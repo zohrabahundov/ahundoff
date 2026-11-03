@@ -1,0 +1,90 @@
+# ==========================================================================
+# AHUNDOFF.RU - Исправленная конфигурация для Timeweb (без циклов редиректов)
+# ==========================================================================
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # !!! ЗАКОММЕНТИРОВАНО: Редирект на HTTPS через .htaccess на Timeweb 
+    # часто вызывает бесконечный цикл. HTTPS включается в панели хостинга.
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Убираем www (редирект на чистый домен)
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^(.*)$ https://%1/$1 [L,R=301]
+
+    # Блокируем доступ к любым скрытым файлам и папкам (начинаются с точки)
+    RewriteRule (^\.|/\.) - [F]
+    
+    # Блокируем прямой доступ к папке logs
+    RewriteRule ^logs/ - [F,L]
+</IfModule>
+
+# Защита конкретных файлов (синтаксис Apache 2.4)
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "\.(log|json|bak|backup|old|env)$">
+    Require all denied
+</FilesMatch>
+
+# send.php — разрешаем ТОЛЬКО POST-запросы (защита формы)
+<Files "send.php">
+    <LimitExcept POST>
+        Require all denied
+    </LimitExcept>
+</Files>
+
+# Запрет просмотра содержимого папок
+Options -Indexes
+
+# Сжатие данных (ускоряет загрузку)
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+# Кэширование на стороне браузера
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType text/html "access plus 1 hour"
+</IfModule>
+
+# Кодировка по умолчанию
+AddDefaultCharset UTF-8
+
+# ==========================================================================
+# SECURITY HEADERS (заголовки безопасности)
+# ==========================================================================
+<IfModule mod_headers.c>
+    # HSTS — принудительный HTTPS на 1 год
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    
+    # Защита от clickjacking (запрет встраивания в iframe)
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # Защита от MIME-sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Контроль referrer-информации
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Ограничение доступа к API браузера
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+    
+    # Content Security Policy (защита от XSS)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://mc.yandex.ru 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://mc.yandex.ru; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
+    
+    # Убираем версию сервера
+    Header unset X-Powered-By
+</IfModule>

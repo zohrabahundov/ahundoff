@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Заявка отправлена — Ahundoff</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    
+    <!-- Yandex.Metrika -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113749509', 'ym');
+        ym(113749509, 'init', {ssr:true, webvisor:true, clickmap:true, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #030712;
+            color: #F8FAFC;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            line-height: 1.7;
+        }
+        
+        .success-card {
+            max-width: 560px;
+            text-align: center;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 24px;
+            padding: 3.5rem 3rem;
+            backdrop-filter: blur(12px);
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pop 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        @keyframes pop {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .success-icon svg {
+            color: #10B981;
+        }
+        
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .success-text {
+            color: #94A3B8;
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+        }
+        
+        .next-steps {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .next-steps-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #3B82F6;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+        
+        .next-steps ol {
+            list-style: none;
+            counter-reset: step;
+        }
+        
+        .next-steps li {
+            counter-increment: step;
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 0.5rem;
+            color: #94A3B8;
+            font-size: 0.95rem;
+        }
+        
+        .next-steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0.1rem;
+            width: 1.4rem;
+            height: 1.4rem;
+            background: rgba(59, 130, 246, 0.15);
+            color: #3B82F6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn--primary {
+            background: #3B82F6;
+            color: white;
+        }
+        
+        .btn--primary:hover {
+            background: #2563EB;
+            transform: translateY(-2px);
+        }
+        
+        .btn--secondary {
+            background: transparent;
+            color: #F8FAFC;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+        
+        .btn--secondary:hover {
+            background: rgba(30, 41, 59, 0.4);
+        }
+        
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #64748B;
+        }
+    </style>
+</head>
+<body>
+    <main class="success-card">
+        <div class="success-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+        
+        <h1>Заявка отправлена!</h1>
+        <p class="success-text">Спасибо за обращение. Я свяжусь с вами в течение 2 часов для бесплатной 30-минутной бизнес-диагностики.</p>
+        
+        <div class="next-steps">
+            <div class="next-steps-title">Что будет дальше:</div>
+            <ol>
+                <li>Я изучу вашу задачу и подготовлюсь к звонку</li>
+                <li>Свяжусь с вами по указанному контакту</li>
+                <li>Проведём диагностику и наметим точки роста</li>
+                <li>Вы получите концепцию решения с расчётом окупаемости</li>
+            </ol>
+        </div>
+        
+        <div class="actions">
+            <a href="https://t.me/zohrab_ahundov" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
+                Написать в Telegram
+            </a>
+            <a href="/" class="btn btn--secondary">
+                Вернуться на сайт
+            </a>
+        </div>
+        
+        <p class="footer-note">Хотите ускорить процесс? Напишите мне напрямую в Telegram — отвечаю быстро.</p>
+    </main>
+    
+    <script>
+        // Отслеживаем цель "успешная отправка" в Метрике
+        if (typeof ym !== 'undefined') {
+            ym(113749509, 'reachGoal', 'form_success_page');
+        }
+        
+        // Защита от прямого захода (опционально)
+        // Если пользователь зашёл напрямую без отправки формы — редиректим на главную
+        if (!document.referrer.includes('ahundoff.ru')) {
+            // Раскомментируйте, если хотите редирект:
+            // window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

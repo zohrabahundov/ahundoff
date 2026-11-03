@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ahundoff.ru/sitemap.xml
