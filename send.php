@@ -15,7 +15,7 @@ define('SENDER_EMAIL', 'noreply@ahundoff.ru');
 define('SENDER_NAME', 'Ahundoff Studio');
 
 // Пути к файлам
-define('LOG_FILE', __DIR__ . '/logs/leads.log');
+define('LOG_FILE', dirname(__DIR__) . '/logs/leads.log');
 define('RATE_LIMIT_FILE', __DIR__ . '/logs/rate_limit.json');
 
 // Настройки rate limiting
@@ -160,6 +160,9 @@ $name = sanitize($_POST['name'] ?? '');
 $phone = sanitize($_POST['phone'] ?? '');
 $message = sanitize($_POST['message'] ?? '');
 $consent = isset($_POST['pd-consent']) ? true : false;
+
+$phone = preg_replace('/[\r\n]/', '', $phone);
+$name = preg_replace('/[\r\n]/', '', $name);
 
 // Дополнительные поля для партнерской формы
 $company = '';
