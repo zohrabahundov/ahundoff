@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zohrab Ahundov — AI Solutions for Enterprise</title>
+    <meta name="description" content="Founder of Ahundoff Studio. 10+ years leading AI portfolios at top-tier banks and telecoms. Patented AI inventor.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #030712;
+            color: #F8FAFC;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Header */
+        header {
+            padding: 30px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .logo {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: #F8FAFC;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        .logo::after {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #3B82F6;
+            border-radius: 50%;
+            margin-left: 4px;
+            vertical-align: super;
+            box-shadow: 0 0 12px #3B82F6;
+        }
+
+        .lang-switch {
+            float: right;
+            margin-top: 4px;
+        }
+
+        .lang-switch a {
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 14px;
+            margin-left: 20px;
+            transition: color 0.2s;
+        }
+
+        .lang-switch a:hover { color: #3B82F6; }
+        .lang-switch a.active { color: #F8FAFC; font-weight: 600; }
+
+        /* Hero */
+        .hero {
+            padding: 100px 0 80px;
+            text-align: center;
+        }
+
+        .hero__label {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #3B82F6;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .hero__title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(32px, 5vw, 52px);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero__title span { color: #3B82F6; }
+
+        .hero__subtitle {
+            font-size: 18px;
+            color: #94A3B8;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .hero__cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+            color: #fff;
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .hero__cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Stats */
+        .stats {
+            padding: 60px 0;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .stats__grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+
+        .stat__number {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 800;
+            color: #3B82F6;
+            margin-bottom: 8px;
+        }
+
+        .stat__label {
+            font-size: 14px;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Services */
+        .services {
+            padding: 80px 0;
+        }
+
+        .section__title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(24px, 3.5vw, 36px);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section__title span { color: #3B82F6; }
+
+        .section__subtitle {
+            font-size: 16px;
+            color: #94A3B8;
+            margin-bottom: 48px;
+            max-width: 700px;
+        }
+
+        .services__grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .service-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 16px;
+            padding: 32px 28px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .service-card__icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .service-card__title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .service-card__desc {
+            font-size: 14px;
+            color: #94A3B8;
+            line-height: 1.6;
+        }
+
+        /* Why */
+        .why {
+            padding: 80px 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(59, 130, 246, 0.03) 100%);
+        }
+
+        .why__list {
+            list-style: none;
+            max-width: 800px;
+        }
+
+        .why__item {
+            display: flex;
+            gap: 16px;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .why__item:last-child { border-bottom: none; }
+
+        .why__check {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            background: #3B82F6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        .why__text {
+            font-size: 16px;
+            color: #F8FAFC;
+        }
+
+        .why__text strong { color: #3B82F6; }
+
+        /* Contact */
+        .contact {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .contact__title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(24px, 3.5vw, 36px);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .contact__title span { color: #3B82F6; }
+
+        .contact__text {
+            font-size: 16px;
+            color: #94A3B8;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact__links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .contact__link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #F8FAFC;
+            text-decoration: none;
+            font-size: 15px;
+            padding: 12px 24px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        .contact__link:hover {
+            border-color: #3B82F6;
+            color: #3B82F6;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+            text-align: center;
+            font-size: 13px;
+            color: #64748B;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 0 24px; }
+            .hero { padding: 60px 0 50px; }
+            .lang-switch { float: none; display: block; margin-top: 16px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <a href="/" class="logo">Ahundoff</a>
+        <div class="lang-switch">
+            <a href="/">RU</a>
+            <a href="/en.html" class="active">EN</a>
+        </div>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="container">
+        <div class="hero__label">Founder · Ahundoff Studio</div>
+        <h1 class="hero__title">
+            Turning enterprise AI experience into <span>working products</span>
+        </h1>
+        <p class="hero__subtitle">
+            I'm Zohrab Ahundov. For 10+ years I led AI portfolios worth $550M+ at top-tier banks and telecoms. Now I build boutique AI solutions for businesses that need enterprise-grade quality at startup speed.
+        </p>
+        <a href="mailto:info@ahundoff.ru" class="hero__cta">
+            Get in touch →
+        </a>
+    </div>
+</section>
+
+<section class="stats">
+    <div class="container">
+        <div class="stats__grid">
+            <div>
+                <div class="stat__number">10+</div>
+                <div class="stat__label">Years in Enterprise AI</div>
+            </div>
+            <div>
+                <div class="stat__number">$550M+</div>
+                <div class="stat__label">AI Portfolio Managed</div>
+            </div>
+            <div>
+                <div class="stat__number">14 days</div>
+                <div class="stat__label">MVP Launch Time</div>
+            </div>
+            <div>
+                <div class="stat__number">Patented</div>
+                <div class="stat__label">AI Invention (RU2023115731)</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="services">
+    <div class="container">
+        <h2 class="section__title">What we <span>build</span></h2>
+        <p class="section__subtitle">
+            Production-ready AI systems, not lab demos. Deployed on-premise or in your cloud, with full documentation and SLA.
+        </p>
+        <div class="services__grid">
+            <div class="service-card">
+                <div class="service-card__icon">📄</div>
+                <h3 class="service-card__title">Document Processing</h3>
+                <p class="service-card__desc">Automated data extraction from invoices, contracts, and forms. Integrates with ERP and CRM systems. 80%+ time savings.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-card__icon">🧠</div>
+                <h3 class="service-card__title">RAG Systems</h3>
+                <p class="service-card__desc">AI assistants that answer questions based on your internal knowledge base, regulations, and documentation in seconds.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-card__icon">👁️</div>
+                <h3 class="service-card__title">Computer Vision</h3>
+                <p class="service-card__desc">Quality control on production lines, video surveillance analytics, real-time defect detection at 30+ FPS.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-card__icon">📊</div>
+                <h3 class="service-card__title">Predictive Analytics</h3>
+                <p class="service-card__desc">Demand forecasting, credit scoring, churn prediction, and process optimization powered by your data.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="why">
+    <div class="container">
+        <h2 class="section__title">Why partners <span>choose us</span></h2>
+        <ul class="why__list">
+            <li class="why__item">
+                <div class="why__check">✓</div>
+                <div class="why__text"><strong>Founder-led delivery.</strong> I personally architect and oversee every project from discovery to deployment.</div>
+            </li>
+            <li class="why__item">
+                <div class="why__check">✓</div>
+                <div class="why__text"><strong>Patented methodology.</strong> Our approach is backed by a granted invention patent in the AI field.</div>
+            </li>
+            <li class="why__item">
+                <div class="why__check">✓</div>
+                <div class="why__text"><strong>Enterprise SLA.</strong> 24/7 monitoring, full documentation, and production-grade reliability.</div>
+            </li>
+            <li class="why__item">
+                <div class="why__check">✓</div>
+                <div class="why__text"><strong>Data sovereignty.</strong> On-premise deployment available. Strict NDA. GDPR-ready architecture.</div>
+            </li>
+            <li class="why__item">
+                <div class="why__check">✓</div>
+                <div class="why__text"><strong>Fast time-to-value.</strong> Working prototype in 3–5 days. MVP in 14 days. ROI in 2 months.</div>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="contact">
+    <div class="container">
+        <h2 class="contact__title">Let's <span>talk</span></h2>
+        <p class="contact__text">
+            Open to partnerships, joint ventures, and complex AI projects. I typically respond within a few hours.
+        </p>
+        <div class="contact__links">
+            <a href="mailto:info@ahundoff.ru" class="contact__link">📧 info@ahundoff.ru</a>
+            <a href="https://t.me/zohrab_ahundov" class="contact__link">✈️ Telegram</a>
+            <a href="https://ahundoff.ru" class="contact__link">🌐 ahundoff.ru</a>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        © 2026 Ahundoff Studio. All rights reserved.
+    </div>
+</footer>
+
+</body>
+</html>
