@@ -3,452 +3,797 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zohrab Ahundov — AI Solutions for Enterprise</title>
-    <meta name="description" content="Founder of Ahundoff Studio. 10+ years leading AI portfolios at top-tier banks and telecoms. Patented AI inventor.">
+    <meta name="description" content="Ahundoff — AI solutions for business. We turn business process chaos into autonomous AI systems. MVP launch in 14 days.">
+    <meta name="keywords" content="AI for business, digital transformation, process automation, computer vision, RAG, scoring, turnkey development, ROI">
+    <meta name="author" content="Zohrab Ahundov">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://ahundoff.ru/en.html">
+    
+    <meta property="og:title" content="Ahundoff — AI Solutions for Business">
+    <meta property="og:description" content="We turn business process chaos into autonomous AI systems. MVP launch in 14 days.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ahundoff.ru/en.html">
+    <meta property="og:image" content="https://ahundoff.ru/og-image.jpg">
+    <meta property="og:locale" content="en_US">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ahundoff — AI Solutions for Business">
+    <meta name="twitter:description" content="We turn business process chaos into autonomous AI systems. MVP launch in 14 days.">
+    
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    
+    <title>Ahundoff — AI Solutions for Business</title>
+    
+    <link rel="preload" href="/styles.css?v=product-grid-1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/styles.css?v=product-grid-1"></noscript>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #030712;
-            color: #F8FAFC;
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 40px;
-        }
-
-        /* Header */
-        header {
-            padding: 30px 0;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-        }
-
-        .logo {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 24px;
-            font-weight: 700;
-            color: #F8FAFC;
-            letter-spacing: 2px;
-            text-decoration: none;
-        }
-
-        .logo::after {
-            content: '';
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #3B82F6;
-            border-radius: 50%;
-            margin-left: 4px;
-            vertical-align: super;
-            box-shadow: 0 0 12px #3B82F6;
-        }
-
-        .lang-switch {
-            float: right;
-            margin-top: 4px;
-        }
-
-        .lang-switch a {
-            color: #94A3B8;
-            text-decoration: none;
-            font-size: 14px;
-            margin-left: 20px;
-            transition: color 0.2s;
-        }
-
-        .lang-switch a:hover { color: #3B82F6; }
-        .lang-switch a.active { color: #F8FAFC; font-weight: 600; }
-
-        /* Hero */
-        .hero {
-            padding: 100px 0 80px;
-            text-align: center;
-        }
-
-        .hero__label {
-            display: inline-block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #3B82F6;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-        }
-
-        .hero__title {
-            font-family: 'Unbounded', sans-serif;
-            font-size: clamp(32px, 5vw, 52px);
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 24px;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero__title span { color: #3B82F6; }
-
-        .hero__subtitle {
-            font-size: 18px;
-            color: #94A3B8;
-            max-width: 700px;
-            margin: 0 auto 40px;
-        }
-
-        .hero__cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
-            color: #fff;
-            padding: 16px 32px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-family: 'Unbounded', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
-        }
-
-        .hero__cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
-        }
-
-        /* Stats */
-        .stats {
-            padding: 60px 0;
-            border-top: 1px solid rgba(148, 163, 184, 0.1);
-            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-        }
-
-        .stats__grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 40px;
-            text-align: center;
-        }
-
-        .stat__number {
-            font-family: 'Unbounded', sans-serif;
-            font-size: clamp(32px, 4vw, 48px);
-            font-weight: 800;
-            color: #3B82F6;
-            margin-bottom: 8px;
-        }
-
-        .stat__label {
-            font-size: 14px;
-            color: #94A3B8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Services */
-        .services {
-            padding: 80px 0;
-        }
-
-        .section__title {
-            font-family: 'Unbounded', sans-serif;
-            font-size: clamp(24px, 3.5vw, 36px);
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .section__title span { color: #3B82F6; }
-
-        .section__subtitle {
-            font-size: 16px;
-            color: #94A3B8;
-            margin-bottom: 48px;
-            max-width: 700px;
-        }
-
-        .services__grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-        }
-
-        .service-card {
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid rgba(59, 130, 246, 0.15);
-            border-radius: 16px;
-            padding: 32px 28px;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .service-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(59, 130, 246, 0.4);
-        }
-
-        .service-card__icon {
-            font-size: 32px;
-            margin-bottom: 16px;
-        }
-
-        .service-card__title {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .service-card__desc {
-            font-size: 14px;
-            color: #94A3B8;
-            line-height: 1.6;
-        }
-
-        /* Why */
-        .why {
-            padding: 80px 0;
-            background: linear-gradient(180deg, transparent 0%, rgba(59, 130, 246, 0.03) 100%);
-        }
-
-        .why__list {
-            list-style: none;
-            max-width: 800px;
-        }
-
-        .why__item {
-            display: flex;
-            gap: 16px;
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-        }
-
-        .why__item:last-child { border-bottom: none; }
-
-        .why__check {
-            flex-shrink: 0;
-            width: 24px;
-            height: 24px;
-            background: #3B82F6;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 700;
-            font-size: 14px;
-            margin-top: 2px;
-        }
-
-        .why__text {
-            font-size: 16px;
-            color: #F8FAFC;
-        }
-
-        .why__text strong { color: #3B82F6; }
-
-        /* Contact */
-        .contact {
-            padding: 80px 0;
-            text-align: center;
-        }
-
-        .contact__title {
-            font-family: 'Unbounded', sans-serif;
-            font-size: clamp(24px, 3.5vw, 36px);
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .contact__title span { color: #3B82F6; }
-
-        .contact__text {
-            font-size: 16px;
-            color: #94A3B8;
-            margin-bottom: 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .contact__links {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .contact__link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #F8FAFC;
-            text-decoration: none;
-            font-size: 15px;
-            padding: 12px 24px;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 10px;
-            transition: all 0.2s;
-        }
-
-        .contact__link:hover {
-            border-color: #3B82F6;
-            color: #3B82F6;
-        }
-
-        /* Footer */
-        footer {
-            padding: 40px 0;
-            border-top: 1px solid rgba(148, 163, 184, 0.1);
-            text-align: center;
-            font-size: 13px;
-            color: #64748B;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container { padding: 0 24px; }
-            .hero { padding: 60px 0 50px; }
-            .lang-switch { float: none; display: block; margin-top: 16px; text-align: center; }
-        }
-    </style>
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/unbounded/v7/Yq6F-LOTXCb04q32xlOZuGkLbqK2jA.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap">
+    </noscript>
+    
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "Ahundoff Studio",
+        "description": "AI solutions for business. We turn business process chaos into autonomous AI systems. MVP launch in 14 days.",
+        "url": "https://ahundoff.ru",
+        "telephone": "+79295005785",
+        "email": "info@ahundoff.ru",
+        "priceRange": "from 250,000 ₽",
+        "areaServed": { "@type": "Country", "name": "Russia" },
+        "serviceType": ["AI Solutions", "Computer Vision", "RAG Systems", "Business Process Automation", "Predictive Analytics", "Client Scoring"],
+        "founder": {
+            "@type": "Person",
+            "name": "Zohrab Ahundov",
+            "jobTitle": "Founder and CTO",
+            "hasCredential": {
+                "@type": "EducationalOccupationalCredential",
+                "name": "Patent for invention RU2023115731 in the field of artificial intelligence"
+            }
+        },
+        "address": { "@type": "PostalAddress", "addressCountry": "RU" },
+        "sameAs": ["https://t.me/zohrab_ahundov"]
+    }
+    </script>
 </head>
 <body>
+    <!-- SVG Sprite -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+        <symbol id="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+        </symbol>
+        <symbol id="icon-telegram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </symbol>
+        <symbol id="icon-whatsapp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </symbol>
+        <symbol id="icon-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+        </symbol>
+        <symbol id="icon-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </symbol>
+        <symbol id="icon-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+            <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+            <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+        </symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </symbol>
+        <symbol id="icon-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+            <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+        </symbol>
+        <symbol id="icon-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </symbol>
+        <symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </symbol>
+        <symbol id="icon-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </symbol>
+        <symbol id="icon-dollar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </symbol>
+        <symbol id="icon-factory" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 20h20"/><path d="M4 20V8l6-4v16"/><path d="M10 20V4l6 4v12"/><path d="M16 20V8l4 2v10"/>
+            <path d="M6 12h1"/><path d="M6 16h1"/><path d="M12 12h1"/><path d="M12 16h1"/><path d="M18 14h1"/><path d="M18 18h1"/>
+        </symbol>
+        <symbol id="icon-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+        </symbol>
+        <symbol id="icon-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </symbol>
+        <symbol id="icon-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </symbol>
+        <symbol id="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </symbol>
+        <symbol id="icon-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </symbol>
+        <symbol id="icon-quote" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </symbol>
+        <symbol id="icon-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+        </symbol>
+        <symbol id="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+        </symbol>
+        <symbol id="icon-video" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="23 7 16 12 23 17 23 7"></polygon>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+        </symbol>
+        <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </symbol>
+        <symbol id="icon-heart-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 7.65l.77.78 7.65 7.65 7.65-7.65.77-.78a5.4 5.4 0 0 0 0-7.65z"></path>
+            <polyline points="3 12 7 12 9 8 13 16 15 12 21 12"></polyline>
+        </symbol>
+        <symbol id="icon-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </symbol>
+    </svg>
 
-<header>
-    <div class="container">
-        <a href="/" class="logo">Ahundoff</a>
-        <div class="lang-switch">
-            <a href="/">RU</a>
-            <a href="/en.html" class="active">EN</a>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header__content">
+                <a href="/" class="logo" aria-label="Ahundoff Studio — Home">Ahundoff<span class="logo__dot">.</span></a>
+                <div class="header__lang">
+                    <a href="/">RU</a>
+                    <a href="/en.html" class="active">EN</a>
+                </div>
+                <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav">
+                    <span></span><span></span><span></span>
+                </button>
+                <nav class="nav" id="main-nav" aria-label="Main navigation">
+                    <a href="#services" class="nav__link">Products</a>
+                    <a href="#cases" class="nav__link">Cases</a>
+                    <a href="#industries" class="nav__link">Industries</a>
+                    <a href="#process" class="nav__link">Approach</a>
+                    <a href="#contact" class="nav__link nav__link--cta">Contacts</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <canvas class="hero__grid" aria-hidden="true"></canvas>
+        <div class="container">
+            <div class="hero__content">
+                <span class="hero__badge">Boutique AI Studio</span>
+                <h1 class="hero__title">AI solutions for your business<span class="logo__dot">.</span></h1>
+                <p class="hero__subtitle">We integrate AI assistants, computer vision, voice assistants, RAG systems, and predictive analytics into your business processes. MVP launch in 14 days with a quality guarantee.</p>
+                <div class="hero__actions">
+                    <a href="#contact" class="btn btn--primary">Get a project estimate</a>
+                    <a href="#cases" class="btn btn--secondary">View cases</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats" aria-label="Key metrics">
+        <div class="container">
+            <div class="stats__grid">
+                <div class="stat">
+                    <div class="stat__number" data-target="10" data-suffix="+ years">10+ years</div>
+                    <div class="stat__label">
+                        <span class="tooltip" data-tooltip="Experience working with the largest banks and telecom companies in Russia, including managing AI transformation">expertise in AI</span>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat__number" data-target="50" data-suffix="B+ ₽">50B+ ₽</div>
+                    <div class="stat__label">
+                        <span class="tooltip" data-tooltip="Portfolio of IT initiatives in Russia's largest banks and telecom companies, including AI scoring and anti-fraud models">AI project portfolio</span>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat__number" data-target="14" data-suffix=" days">14 days</div>
+                    <div class="stat__label">
+                        <span class="tooltip" data-tooltip="Average time from the first meeting to launching a working MVP. Thanks to ready-made architectural templates">average MVP launch time</span>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat__number" data-target="100" data-suffix="%">100%</div>
+                    <div class="stat__label">
+                        <span class="tooltip" data-tooltip="Every project is delivered with an SLA, 24/7 monitoring, documentation, and team training">projects delivered with corporate SLA</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title">AI products for your business<span class="logo__dot">.</span></h2>
+            <p class="section-subtitle">Development and seamless integration of products into your business processes.</p>
+            <div class="services__grid">
+                <article class="card service-card service-card--feature">
+                    <div class="card-art">
+                        <img src="assets/products/document-scanner.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Document Processing</h3>
+                    <p class="card__text">Automated data extraction from invoices, waybills, and contracts. Integration with ERP and CRM. 80% reduction in manual labor and elimination of human errors.</p>
+                    <div class="service-card__meta">
+                        <span>Accuracy: >98%</span>
+                        <span>Time: from 2 weeks</span>
+                        <span class="service-card__price">from 250,000 ₽</span>
+                    </div>
+                </article>
+                <article class="card service-card service-card--compact">
+                    <div class="card-art">
+                        <img src="assets/products/inspection-gauge.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Quality Control in Manufacturing</h3>
+                    <p class="card__text">Real-time defect and flaw detection. <span class="tooltip" data-tooltip="Deploying AI models directly on the device (camera, server) without sending data to the cloud">Edge deployment</span> with zero latency. Reduction of claims and improvement of product quality.</p>
+                    <div class="service-card__meta">
+                        <span>Defect reduction: up to 80%</span>
+                        <span>Time: from 3 weeks</span>
+                        <span class="service-card__price">from 350,000 ₽</span>
+                    </div>
+                </article>
+                <article class="card service-card service-card--compact service-card--accent">
+                    <div class="card-art">
+                        <img src="assets/products/video-camera.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Smart Video Surveillance</h3>
+                    <p class="card__text">Video stream analytics: visitor counting, PPE compliance control, abandoned object detection. We turn cameras into a source of business analytics.</p>
+                    <div class="service-card__meta">
+                        <span>Processing: 30+ FPS</span>
+                        <span>Time: from 2 weeks</span>
+                        <span class="service-card__price">from 300,000 ₽</span>
+                    </div>
+                </article>
+                <article class="card service-card service-card--wide">
+                    <div class="card-art">
+                        <img src="assets/products/product-search.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Visual Search for E-commerce</h3>
+                    <p class="card__text">Product search by photo and auto-generation of SEO descriptions. Increased conversion, reduced returns, and saving hundreds of hours for content managers.</p>
+                    <div class="service-card__meta">
+                        <span>Conversion growth: 15-25%</span>
+                        <span>Time: from 2 weeks</span>
+                        <span class="service-card__price">from 200,000 ₽</span>
+                    </div>
+                </article>
+                <article class="card service-card">
+                    <div class="card-art">
+                        <img src="assets/products/ct-scanner.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Medical Diagnostics</h3>
+                    <p class="card__text">AI assistant for doctors: detection of pathologies on X-rays, CT, and MRI. Integration with <span class="tooltip" data-tooltip="Medical Information System — software for automating clinic operations">MIS</span>. Accelerated diagnostics and reduced specialist workload.</p>
+                    <div class="service-card__meta">
+                        <span>Sensitivity: >95%</span>
+                        <span>Time: from 4 weeks</span>
+                        <span class="service-card__price">from 500,000 ₽</span>
+                    </div>
+                </article>
+                <article class="card service-card">
+                    <div class="card-art">
+                        <img src="assets/products/card-catalog.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Corporate <span class="tooltip" data-tooltip="Retrieval-Augmented Generation — an AI system that searches for answers in your internal documents and knowledge bases">RAG</span> Systems</h3>
+                    <p class="card__text">Smart search across knowledge bases and support automation. Secure deployment on servers in Russia with GigaChat or YandexGPT. Compliance with data protection laws.</p>
+                    <div class="service-card__meta">
+                        <span>Time savings: up to 40%</span>
+                        <span>Time: from 2 weeks</span>
+                        <span class="service-card__price">from 300,000 ₽</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cases -->
+    <section id="cases" class="cases">
+        <div class="container">
+            <h2 class="section-title">Implemented projects<span class="logo__dot">.</span></h2>
+            <p class="section-subtitle">From chatbots and websites to industrial models and platforms for Russia's largest companies.</p>
+            <div class="cases__grid">
+                <article class="card case-card">
+                    <div class="card-art">
+                        <img src="assets/cases/scoring.webp?v=cutout-1" width="960" height="384" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <div class="case-card__header">
+                        <h3 class="card__title">Industrial AI scoring models for market leaders in Russia</h3>
+                        <span class="case-card__btn case-card__btn--nda" aria-label="Project under NDA">
+                            <svg width="16" height="16" aria-hidden="true"><use href="#icon-lock"/></svg>
+                            <span>NDA</span>
+                        </span>
+                    </div>
+                    <p class="case-card__text"><strong>Industry:</strong> Fintech and telecom (Top-3 largest companies in Russia).</p>
+                    <p class="case-card__text"><strong>Task:</strong> Development and implementation of predictive models for scoring tens of millions of clients.</p>
+                    <p class="case-card__text"><strong>Result:</strong> Models passed multi-level validation by the risk committee and were implemented in the production process.</p>
+                    <div class="case-card__impact">
+                        <svg width="16" height="16" aria-hidden="true"><use href="#icon-quote"/></svg>
+                        <p>"The solution became a quality benchmark for other teams within the company."</p>
+                    </div>
+                </article>
+
+                <article class="card case-card">
+                    <div class="card-art">
+                        <img src="assets/cases/industry.webp?v=cutout-1" width="960" height="384" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <div class="case-card__header">
+                        <h3 class="card__title">Corporate website for an international manufacturer</h3>
+                        <a href="https://mbatr.ru" target="_blank" rel="noopener noreferrer" class="case-card__btn" aria-label="View case mbatr.ru">
+                            <span>mbatr.ru</span>
+                            <svg width="16" height="16" aria-hidden="true"><use href="#icon-external"/></svg>
+                        </a>
+                    </div>
+                    <p class="case-card__text"><strong>Industry:</strong> Industrial construction equipment.</p>
+                    <p class="case-card__text"><strong>Task:</strong> Launching a website to enter new markets with a focus on generating qualified leads.</p>
+                    <p class="case-card__text"><strong>Result:</strong> A working B2B lead generation tool with a 3.2% conversion rate, full compliance with data protection laws.</p>
+                    <div class="case-card__impact">
+                        <svg width="16" height="16" aria-hidden="true"><use href="#icon-quote"/></svg>
+                        <p>"Previously, processing applications took hours of manual work. Now the system autonomously classifies leads."</p>
+                    </div>
+                </article>
+
+                <article class="card case-card">
+                    <div class="card-art">
+                        <img src="assets/cases/connections.webp?v=cutout-1" width="960" height="384" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <div class="case-card__header">
+                        <h3 class="card__title">High-load service for matchmaking</h3>
+                        <a href="https://t.me/fcc_edinstvo_bot" target="_blank" rel="noopener noreferrer" class="case-card__btn" aria-label="View case KPC Edinstvo">
+                            <span>KPC "Edinstvo"</span>
+                            <svg width="16" height="16" aria-hidden="true"><use href="#icon-external"/></svg>
+                        </a>
+                    </div>
+                    <p class="case-card__text"><strong>Industry:</strong> Social services, payment processing.</p>
+                    <p class="case-card__text"><strong>Task:</strong> Automation of a complex business process with moderation, payment, and multi-step logic.</p>
+                    <p class="case-card__text"><strong>Result:</strong> Thousands of active users per day, 60% reduction in operating costs, elimination of vulnerabilities.</p>
+                    <div class="case-card__impact">
+                        <svg width="16" height="16" aria-hidden="true"><use href="#icon-quote"/></svg>
+                        <p>"75% of the routine is performed autonomously. The team focuses on service development."</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Section -->
+    <section id="founder" class="trust-section">
+        <div class="container">
+            <div class="trust-section__header">
+                <h2 class="section-title">Why choose Ahundoff<span class="logo__dot">.</span></h2>
+                <p class="section-subtitle">We don't just write code. We take full responsibility for the result, security, and ROI of your AI investments.</p>
+            </div>
+            
+            <div class="why__grid">
+                <div class="card why__item">
+                    <div class="card-art">
+                        <img src="assets/trust/balance.webp?v=cutout-1" width="880" height="352" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Focus on business results</h3>
+                    <p class="card__text">We speak the language of business: cost reduction, conversion growth, and measurable ROI. 10 years managing AI transformation in Russia's largest banks and telecoms.</p>
+                </div>
+                <div class="card why__item">
+                    <div class="card-art">
+                        <img src="assets/trust/bridge.webp?v=cutout-1" width="880" height="352" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Corporate reliability</h3>
+                    <p class="card__text">Every project is delivered with industrial infrastructure, 24/7 monitoring, data protection, and full technical documentation. We work strictly under NDA.</p>
+                </div>
+                <div class="card why__item">
+                    <div class="card-art">
+                        <img src="assets/trust/turbine.webp?v=cutout-1" width="880" height="352" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Speed without compromise</h3>
+                    <p class="card__text">Thanks to Rapid Prototyping experience and ready-made architectural templates, we launch MVPs in 14 days, while large agencies are still approving the SOW.</p>
+                </div>
+            </div>
+
+            <!-- Data Protection Block -->
+            <div class="security-section">
+                <h3 class="security-section__title">How we protect your data</h3>
+                <div class="security-section__grid">
+                    <div class="security-section__item">
+                        <div class="card-art">
+                            <img src="assets/trust/seal.webp?v=cutout-1" width="640" height="256" alt="" loading="lazy" decoding="async">
+                        </div>
+                        <div class="security-section__content">
+                            <h4>Strict NDA</h4>
+                            <p>We sign a non-disclosure agreement before work begins. All project details are legally protected.</p>
+                        </div>
+                    </div>
+                    <div class="security-section__item">
+                        <div class="card-art">
+                            <img src="assets/trust/archive.webp?v=cutout-1" width="640" height="256" alt="" loading="lazy" decoding="async">
+                        </div>
+                        <div class="security-section__content">
+                            <h4>Data Sovereignty</h4>
+                            <p>All data is stored and processed on servers in Russia. Full compliance with local data protection laws.</p>
+                        </div>
+                    </div>
+                    <div class="security-section__item">
+                        <div class="card-art">
+                            <img src="assets/trust/model.webp?v=cutout-1" width="640" height="256" alt="" loading="lazy" decoding="async">
+                        </div>
+                        <div class="security-section__content">
+                            <h4>Certified LLMs</h4>
+                            <p>We use GigaChat by Sber and domestic solutions. Data never leaves the client's perimeter.</p>
+                        </div>
+                    </div>
+                    <div class="security-section__item">
+                        <div class="card-art">
+                            <img src="assets/trust/cipher.webp?v=cutout-1" width="640" height="256" alt="" loading="lazy" decoding="async">
+                        </div>
+                        <div class="security-section__content">
+                            <h4>Secure Architecture</h4>
+                            <p>Data encryption, protection against SQLi/XSS/IDOR, regular security audits.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Founder -->
+            <div class="founder__guarantee">
+                <div class="founder__grid">
+                    <div class="founder__photo">
+                        <div class="founder__image">
+                            <img src="founder.jpg" alt="Zohrab Ahundov — Founder of Ahundoff Studio" loading="lazy" decoding="async" width="800" height="1067">
+                        </div>
+                        <div class="founder__photo-badge">
+                            <svg width="16" height="16" aria-hidden="true"><use href="#icon-check"/></svg>
+                            <span>10+ years · MBA · Patent in AI</span>
+                        </div>
+                    </div>
+
+                    <div class="founder__content">
+                        <span class="founder__label">Founder's personal guarantee</span>
+                        <h2 class="founder__name">Zohrab Ahundov<span class="logo__dot">.</span></h2>
+                        <p class="founder__role">MBA · Patent in AI · Chief Technology Officer</p>
+                        
+                        <div class="founder__bio">
+                            <p>For 10+ years of experience in Russia's largest banks and telecom companies, I personally managed a portfolio of IT initiatives worth <strong>50 billion ₽</strong> — from AI model implementation to digital transformation of entire business units.</p>
+                            <p>I am the <strong>author of patent RU2023115731 for an invention</strong> in the field of AI. This is a guarantee that behind every decision of mine lies deep technical expertise and an understanding of how the technology works from the inside out.</p>
+                            <p>Now I apply corporate reliability standards to boutique projects, giving your business <strong>startup speed and enterprise quality</strong>. I personally oversee every project, from architecture to deployment.</p>
+                        </div>
+
+                        <div class="founder__actions">
+                            <a href="https://t.me/zohrab_ahundov" target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--sm">
+                                <svg width="16" height="16" aria-hidden="true"><use href="#icon-telegram"/></svg>
+                                <span>Message Zohrab on Telegram</span>
+                            </a>
+                            <a href="#contact" class="btn btn--secondary btn--sm">Discuss a project</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Industries -->
+    <section id="industries" class="industries">
+        <div class="container">
+            <h2 class="section-title">Industries we work in<span class="logo__dot">.</span></h2>
+            <p class="section-subtitle">We solve specific business challenges in specific industries.</p>
+
+            <div class="industries__grid">
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/bank-vault.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Fintech & Banking</h3>
+                    <p class="card__text">Scoring, anti-fraud, document processing, predictive analytics. Compliance with central bank standards and data protection laws.</p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/machine-tool.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Manufacturing</h3>
+                    <p class="card__text">Quality control, demand forecasting, inventory optimization. Defect reduction and output increase.</p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/freight-train.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Logistics</h3>
+                    <p class="card__text">Route optimization, tracking automation, AI assistants for dispatchers. 15-25% cost reduction.</p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/cash-register.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Retail</h3>
+                    <p class="card__text">Personalized recommendations, churn prediction, visual search. Average check growth and customer retention.</p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/microscope.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Healthcare</h3>
+                    <p class="card__text">Image-based diagnostics, document workflow automation, AI assistants for doctors. Accelerated diagnostics.</p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/open-book.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Education</h3>
+                    <p class="card__text">Adaptive learning, grading automation, RAG systems for educational materials. Learning personalization.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process -->
+    <section id="process" class="process">
+        <div class="container">
+            <h2 class="section-title">How we work<span class="logo__dot">.</span></h2>
+            <p class="section-subtitle">A transparent process from the first meeting to production launch. You always know what stage your project is at.</p>
+            <div class="process__timeline">
+                <div class="process__line"></div>
+                <div class="process__step">
+                    <div class="process__dot">01</div>
+                    <div class="process__content">
+                        <h3 class="process__title">Business Diagnostics</h3>
+                        <p class="process__text">Free, 30 minutes. We analyze your processes, find "bottlenecks", and determine where automation will yield the maximum ROI. You get a clear action plan.</p>
+                    </div>
+                </div>
+                <div class="process__step">
+                    <div class="process__dot">02</div>
+                    <div class="process__content">
+                        <h3 class="process__title">Prototype & ROI Calculation</h3>
+                        <p class="process__text">In 3-5 days, we build a working prototype. You see the architecture, assess risks, and understand how it will work before spending budget on full development.</p>
+                    </div>
+                </div>
+                <div class="process__step">
+                    <div class="process__dot">03</div>
+                    <div class="process__content">
+                        <h3 class="process__title">Development & Implementation</h3>
+                        <p class="process__text">Weekly demos, full transparency. We set up 24/7 monitoring, train your team, and guarantee an SLA. AI becomes part of your daily operations.</p>
+                    </div>
+                </div>
+                <div class="process__step">
+                    <div class="process__dot">04</div>
+                    <div class="process__content">
+                        <h3 class="process__title">Scaling</h3>
+                        <p class="process__text">After a successful launch, we help scale the solution to other departments or processes, ensuring cumulative growth in business efficiency.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions<span class="logo__dot">?</span></h2>
+            <div class="faq__grid">
+                <div class="faq__item">
+                    <button class="faq__question" aria-expanded="false" aria-controls="faq-answer-1" id="faq-question-1">
+                        <span>How is working with you different from working with a freelancer?</span>
+                        <span class="faq__icon" aria-hidden="true">▶</span>
+                    </button>
+                    <div class="faq__answer" id="faq-answer-1" role="region" aria-labelledby="faq-question-1">
+                        <p>A freelancer solves the task "so the code works". We solve the task "so the product scales, is secure, and pays off". We provide an SLA, sign an NDA, set up 24/7 monitoring, and hand over full documentation. This eliminates the risk of having to redo everything in six months.</p>
+                    </div>
+                </div>
+                <div class="faq__item">
+                    <button class="faq__question" aria-expanded="false" aria-controls="faq-answer-2" id="faq-question-2">
+                        <span>What is included in "corporate-level reliability"?</span>
+                        <span class="faq__icon" aria-hidden="true">▶</span>
+                    </button>
+                    <div class="faq__answer" id="faq-answer-2" role="region" aria-labelledby="faq-question-2">
+                        <p>Every project is delivered with industrial infrastructure: 24/7 monitoring (Prometheus/Grafana), centralized logging (ELK), vulnerability protection, automated backups, API documentation, and training for your team.</p>
+                    </div>
+                </div>
+                <div class="faq__item">
+                    <button class="faq__question" aria-expanded="false" aria-controls="faq-answer-3" id="faq-question-3">
+                        <span>How do you guarantee the 14-day deadline?</span>
+                        <span class="faq__icon" aria-hidden="true">▶</span>
+                    </button>
+                    <div class="faq__answer" id="faq-answer-3" role="region" aria-labelledby="faq-question-3">
+                        <p>Thanks to 10 years of experience and ready-made architectural templates, we don't reinvent the wheel. We use proven solutions that already work in production. Weekly demos show progress.</p>
+                    </div>
+                </div>
+                <div class="faq__item">
+                    <button class="faq__question" aria-expanded="false" aria-controls="faq-answer-4" id="faq-question-4">
+                        <span>How much does AI implementation cost?</span>
+                        <span class="faq__icon" aria-hidden="true">▶</span>
+                    </button>
+                    <div class="faq__answer" id="faq-answer-4" role="region" aria-labelledby="faq-question-4">
+                        <p>We don't sell "boxed solutions", so the cost depends on the task. Typical audit and prototyping start from 50,000 ₽. Full MVP development starts from 150,000 ₽, and complex AI systems from 400,000 ₽. We fix the budget before work begins.</p>
+                    </div>
+                </div>
+                <div class="faq__item">
+                    <button class="faq__question" aria-expanded="false" aria-controls="faq-answer-5" id="faq-question-5">
+                        <span>Where and how is data processed?</span>
+                        <span class="faq__icon" aria-hidden="true">▶</span>
+                    </button>
+                    <div class="faq__answer" id="faq-answer-5" role="region" aria-labelledby="faq-question-5">
+                        <p>All data is stored and processed on servers in Russia in full compliance with local data protection laws. For AI solutions, we use certified models (GigaChat by Sber) or open-source solutions deployed within your perimeter. We sign an NDA before the project starts.</p>
+                    </div>
+                </div>
+                <div class="faq__item">
+                    <button class="faq__question" aria-expanded="false" aria-controls="faq-answer-6" id="faq-question-6">
+                        <span>What technologies do you use?</span>
+                        <span class="faq__icon" aria-hidden="true">▶</span>
+                    </button>
+                    <div class="faq__answer" id="faq-answer-6" role="region" aria-labelledby="faq-question-6">
+                        <p>We use a proven stack: Python (FastAPI, Aiogram), PostgreSQL, Redis, Docker for backend. For AI — GigaChat, YandexGPT, LangChain, RAG, LightGBM. Monitoring via Prometheus/Grafana. Integrations with ERP, CRM, Telegram Bot API. All technologies are deployed on servers in Russia for compliance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="contact__content">
+                <h2 class="section-title">Ready to discuss your project<span class="logo__dot">?</span></h2>
+                <p class="contact__text">Leave a request, and we will contact you within 2 hours for a free business diagnostics and ROI calculation.</p>
+                
+                <div class="security-badges" role="list" aria-label="Security guarantees">
+                    <div class="security-badge" role="listitem">
+                        <svg width="16" height="16" aria-hidden="true"><use href="#icon-shield"/></svg>
+                        <span>We work under NDA</span>
+                    </div>
+                    <div class="security-badge" role="listitem">
+                        <svg width="16" height="16" aria-hidden="true"><use href="#icon-lock"/></svg>
+                        <span>Data in Russia (Compliance)</span>
+                    </div>
+                    <div class="security-badge" role="listitem">
+                        <svg width="16" height="16" aria-hidden="true"><use href="#icon-check"/></svg>
+                        <span>Certified LLMs (GigaChat)</span>
+                    </div>
+                </div>
+                
+                <form class="contact__form" id="contactForm" novalidate>
+                    <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;" aria-hidden="true">
+                    <input type="hidden" name="form_time" id="formTime">
+                    
+                    <div class="form-group">
+                        <label for="name" class="sr-only">Your name</label>
+                        <input type="text" name="name" id="name" placeholder="Your name" required minlength="2" maxlength="100" autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="sr-only">Phone or Telegram</label>
+                        <input type="tel" name="phone" id="phone" placeholder="+7 (___) ___-__-__" required autocomplete="tel" inputmode="tel">
+                    </div>
+                    <div class="form-group">
+                        <label for="message" class="sr-only">Business task description</label>
+                        <textarea name="message" id="message" placeholder="Describe your business task" rows="4" maxlength="2000"></textarea>
+                    </div>
+                    
+                    <div class="form-consent">
+                        <input type="checkbox" id="pd-consent" name="pd-consent" required>
+                        <label for="pd-consent">
+                            I consent to the processing of my <a href="/privacy-policy.html">personal data</a> in accordance with privacy laws.
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn--primary btn--full" id="submitBtn">Get a project estimate</button>
+                    <div id="formMessage" style="margin-top:1rem;text-align:center;" role="alert" aria-live="polite"></div>
+                </form>
+                
+                <address class="contact__info">
+                    <div class="contact__link-wrapper">
+                        <a href="mailto:info@ahundoff.ru" class="contact__link">
+                            <svg class="contact__icon" width="20" height="20" aria-hidden="true"><use href="#icon-mail"/></svg>
+                            <span>info@ahundoff.ru</span>
+                        </a>
+                        <button class="copy-btn" data-copy="info@ahundoff.ru" aria-label="Copy email">
+                            <svg width="16" height="16" aria-hidden="true"><use href="#icon-code"/></svg>
+                        </button>
+                    </div>
+                    <a href="tel:+79295005785" class="contact__link">
+                        <svg class="contact__icon" width="20" height="20" aria-hidden="true"><use href="#icon-phone"/></svg>
+                        <span>+7 (929) 500-57-85</span>
+                    </a>
+                    <a href="https://wa.me/79295005785" target="_blank" rel="noopener noreferrer" class="contact__link">
+                        <svg class="contact__icon" width="20" height="20" aria-hidden="true"><use href="#icon-whatsapp"/></svg>
+                        <span>WhatsApp</span>
+                    </a>
+                    <a href="https://t.me/zohrab_ahundov" target="_blank" rel="noopener noreferrer" class="contact__link">
+                        <svg class="contact__icon" width="20" height="20" aria-hidden="true"><use href="#icon-telegram"/></svg>
+                        <span>Telegram</span>
+                    </a>
+                </address>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Sticky Bar -->
+    <div class="sticky-bar" role="complementary" aria-label="Quick access to form">
+        <div class="container">
+            <div class="sticky-bar__content">
+                <div class="sticky-bar__text">
+                    <svg class="sticky-bar__icon" width="20" height="20" aria-hidden="true"><use href="#icon-rocket"/></svg>
+                    <span>Free business diagnostics</span>
+                </div>
+                <a href="#contact" class="btn btn--primary btn--sm">Get an estimate</a>
+            </div>
         </div>
     </div>
-</header>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__brand">
+                    <a href="/" class="logo">Ahundoff<span class="logo__dot">.</span></a>
+                    <p class="footer__tagline">AI solutions for business</p>
+                    <p class="footer__legal">IE Ahundov Zohrab | INN 054204225330</p>
+                </div>
+                
+                <nav class="footer__links" aria-label="Site navigation">
+                    <a href="#services">Products</a>
+                    <a href="#cases">Cases</a>
+                    <a href="#industries">Industries</a>
+                    <a href="#process">Approach</a>
+                    <a href="#contact">Contacts</a>
+                    <a href="/partners.html">Partner program</a>
+                    <a href="/privacy-policy.html">Privacy Policy</a>
+                </nav>
 
-<section class="hero">
-    <div class="container">
-        <div class="hero__label">Founder · Ahundoff Studio</div>
-        <h1 class="hero__title">
-            Turning enterprise AI experience into <span>working products</span>
-        </h1>
-        <p class="hero__subtitle">
-            I'm Zohrab Ahundov. For 10+ years I led AI portfolios worth $550M+ at top-tier banks and telecoms. Now I build boutique AI solutions for businesses that need enterprise-grade quality at startup speed.
-        </p>
-        <a href="mailto:info@ahundoff.ru" class="hero__cta">
-            Get in touch →
+                <div class="footer__socials">
+                    <a href="https://wa.me/79295005785" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp">
+                        <svg width="20" height="20" aria-hidden="true"><use href="#icon-whatsapp"/></svg>
+                    </a>
+                    <a href="https://t.me/zohrab_ahundov" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Telegram">
+                        <svg width="20" height="20" aria-hidden="true"><use href="#icon-telegram"/></svg>
+                    </a>
+                </div>
+
+                <div class="footer__copyright">© 2026 Ahundoff Studio. All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" aria-hidden="true"></div>
+
+    <!-- Floating Actions -->
+    <div class="floating-actions">
+        <a href="https://t.me/zohrab_ahundov" target="_blank" rel="noopener noreferrer" class="floating-action floating-action--telegram" aria-label="Message on Telegram">
+            <svg width="24" height="24" aria-hidden="true"><use href="#icon-telegram"/></svg>
         </a>
+        <a href="https://wa.me/79295005785" target="_blank" rel="noopener noreferrer" class="floating-action floating-action--whatsapp" aria-label="Message on WhatsApp">
+            <svg width="24" height="24" aria-hidden="true"><use href="#icon-whatsapp"/></svg>
+        </a>
+        <button class="floating-action floating-action--top" aria-label="Scroll to top">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"/>
+            </svg>
+        </button>
     </div>
-</section>
 
-<section class="stats">
-    <div class="container">
-        <div class="stats__grid">
-            <div>
-                <div class="stat__number">10+</div>
-                <div class="stat__label">Years in Enterprise AI</div>
-            </div>
-            <div>
-                <div class="stat__number">$550M+</div>
-                <div class="stat__label">AI Portfolio Managed</div>
-            </div>
-            <div>
-                <div class="stat__number">14 days</div>
-                <div class="stat__label">MVP Launch Time</div>
-            </div>
-            <div>
-                <div class="stat__number">Patented</div>
-                <div class="stat__label">AI Invention (RU2023115731)</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="services">
-    <div class="container">
-        <h2 class="section__title">What we <span>build</span></h2>
-        <p class="section__subtitle">
-            Production-ready AI systems, not lab demos. Deployed on-premise or in your cloud, with full documentation and SLA.
-        </p>
-        <div class="services__grid">
-            <div class="service-card">
-                <div class="service-card__icon">📄</div>
-                <h3 class="service-card__title">Document Processing</h3>
-                <p class="service-card__desc">Automated data extraction from invoices, contracts, and forms. Integrates with ERP and CRM systems. 80%+ time savings.</p>
-            </div>
-            <div class="service-card">
-                <div class="service-card__icon">🧠</div>
-                <h3 class="service-card__title">RAG Systems</h3>
-                <p class="service-card__desc">AI assistants that answer questions based on your internal knowledge base, regulations, and documentation in seconds.</p>
-            </div>
-            <div class="service-card">
-                <div class="service-card__icon">👁️</div>
-                <h3 class="service-card__title">Computer Vision</h3>
-                <p class="service-card__desc">Quality control on production lines, video surveillance analytics, real-time defect detection at 30+ FPS.</p>
-            </div>
-            <div class="service-card">
-                <div class="service-card__icon">📊</div>
-                <h3 class="service-card__title">Predictive Analytics</h3>
-                <p class="service-card__desc">Demand forecasting, credit scoring, churn prediction, and process optimization powered by your data.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="why">
-    <div class="container">
-        <h2 class="section__title">Why partners <span>choose us</span></h2>
-        <ul class="why__list">
-            <li class="why__item">
-                <div class="why__check">✓</div>
-                <div class="why__text"><strong>Founder-led delivery.</strong> I personally architect and oversee every project from discovery to deployment.</div>
-            </li>
-            <li class="why__item">
-                <div class="why__check">✓</div>
-                <div class="why__text"><strong>Patented methodology.</strong> Our approach is backed by a granted invention patent in the AI field.</div>
-            </li>
-            <li class="why__item">
-                <div class="why__check">✓</div>
-                <div class="why__text"><strong>Enterprise SLA.</strong> 24/7 monitoring, full documentation, and production-grade reliability.</div>
-            </li>
-            <li class="why__item">
-                <div class="why__check">✓</div>
-                <div class="why__text"><strong>Data sovereignty.</strong> On-premise deployment available. Strict NDA. GDPR-ready architecture.</div>
-            </li>
-            <li class="why__item">
-                <div class="why__check">✓</div>
-                <div class="why__text"><strong>Fast time-to-value.</strong> Working prototype in 3–5 days. MVP in 14 days. ROI in 2 months.</div>
-            </li>
-        </ul>
-    </div>
-</section>
-
-<section class="contact">
-    <div class="container">
-        <h2 class="contact__title">Let's <span>talk</span></h2>
-        <p class="contact__text">
-            Open to partnerships, joint ventures, and complex AI projects. I typically respond within a few hours.
-        </p>
-        <div class="contact__links">
-            <a href="mailto:info@ahundoff.ru" class="contact__link">📧 info@ahundoff.ru</a>
-            <a href="https://t.me/zohrab_ahundov" class="contact__link">✈️ Telegram</a>
-            <a href="https://ahundoff.ru" class="contact__link">🌐 ahundoff.ru</a>
-        </div>
-    </div>
-</section>
-
-<footer>
-    <div class="container">
-        © 2026 Ahundoff Studio. All rights reserved.
-    </div>
-</footer>
-
+    <script src="script.js" defer></script>
 </body>
 </html>
