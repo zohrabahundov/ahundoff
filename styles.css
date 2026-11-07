@@ -1285,87 +1285,117 @@
 }
 }
 
+/* ==========================================================================
+   БЕЗОПАСНЫЕ ПРАВКИ ДЛЯ СЕКЦИИ ПРОДУКТОВ (Без ломки верстки)
+   ========================================================================== */
 @layer sections {
+    /* 1. Выравниваем заголовки по центру, как везде на сайте */
     .services .section-title, 
     .services .section-subtitle { 
-        text-align: center; /* Исправлено на центр */
+        text-align: center !important; 
     }
     .services .section-subtitle { 
-        margin-inline: auto; /* Центрируем подзаголовок */
-        max-width: 700px;
+        margin-left: auto; 
+        margin-right: auto; 
     }
-    .services__grid { 
-        gap: clamp(14px, 1.5vw, 24px); 
-    }
+
+    /* 2. Сохраняем ваши красивые фоны для выделенных карточек */
     .service-card--feature {
         background: radial-gradient(ellipse at 64% 12%, #254977 0%, transparent 58%),
                     linear-gradient(155deg, #132642, #091324 82%);
     }
-    .service-card--feature .card__title { font-size: clamp(1.55rem, 3vw, 2.65rem); line-height: 1.17; }
+    .service-card--feature .card__title { 
+        font-size: clamp(1.55rem, 3vw, 2.65rem); 
+        line-height: 1.17; 
+    }
     .service-card--accent {
         background: linear-gradient(125deg, #193d9e, #2359b9);
         --text-secondary: #e4edff;
         --border: rgba(198, 219, 255, .35);
         --accent: #fff;
     }
-    .services .service-card__meta { flex-flow: row wrap; align-items: baseline; gap: .25rem 1.25rem; }
-    .services .service-card__price { flex-basis: 100%; }
-        /* ==========================================================================
-       ИСПРАВЛЕННАЯ СЕТКА ПРОДУКТОВ (Надежный "шахматный" ритм)
-       ========================================================================== */
+    .services .service-card__meta { 
+        flex-flow: row wrap; 
+        align-items: baseline; 
+        gap: .25rem 1.25rem; 
+    }
+    .services .service-card__price { 
+        flex-basis: 100%; 
+    }
+
+    /* 3. Надежная сетка для компьютеров (полностью убираем сломанный float) */
     @media (min-width: 1024px) {
         .services__grid {
             grid-template-columns: repeat(2, 1fr); /* Ровно 2 колонки */
+            gap: 32px;
         }
 
-        /* Первая карточка (Обработка документов) - на всю ширину для акцента */
-        .services .service-card--feature {
+        /* Все карточки растягиваются на одинаковую высоту */
+        .service-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .service-card .card__text {
+            flex-grow: 1; /* Толкает нижнюю часть с ценой вниз */
+        }
+        .service-card__meta {
+            margin-top: auto;
+        }
+
+        /* Первая карточка (Обработка документов) на всю ширину для акцента */
+        .service-card--feature {
             grid-column: 1 / -1;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            gap: 48px;
             align-items: center;
             padding: clamp(28px, 3.2vw, 48px);
         }
         .service-card--feature .card-art {
             margin: 0;
-            min-height: 280px;
+            height: 100%;
+            min-height: 320px;
+            order: -1; /* Картинка визуально встает слева */
         }
         .service-card--feature .card-art img {
-            position: relative; /* Убираем абсолютное позиционирование, которое ломало верстку */
-            inset: auto;
-            object-fit: contain;
             width: 100%;
             height: 100%;
+            object-fit: cover;
+            border-radius: var(--radius);
         }
 
-        /* Обычные карточки занимают по 1 колонке (создают шахматный порядок) */
-        .services .service-card:not(.service-card--feature):not(.service-card--wide) {
-            grid-column: span 1;
-        }
-
-        /* УБИРАЕМ хрупкий float, который ломал высоту карточек */
+        /* ПОЛНОСТЬЮ УБИРАЕМ float, который налезал на текст и ломал высоту */
         .service-card--compact .card-art {
-            float: none;
+            float: none !important;
             width: 100%;
-            margin: 0 0 1rem 0;
+            margin: 0 0 1.5rem 0;
             aspect-ratio: 16 / 9;
         }
         .service-card--compact .card__text {
-            clear: none;
+            clear: none !important;
         }
 
-        /* Широкая карточка (Визуальный поиск) - тоже на всю ширину */
-        .services .service-card--wide {
+        /* Широкая карточка (Визуальный поиск) тоже на всю ширину */
+        .service-card--wide {
             grid-column: 1 / -1;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            gap: 48px;
             align-items: center;
+            background: linear-gradient(100deg, #182e4a, #101c2d 54%);
         }
         .service-card--wide .card-art {
             margin: 0;
-            order: -1; /* Картинка слева, текст справа */
+            order: -1; /* Картинка визуально встает слева */
+            height: 100%;
+            min-height: 320px;
+        }
+        .service-card--wide .card-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--radius);
         }
     }
 }
