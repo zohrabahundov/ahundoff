@@ -258,9 +258,6 @@
     }
     .header__content { display: flex; justify-content: space-between; align-items: center; }
     .header__lang {
-        position: absolute;
-        top: 40px;
-        right: 40px;
         display: flex;
         gap: 16px;
     }
@@ -273,9 +270,8 @@
         transition: color 0.2s;
     }
     .header__lang a:hover,
-    .header__lang a.active {
-        color: #F8FAFC;
-    }
+    .header__lang a.active { color: #F8FAFC; }
+    
     .logo { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); text-decoration: none; }
     .logo__dot { color: var(--accent); }
     .nav { display: flex; gap: 2rem; align-items: center; }
