@@ -1170,6 +1170,113 @@
         }
         .hero__grid { display: none; }
     }
+
+    /* ==========================================================================
+   OPTIMIZATION SUITE
+   ========================================================================== */
+.optimization {
+    padding: 120px 0;
+    background: var(--bg-primary);
+    position: relative;
+}
+
+.optimization::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.optimization__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.optimization-card {
+    position: relative;
+    overflow: visible;
+    transition: var(--transition);
+}
+
+.optimization-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    padding: 1px;
+    background: conic-gradient(from var(--gradient-angle, 0deg), transparent 40%, var(--accent) 50%, transparent 60%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.optimization-card:hover {
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3), 0 0 20px var(--accent-glow);
+    transform: translateY(-4px);
+}
+
+.optimization-card:hover::before {
+    opacity: 1;
+    animation: rotateGradient 4s linear infinite;
+}
+
+.optimization-card__icon {
+    font-size: 48px;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.optimization-card__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 1.5rem;
+}
+
+.optimization-card__price {
+    color: var(--accent);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.optimization__cta {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.optimization__cta .btn--primary {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .optimization {
+        padding: 80px 0;
+    }
+    
+    .optimization__grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .optimization-card__icon {
+        font-size: 40px;
+    }
+}
 }
 
 @layer sections {
