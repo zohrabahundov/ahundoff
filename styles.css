@@ -1310,31 +1310,62 @@
     }
     .services .service-card__meta { flex-flow: row wrap; align-items: baseline; gap: .25rem 1.25rem; }
     .services .service-card__price { flex-basis: 100%; }
-    @media (min-width: 960px) {
-        .services__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-        .services .service-card { grid-column: span 6; }
+        /* ==========================================================================
+       ИСПРАВЛЕННАЯ СЕТКА ПРОДУКТОВ (Надежный "шахматный" ритм)
+       ========================================================================== */
+    @media (min-width: 1024px) {
+        .services__grid {
+            grid-template-columns: repeat(2, 1fr); /* Ровно 2 колонки */
+        }
+
+        /* Первая карточка (Обработка документов) - на всю ширину для акцента */
         .services .service-card--feature {
-            grid-column: span 7; grid-row: span 2;
-            display: flex; flex-direction: column;
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
             padding: clamp(28px, 3.2vw, 48px);
         }
         .service-card--feature .card-art {
-            flex: 1; min-height: 240px; position: relative;
-            margin-inline: -1.5rem;
+            margin: 0;
+            min-height: 280px;
         }
-        .service-card--feature .card-art img { position: absolute; inset: 0; object-fit: contain; }
-        .services .service-card--compact { grid-column: span 5; }
+        .service-card--feature .card-art img {
+            position: relative; /* Убираем абсолютное позиционирование, которое ломало верстку */
+            inset: auto;
+            object-fit: contain;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Обычные карточки занимают по 1 колонке (создают шахматный порядок) */
+        .services .service-card:not(.service-card--feature):not(.service-card--wide) {
+            grid-column: span 1;
+        }
+
+        /* УБИРАЕМ хрупкий float, который ломал высоту карточек */
         .service-card--compact .card-art {
-            float: right; width: 30%; aspect-ratio: 1.7; margin: 0 0 .45rem .6rem;
+            float: none;
+            width: 100%;
+            margin: 0 0 1rem 0;
+            aspect-ratio: 16 / 9;
         }
-        .service-card--compact .card-art img { object-fit: cover; }
-        .service-card--compact .card__text { clear: both; }
+        .service-card--compact .card__text {
+            clear: none;
+        }
+
+        /* Широкая карточка (Визуальный поиск) - тоже на всю ширину */
         .services .service-card--wide {
-            grid-column: 1 / -1; display: grid;
-            grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
-            column-gap: clamp(28px, 4vw, 64px);
-            background: linear-gradient(100deg, #182e4a, #101c2d 54%);
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
         }
-        .service-card--wide .card-art { grid-row: span 3; align-self: center; margin: 0; }
+        .service-card--wide .card-art {
+            margin: 0;
+            order: -1; /* Картинка слева, текст справа */
+        }
     }
 }
