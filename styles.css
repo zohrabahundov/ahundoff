@@ -1286,9 +1286,17 @@
 }
 
 @layer sections {
-    .services .section-title, .services .section-subtitle { text-align: left; }
-    .services .section-subtitle { margin-inline: 0; }
-    .services__grid { gap: clamp(14px, 1.5vw, 22px); }
+    .services .section-title, 
+    .services .section-subtitle { 
+        text-align: center; /* Исправлено на центр */
+    }
+    .services .section-subtitle { 
+        margin-inline: auto; /* Центрируем подзаголовок */
+        max-width: 700px;
+    }
+    .services__grid { 
+        gap: clamp(14px, 1.5vw, 24px); 
+    }
     .service-card--feature {
         background: radial-gradient(ellipse at 64% 12%, #254977 0%, transparent 58%),
                     linear-gradient(155deg, #132642, #091324 82%);
