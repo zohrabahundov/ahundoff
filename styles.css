@@ -1414,21 +1414,6 @@ body.flow-enabled { isolation: isolate; }
     transform: translateY(var(--flow-packet-y, 0px));
 }
 .flow-paused .process__line::after { display: none; }
-.flow-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-secondary);
-    background: rgba(3,7,18,.6);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-full);
-    padding: .6rem .9rem;
-    font: 500 .75rem var(--font-sans);
-    cursor: pointer;
-}
-.flow-toggle::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #64748b; }
-.flow-toggle[aria-pressed="true"]::before { background: #8dbbff; }
-.flow-toggle:disabled { opacity: .6; cursor: default; }
 @media (max-width: 768px) {
     .light-flow { opacity: .75; }
     .flow-enabled .hero { background: rgba(3,7,18,.68); }

@@ -12,20 +12,12 @@
     document.body.classList.add('flow-enabled');
 
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'flow-toggle';
-    const english = document.documentElement.lang === 'en';
-    button.textContent = english ? 'Background motion' : 'Фоновая анимация';
-    hero.querySelector('.hero__actions').append(button);
-
     let width = 0;
     let height = 0;
     let frame = 0;
     let lastTime = 0;
     let time = 0;
     let scroll = window.scrollY;
-    let paused = false;
     const timeline = document.querySelector('.process__timeline');
     let timelineVisible = false;
     let timelineHeight = 0;
@@ -93,7 +85,7 @@
 
     function tick(now) {
         frame = 0;
-        if (document.hidden || paused || reduced.matches) return;
+        if (document.hidden || reduced.matches) return;
         if (now - lastTime >= (width < 700 ? 50 : 33)) {
             time += Math.min((now - lastTime) / 1000, .06);
             lastTime = now;
@@ -106,11 +98,9 @@
     function sync() {
         cancelAnimationFrame(frame);
         frame = 0;
-        const running = !paused && !reduced.matches;
+        const running = !reduced.matches;
         document.body.classList.toggle('flow-paused', !running);
         document.dispatchEvent(new Event('flow-motion-change'));
-        button.setAttribute('aria-pressed', String(running));
-        button.disabled = reduced.matches;
         draw();
         if (running && !document.hidden) {
             lastTime = performance.now();
@@ -129,10 +119,6 @@
         draw();
     }
 
-    button.addEventListener('click', () => {
-        paused = !paused;
-        sync();
-    });
     reduced.addEventListener('change', sync);
     document.addEventListener('visibilitychange', sync);
     window.addEventListener('resize', resize, { passive: true });
