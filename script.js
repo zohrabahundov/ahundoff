@@ -565,6 +565,7 @@ document.documentElement.classList.add('js');
             }
 
             const ctx = canvas.getContext('2d');
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
             let animationId;
             let particles = [];
             let mouse = { x: 0, y: 0 };
@@ -597,6 +598,10 @@ document.documentElement.classList.add('js');
 
             const draw = () => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
+                if (document.hidden || reducedMotion.matches || document.body.classList.contains('flow-paused')) {
+                    animationId = 0;
+                    return;
+                }
 
                 particles.forEach(p => {
                     const dx = mouse.x - p.x;
@@ -661,6 +666,10 @@ document.documentElement.classList.add('js');
 
             canvas.addEventListener('mousemove', handleMouseMove);
             canvas.addEventListener('mouseleave', handleMouseLeave);
+            const resume = () => { if (!animationId) draw(); };
+            document.addEventListener('flow-motion-change', resume);
+            document.addEventListener('visibilitychange', resume);
+            reducedMotion.addEventListener('change', resume);
         };
 
         return { init };
