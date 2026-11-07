@@ -1230,8 +1230,14 @@
 }
 
 .optimization-card__icon {
-    font-size: 48px;
     margin-bottom: 1.5rem;
+    display: block;
+    color: var(--accent); /* Делает иконку фирменного синего цвета */
+}
+
+.optimization-card__icon svg {
+    width: 48px;
+    height: 48px;
     display: block;
 }
 
