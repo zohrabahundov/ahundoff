@@ -489,6 +489,19 @@
     .cases__grid { overflow-x: clip; }
     .industry-card .card__icon { width: 48px; height: 48px; }
 
+    /* Выравнивание высоты карточек в сетках Industries и Why */
+    .industry-card,
+    .why__item {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .industry-card .card__text,
+    .why__item .card__text {
+        flex-grow: 1;
+    }
+
     .case-card { position: relative; overflow: visible; }
     .service-card, .industry-card { overflow: clip; }
     
