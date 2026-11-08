@@ -145,6 +145,12 @@ document.documentElement.classList.add('js');
             const toast = document.createElement('div');
             toast.className = `toast ${isError ? 'toast--error' : 'toast--success'}`;
             toast.textContent = message;
+            
+            // Добавляем ARIA-атрибуты для доступности (WCAG 2.1)
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'polite');
+            toast.setAttribute('aria-atomic', 'true');
+            
             document.body.appendChild(toast);
             
             setTimeout(() => toast.classList.add('toast--visible'), 10);
