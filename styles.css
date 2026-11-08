@@ -1318,14 +1318,14 @@
         .services .service-card--feature {
             grid-column: 1 / -1;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            column-gap: 40px;
             align-items: center;
             padding: clamp(28px, 3.2vw, 48px);
         }
         .service-card--feature .card-art {
             margin: 0;
-            min-height: 280px;
+            min-height: 0;
         }
         .service-card--feature .card-art img {
             position: relative; /* Убираем абсолютное позиционирование, которое ломало верстку */
@@ -1355,13 +1355,62 @@
         .services .service-card--wide {
             grid-column: 1 / -1;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            column-gap: 40px;
             align-items: center;
         }
         .service-card--wide .card-art {
             margin: 0;
             order: -1; /* Картинка слева, текст справа */
         }
+        .services :is(.service-card--feature, .service-card--wide) > .card-art {
+            grid-column: 1;
+            grid-row: 1 / span 3;
+            min-width: 0;
+            width: 100%;
+            aspect-ratio: 5 / 3;
+            align-self: center;
+        }
+        .services :is(.service-card--feature, .service-card--wide) > :is(.card__title, .card__text, .service-card__meta) {
+            grid-column: 2;
+            min-width: 0;
+        }
+        .services :is(.service-card--feature, .service-card--wide) > .card-art img {
+            object-fit: contain;
+        }
     }
+}
+
+/* Optical flow is below the document and cannot intercept controls. */
+body.flow-enabled { isolation: isolate; }
+.light-flow {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+.flow-enabled :is(.services, .trust-section, .process, .contact, .optimization) {
+    background: rgba(3, 7, 18, .62);
+}
+.flow-enabled :is(.cases, .industries, .faq, .stats) {
+    background: rgba(15, 23, 42, .78);
+}
+.flow-enabled .hero {
+    background: linear-gradient(90deg, rgba(3,7,18,.96) 0%, rgba(3,7,18,.84) 36%, rgba(3,7,18,.1) 75%);
+}
+.flow-enabled .process__line { overflow: hidden; }
+.flow-enabled .process__line::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 100px;
+    background: linear-gradient(transparent, #3b82f6 50%, #d9e7f9 80%, transparent);
+    transform: translateY(var(--flow-packet-y, 0px));
+}
+.flow-paused .process__line::after { display: none; }
+@media (max-width: 768px) {
+    .light-flow { opacity: .75; }
+    .flow-enabled .hero { background: rgba(3,7,18,.68); }
 }
