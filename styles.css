@@ -296,8 +296,35 @@
     .nav__link--cta { background: var(--accent); color: white; padding: 0.5rem 1.5rem; border-radius: var(--radius); }
     .nav__link--cta:hover { background: var(--accent-hover); color: white; }
 
-    .burger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 5px; }
-    .burger span { width: 24px; height: 2px; background: var(--text-primary); transition: var(--transition); }
+    .burger { 
+        display: none; 
+        flex-direction: column; 
+        gap: 5px; 
+        background: none; 
+        border: none; 
+        cursor: pointer; 
+        padding: 5px; 
+        z-index: 1002; /* Убедимся, что кнопка всегда поверх меню */
+    }
+    .burger span { 
+        width: 24px; 
+        height: 2px; 
+        background: var(--text-primary); 
+        transition: var(--transition); 
+        transform-origin: center;
+    }
+    
+    /* Анимация превращения бургера в крестик */
+    .burger.active span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+    .burger.active span:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+    }
+    .burger.active span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
 
     /* --- Hero --- */
     .hero { 
