@@ -908,6 +908,10 @@
             background: linear-gradient(100deg, #182e4a, #101c2d 54%);
         }
         .service-card--wide .card-art { grid-row: span 3; align-self: center; margin: 0; }
+
+        .optimization__grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
 
     @media (max-width: 1024px) {
