@@ -221,6 +221,8 @@ document.documentElement.classList.add('js');
     const FormHandler = (() => {
         const init = () => {
             const form = document.getElementById('contactForm');
+            const successBlock = document.getElementById('successBlock');
+            const resetBtn = document.getElementById('resetFormBtn');
             if (!form) return;
 
             const submitBtn = document.getElementById('submitBtn');
@@ -235,6 +237,27 @@ document.documentElement.classList.add('js');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Получить расчёт проекта';
             };
+
+            // Переключение между формой и блоком успеха
+            const showSuccess = () => {
+                form.style.display = 'none';
+                if (successBlock) successBlock.style.display = 'block';
+                // Прокручиваем к блоку успеха, чтобы он был виден
+                successBlock?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            };
+
+            const showForm = () => {
+                if (successBlock) successBlock.style.display = 'none';
+                form.style.display = 'flex';
+                form.reset();
+                if (formTimeInput) formTimeInput.value = Math.floor(Date.now() / 1000);
+                formMessage.innerHTML = '';
+            };
+
+            // Обработчик кнопки "Оставить ещё одну заявку"
+            if (resetBtn) {
+                resetBtn.addEventListener('click', showForm);
+            }
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -264,13 +287,8 @@ document.documentElement.classList.add('js');
 
                     if (response.ok && result.success) {
                         Tracker.track('form_submit');
-                        Toast.show('Заявка успешно отправлена!');
-                        form.reset();
-                        if (formTimeInput) formTimeInput.value = Math.floor(Date.now() / 1000);
-                        
-                        setTimeout(() => {
-                            window.location.href = result.redirect || '/success.html';
-                        }, 1500);
+                        // Убрали Toast — блок успеха сам является обратной связью
+                        showSuccess();
                     } else {
                         const errorMsg = typeof result.error === 'string' 
                             ? result.error.replace(/[<>]/g, '') 
@@ -279,6 +297,8 @@ document.documentElement.classList.add('js');
                         resetSubmitButton();
                     }
                 } catch (error) {
+                    // Бонус: логируем реальную ошибку для отладки (пункт 14 из списка)
+                    console.error('Form submission error:', error);
                     Toast.show('Ошибка сети. Напишите напрямую: info@ahundoff.ru', true);
                     resetSubmitButton();
                 }
