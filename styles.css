@@ -275,14 +275,6 @@
         display: flex;
         gap: 16px;
     }
-/*    .header__lang {
-        position: absolute;
-        top: 40px;
-        right: 40px;
-        display: flex;
-        gap: 16px;
-    }
-*/
     .header__lang a {
         color: #94A3B8;
         text-decoration: none;
