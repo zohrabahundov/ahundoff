@@ -652,7 +652,7 @@
     }
     .process__line {
         position: absolute;
-        left: 50px; /* ← было 30px */
+        left: 29px;
         top: 0;
         bottom: 0;
         width: 2px;
