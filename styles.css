@@ -360,13 +360,13 @@
     .stat__label { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.4; }
 
     /* --- Global Section Padding --- */
-    .services, .industries, .faq { padding: 120px 0; background: var(--bg-primary); }
-    .cases, .trust-section, .process, .contact { padding: 120px 0; background: var(--bg-secondary); }
+    .services, .industries, .trust-section, .faq { padding: 120px 0; background: var(--bg-primary); }
+    .optimization, .cases, .process, .contact { padding: 120px 0; background: var(--bg-secondary); }
 
     /* --- Optimization Suite --- */
     .optimization {
         padding: 120px 0;
-        background: var(--bg-primary);
+        background: var(--bg-secondary);
         position: relative;
     }
     .optimization::before {
