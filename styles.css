@@ -697,7 +697,9 @@
     .sticky-bar {
         position: sticky; bottom: 0; z-index: 900; background: rgba(3, 7, 18, 0.9);
         backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border-top: 1px solid var(--border); padding: 0.75rem 0; transition: opacity 0.3s ease;
+        border-top: 1px solid var(--border); padding: 0.75rem 0; 
+        transition: opacity 0.3s ease, transform 0.3s ease; /* Добавлен transform */
+        transform: translateY(0); /* Начальное состояние */
     }
     .sticky-bar__content { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
     .sticky-bar__text { display: inline-flex; align-items: center; gap: 0.75rem; color: var(--text-primary); font-size: 0.95rem; font-weight: 500; }
