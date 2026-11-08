@@ -333,9 +333,36 @@
     .stat__number { font-size: 2.5rem; font-weight: 700; color: var(--accent); margin-bottom: 0.5rem; }
     .stat__label { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.4; }
 
-    .services, .trust-section, .process, .contact { padding: 120px 0; background: var(--bg-primary); }
-    .cases, .industries, .faq { padding: 120px 0; background: var(--bg-secondary); }
-
+    /* ГРАДИЕНТНЫЙ ПЕРЕХОД МЕЖДУ СЕКЦИЯМИ */
+    .services, .trust-section, .process, .contact { 
+        padding: 120px 0; 
+        background: transparent;
+    }
+    .cases, .industries, .faq, .optimization { 
+        padding: 120px 0; 
+        background: transparent;
+    }
+    
+    /* Градиент на всем body от темного к светлому и обратно */
+    body {
+        background: linear-gradient(
+            180deg,
+            var(--bg-primary) 0%,
+            var(--bg-secondary) 15%,
+            var(--bg-primary) 30%,
+            var(--bg-secondary) 45%,
+            var(--bg-secondary) 55%,
+            var(--bg-primary) 70%,
+            var(--bg-secondary) 85%,
+            var(--bg-primary) 100%
+        );
+        background-attachment: fixed;
+    }
+    
+    /* Stats секция - отдельный градиент */
+    .stats {
+        background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    }
     .services__grid, .cases__grid, .why__grid, .industries__grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
