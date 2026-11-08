@@ -518,37 +518,35 @@ document.documentElement.classList.add('js');
         return { init };
     })();
 
-    const StickyBar = (() => {
+     const StickyBar = (() => {
         const init = () => {
             const stickyBar = document.querySelector('.sticky-bar');
             const footer = document.querySelector('.footer');
             if (!stickyBar || !footer) return;
 
-            let ticking = false;
+            // Создаем наблюдатель за появлением футера в нижней части экрана
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Футер виден: скрываем панель
+                        stickyBar.style.opacity = '0';
+                        stickyBar.style.pointerEvents = 'none';
+                        stickyBar.style.transform = 'translateY(100%)'; // Плавный уезд вниз
+                    } else {
+                        // Футер не виден: показываем панель
+                        stickyBar.style.opacity = '1';
+                        stickyBar.style.pointerEvents = 'auto';
+                        stickyBar.style.transform = 'translateY(0)'; // Возврат на место
+                    }
+                });
+            }, {
+                root: null, // наблюдение относительно окна браузера
+                rootMargin: '0px 0px -80px 0px', // срабатывает чуть раньше, чем футер полностью перекроет панель (высота панели ~70px)
+                threshold: 0 // срабатывает сразу, как только хоть 1 пиксель футера пересек границу
+            });
 
-            const checkFooter = () => {
-                const footerRect = footer.getBoundingClientRect();
-                const windowHeight = window.innerHeight;
-                
-                if (footerRect.top < windowHeight - 50) {
-                    stickyBar.style.opacity = '0';
-                    stickyBar.style.pointerEvents = 'none';
-                } else {
-                    stickyBar.style.opacity = '1';
-                    stickyBar.style.pointerEvents = 'auto';
-                }
-                ticking = false;
-            };
-
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    requestAnimationFrame(checkFooter);
-                    ticking = true;
-                }
-            }, { passive: true });
-
-            window.addEventListener('resize', checkFooter, { passive: true });
-            checkFooter();
+            // Начинаем наблюдение за футером
+            observer.observe(footer);
         };
 
         return { init };
