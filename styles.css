@@ -452,10 +452,10 @@
     /* Services specific overrides */
     .services .section-title, 
     .services .section-subtitle { 
-        text-align: left; 
+        text-align: center; 
     }
     .services .section-subtitle { 
-        margin-inline: 0; 
+        margin-inline: auto; 
     }
     .services .service-card__meta { 
         flex-flow: row wrap; 
