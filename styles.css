@@ -881,9 +881,9 @@
         .security-section__grid { grid-template-columns: 1fr; gap: 1rem; }
         .security-section__item { padding: 0.75rem; }
 
-        .process__timeline { padding-left: 50px; }
-        .process__line { left: 20px; }
-        .process__dot { left: -50px; width: 40px; height: 40px; font-size: 0.9rem; }
+        .process__timeline { padding-left: 60px; }
+        .process__line { left: 19px; }
+        .process__dot { left: -60px; width: 40px; height: 40px; font-size: 0.9rem; }
         .process__content { padding: 1.5rem; }
 
         .founder__guarantee { margin-top: 4rem; padding-top: 4rem; }
@@ -940,9 +940,9 @@
         .stat__number { font-size: 2rem; }
         .founder__name { font-size: 1.75rem; }
         .btn { padding: 0.75rem 1.5rem; font-size: 0.9rem; }
-        .process__timeline { padding-left: 40px; }
+        .process__timeline { padding-left: 50px; }
         .process__line { left: 15px; }
-        .process__dot { left: -40px; width: 32px; height: 32px; font-size: 0.8rem; }
+        .process__dot { left: -50px; width: 32px; height: 32px; font-size: 0.8rem; }
         .process__content { padding: 1.25rem; }
         .process__title { font-size: 1.1rem; }
     }
