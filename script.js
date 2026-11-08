@@ -651,7 +651,7 @@ document.documentElement.classList.add('js');
 
             const ctx = canvas.getContext('2d');
             const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-            let animationId;
+            let animationId = 0;
             let particles = [];
             let mouse = { x: 0, y: 0 };
 
