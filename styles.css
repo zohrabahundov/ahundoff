@@ -1041,11 +1041,15 @@
         pointer-events: none;
     }
     
-    .flow-enabled :is(.services, .trust-section, .process, .contact, .optimization) {
+    .flow-enabled :is(.services, .industries, .trust-section, .faq) {
         background: rgba(3, 7, 18, .62);
     }
     
-    .flow-enabled :is(.cases, .industries, .faq, .stats) {
+    .flow-enabled :is(.optimization, .cases, .process, .contact) {
+        background: rgba(15, 23, 42, .78);
+    }
+    
+    .flow-enabled :is(.stats) {
         background: rgba(15, 23, 42, .78);
     }
     
