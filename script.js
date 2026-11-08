@@ -162,6 +162,7 @@ document.documentElement.classList.add('js');
             const phoneInput = document.getElementById('phone');
             if (!phoneInput) return;
 
+            // Функция форматирования строки в нужный вид
             const formatPhone = (value) => {
                 let digits = value.replace(/\D/g, '');
                 
@@ -186,30 +187,82 @@ document.documentElement.classList.add('js');
             };
 
             phoneInput.addEventListener('input', (e) => {
-                const cursorPosition = e.target.selectionStart;
-                const oldValue = e.target.value;
-                const newValue = formatPhone(e.target.value);
-                e.target.value = newValue;
+                const input = e.target;
+                const cursorPosition = input.selectionStart || 0;
+                const oldValue = input.value;
+
+                // 1. Считаем, сколько цифр было ДО курсора в старом (неотформатированном) значении
+                let digitsBeforeCursor = 0;
+                for (let i = 0; i < cursorPosition; i++) {
+                    if (/\d/.test(oldValue[i])) {
+                        digitsBeforeCursor++;
+                    }
+                }
+
+                // 2. Получаем новое отформатированное значение
+                const newValue = formatPhone(oldValue);
+                const oldDigits = oldValue.replace(/\D/g, '');
                 
-                const diff = newValue.length - oldValue.length;
-                const newPosition = Math.max(0, cursorPosition + diff);
-                e.target.setSelectionRange(newPosition, newPosition);
+                // 3. Корректируем целевое количество цифр: 
+                // если система автоматически добавила '7' (которой не было в старом вводе), 
+                // нам нужно учесть этот сдвиг, чтобы курсор не откатывался назад.
+                const wasSevenAdded = oldDigits.length > 0 && !oldDigits.startsWith('7') && !oldDigits.startsWith('8');
+                const targetDigits = digitsBeforeCursor + (wasSevenAdded ? 1 : 0);
+
+                // 4. Находим новую позицию курсора в отформатированной строке
+                let newCursorPosition = 0;
+                let currentDigits = 0;
+                let found = false;
+
+                for (let i = 0; i < newValue.length; i++) {
+                    if (/\d/.test(newValue[i])) {
+                        currentDigits++;
+                    }
+                    
+                    // Как только набрали нужное количество цифр, ставим курсор ПОСЛЕ этой цифры
+                    if (currentDigits === targetDigits) {
+                        newCursorPosition = i + 1;
+                        found = true;
+                        break;
+                    }
+                }
+
+                // Если точное совпадение не найдено (например, удалили цифру и их стало меньше), 
+                // ставим курсор в самый конец доступного ввода.
+                if (!found) {
+                    newCursorPosition = newValue.length;
+                }
+
+                // 5. Микро-улучшение UX: если курсор попал ровно перед разделителем (скобкой, тире, пробелом),
+                // перепрыгиваем его, чтобы пользователю было удобнее продолжать ввод или стирание.
+                if (found && newCursorPosition < newValue.length) {
+                    if (/[\s\-\(\)]/.test(newValue[newCursorPosition])) {
+                        newCursorPosition++;
+                    }
+                }
+
+                // Применяем новое значение и позицию курсора
+                input.value = newValue;
+                input.setSelectionRange(newCursorPosition, newCursorPosition);
             });
 
             phoneInput.addEventListener('focus', (e) => {
                 if (!e.target.value) {
                     e.target.value = '+7';
+                    // Ставим курсор после +7, чтобы пользователь сразу начинал вводить номер
+                    setTimeout(() => e.target.setSelectionRange(3, 3), 0);
                 }
             });
 
             phoneInput.addEventListener('blur', (e) => {
-                if (e.target.value === '+7') {
+                if (e.target.value === '+7' || e.target.value === '+7 (') {
                     e.target.value = '';
                 }
             });
 
             phoneInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Backspace' && e.target.value === '+7') {
+                // Запрещаем стирать префикс '+7'
+                if (e.key === 'Backspace' && (e.target.value === '+7' || e.target.selectionStart <= 3)) {
                     e.preventDefault();
                 }
             });
