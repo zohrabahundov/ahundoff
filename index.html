@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="dark">
     <style>html { background: #030712; }</style>
-    <meta name="description" content="Ahundoff — AI-решения для бизнеса. Превращаем хаос бизнес-процессов в автономные AI-системы. Запуск за 14 дней.">
+    <meta name="description" content="Ahundoff — AI-решения для бизнеса. Превращаем хаос бизнес-процессов в автономные AI-системы. Запуск MVP за 14 дней.">
     <meta name="keywords" content="AI для бизнеса, цифровая трансформация, автоматизация процессов, компьютерное зрение, RAG, скоринг, разработка под ключ, ROI">
     <meta name="author" content="Зохраб Ахундов">
     <meta name="robots" content="index, follow">
@@ -31,7 +31,7 @@
     
     <title>Ahundoff — AI-решения для бизнеса</title>
     
-    <link rel="stylesheet" href="/styles.css?v=light-flow-2">
+    <link rel="stylesheet" href="/styles.css?v=refactor-v2">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -202,9 +202,10 @@
                 </button>
                 <nav class="nav" id="main-nav" aria-label="Главная навигация">
                     <a href="#services" class="nav__link">Продукты</a>
-                    <a href="#optimization" class="nav__link">Оптимизация</a> <!-- ДОБАВИТЬ ЭТУ СТРОКУ -->
-                    <a href="#cases" class="nav__link">Кейсы</a>
+                    <a href="#optimization" class="nav__link">Оптимизация</a>
                     <a href="#industries" class="nav__link">Отрасли</a>
+                    <a href="#cases" class="nav__link">Кейсы</a>
+                    <a href="#founder" class="nav__link">Экспертиза</a>
                     <a href="#process" class="nav__link">Подход</a>
                     <a href="#contact" class="nav__link nav__link--cta">Контакты</a>
                 </nav>
@@ -212,14 +213,14 @@
         </div>
     </header>
 
-    <!-- Hero -->
+    <!-- 1. Hero -->
     <section class="hero">
         <canvas class="hero__grid" aria-hidden="true"></canvas>
         <div class="container">
             <div class="hero__content">
                 <span class="hero__badge">Бутиковая AI-студия</span>
                 <h1 class="hero__title">AI-решения для вашего бизнеса<span class="logo__dot">.</span></h1>
-                <p class="hero__subtitle">Внедряем компьютерное зрение, голосовых ассистентов, RAG-системы и предиктивную аналитику в ваши бизнес-процессы. Проводим аудит архитектуры, надежности и кибербезопасности ваших ИТ-систем. Оптимизируем затраты на AI. Создаем и улучшаем ваши патенты. Запуск MVP за 14 дней с гарантией качества.</p>
+                <p class="hero__subtitle">Разрабатываем, оптимизируем и защищаем AI-решения для бизнеса: от компьютерного зрения и RAG-систем до аудита безопасности и патентов. Запуск MVP за 14 дней с гарантией качества.</p>
                 <div class="hero__actions">
                     <a href="#contact" class="btn btn--primary">Получить расчёт проекта</a>
                     <a href="#cases" class="btn btn--secondary">Смотреть кейсы</a>
@@ -228,7 +229,7 @@
         </div>
     </section>
 
-    <!-- Stats -->
+    <!-- 2. Stats -->
     <section class="stats" aria-label="Ключевые показатели">
         <div class="container">
             <div class="stats__grid">
@@ -260,7 +261,7 @@
         </div>
     </section>
 
-    <!-- Products -->
+    <!-- 3. Services -->
     <section id="services" class="services">
         <div class="container">
             <h2 class="section-title">AI-продукты для вашего бизнеса<span class="logo__dot">.</span></h2>
@@ -283,7 +284,7 @@
                         <img src="assets/products/inspection-gauge.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
                     </div>
                     <h3 class="card__title">Контроль качества на производстве</h3>
-                    <p class="card__text">Детекция дефектов и брака в реальном времени. <span class="tooltip" data-tooltip="Развертывание AI-модели непосредственно на устройстве (камере, сервере) без отправки данных в облако">Edge-развертывание</span> без задержек. Снижение рекламаций и повышение качества продукции.</p>
+                    <p class="card__text">Детекция дефектов и брака в реальном времени. <span class="tooltip" data-tooltip="Развертывание AI-модели непосредственно на устройстве (камере, сервере) без отправки данных в облако">Edge-развертывание</span> без задержек и передачи данных в облако. Снижение рекламаций и повышение качества продукции.</p>
                     <div class="service-card__meta">
                         <span>Снижение брака: до 80%</span>
                         <span>Срок: от 3 недель</span>
@@ -342,7 +343,124 @@
         </div>
     </section>
 
-    <!-- Cases -->
+    <!-- 4. Optimization -->
+    <section id="optimization" class="optimization">
+    <div class="container">
+        <h2 class="section-title">AI & IT оптимизация<span class="logo__dot">.</span></h2>
+        <p class="section-subtitle">Вы уже внедрили AI или имеете технологические патенты? Мы находим узкие места и устраняем их, снижая затраты на 30–50% и защищая интеллектуальную собственность.</p>
+
+        <div class="optimization__grid">
+            <article class="card optimization-card">
+                <div class="card-art">
+                    <img src="assets/optimization/security.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                </div>
+                <h3 class="card__title">Аудит безопасности ИТ-систем</h3>
+                <p class="card__text">Проводим аудит надежности, кибербезопасности и архитектуры ваших ИТ-систем и API для выявления всех видов уязвимостей.</p>
+                <div class="optimization-card__meta">
+                    <span>Снижение количества инцидентов: 70%-90%</span>
+                    <span>Срок: 1-2 недели</span>
+                    <span class="optimization-card__price">от 50 000 ₽</span>
+                </div>
+            </article>
+
+            <article class="card optimization-card">
+                <div class="card-art">
+                    <img src="assets/optimization/llm-cost.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                </div>
+                <h3 class="card__title">Аудит затрат на LLM</h3>
+                <p class="card__text">Внедряем кэширование, оптимизируем RAG-пайплайны и квантуем модели для снижения затрат и увеличения скорости отклика моделей.</p>
+                <div class="optimization-card__meta">
+                    <span>Снижение затрат: 30-60%</span>
+                    <span>Срок: 1-2 недели</span>
+                    <span class="optimization-card__price">от 100 000 ₽</span>
+                </div>
+            </article>
+
+            <article class="card optimization-card">
+                <div class="card-art">
+                    <img src="assets/optimization/algorithms.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                </div>
+                <h3 class="card__title">Аудит алгоритмов</h3>
+                <p class="card__text">Анализируем сложность, убираем избыточные параметры алгоритмов и перепроектируем узкие места для снижения затрат и увеличения скорости отклика моделей.</p>
+                <div class="optimization-card__meta">
+                    <span>Увеличение скорости работы алгоритмов: 50%-1000%</span>
+                    <span class="optimization-card__price">от 150 000 ₽</span>
+                </div>
+            </article>
+
+            <article class="card optimization-card">
+                <div class="card-art">
+                    <img src="assets/optimization/patents.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                </div>
+                <h3 class="card__title">Аудит патентов</h3>
+                <p class="card__text">Проводим анализ патентов на возможность их улучшения и систематизации для избежания "патентных войн" со стороны конкурентов.</p>
+                <div class="optimization-card__meta">
+                    <span>Усиление портфеля патентов</span>
+                    <span class="optimization-card__price">от 300 000 ₽</span>
+                </div>
+            </article>
+        </div>
+
+        <div class="optimization__cta">
+            <a href="#contact" class="btn btn--primary">Получить бесплатный экспресс-аудит</a>
+        </div>
+    </div>
+</section>
+
+    <!-- 5. Industries -->
+    <section id="industries" class="industries">
+        <div class="container">
+            <h2 class="section-title">Отрасли, в которых мы работаем<span class="logo__dot">.</span></h2>
+            <p class="section-subtitle">Мы решаем конкретные бизнес-задачи в конкретных отраслях.</p>
+
+            <div class="industries__grid">
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/bank-vault.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Финтех и банки</h3>
+                    <p class="card__text">Скоринг, антифрод, обработка документов, предиктивная аналитика. Соответствие стандартам ЦБ РФ и 152-ФЗ.</p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/machine-tool.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Производство</h3>
+                    <p class="card__text">Контроль качества, прогнозирование спроса, оптимизация запасов. Снижение брака и увеличение выпуска.</p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/freight-train.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Логистика</h3>
+                    <p class="card__text">Оптимизация маршрутов, автоматизация трекинга, AI-ассистенты для диспетчеров. Снижение издержек на 15-25%.</p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/cash-register.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Ритейл</h3>
+                    <p class="card__text">Персональные рекомендации, прогноз оттока, визуальный поиск. Рост среднего чека и удержание клиентов.</p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/microscope.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Медицина</h3>
+                    <p class="card__text">Диагностика по снимкам, автоматизация документооборота, AI-ассистенты для врачей. Ускорение диагностики.</p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/open-book.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title">Образование</h3>
+                    <p class="card__text">Адаптивное обучение, автоматизация проверки, RAG-системы для учебных материалов. Персонализация обучения.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Cases -->
     <section id="cases" class="cases">
         <div class="container">
             <h2 class="section-title">Реализованные проекты<span class="logo__dot">.</span></h2>
@@ -411,71 +529,7 @@
         </div>
     </section>
 
-    <!-- Optimization Suite -->
-    <section id="optimization" class="optimization">
-    <div class="container">
-        <h2 class="section-title">AI  &  IT  оптимизация<span class="logo__dot">.</span></h2>
-        <p class="section-subtitle">Вы уже внедрили AI или имеете технологические патенты? Мы находим узкие места и устраняем их, снижая затраты на 30–50% и защищая интеллектуальную собственность.</p>
-        
-        <div class="optimization__grid">
-            <article class="card optimization-card">
-                <div class="card-art">
-                    <img src="assets/optimization/security.webp" width="800" height="320" alt="" loading="lazy" decoding="async">
-                </div>
-                <h3 class="card__title">Аудит безопасности ИТ-систем</h3>
-                <p class="card__text">Проводим аудит надежности, кибербезопасности и архитектуры ваших ИТ-систем и API для выявления всех видов уязвимостей.</p>
-                <div class="optimization-card__meta">
-                    <span>Снижение количества инцидентов: 70%-90%</span>
-                    <span>Срок: 1-2 недели</span>
-                    <span class="optimization-card__price">от 50 000 ₽</span>
-                </div>
-            </article>
-
-            <article class="card optimization-card">
-                <div class="card-art">
-                    <img src="assets/optimization/llm-cost.webp" width="800" height="320" alt="" loading="lazy" decoding="async">
-                </div>
-                <h3 class="card__title">Аудит затрат на LLM</h3>
-                <p class="card__text">Внедряем кэширование, оптимизируем RAG-пайплайны и квантуем модели для снижения затрат и увеличения скорости отклика моделей.</p>
-                <div class="optimization-card__meta">
-                    <span>Снижение затрат: 30-60%</span>
-                    <span>Срок: 1-2 недели</span>
-                    <span class="optimization-card__price">от 100 000 ₽</span>
-                </div>
-            </article>
-
-            <article class="card optimization-card">
-                <div class="card-art">
-                    <img src="assets/optimization/algorithms.webp" width="800" height="320" alt="" loading="lazy" decoding="async">
-                </div>
-                <h3 class="card__title">Аудит алгоритмов</h3>
-                <p class="card__text">Анализируем сложность, убираем избыточные параметры алгоритмов и перепроектируем узкие места для снижения затрат и увеличения скорости отклика моделей.</p>
-                <div class="optimization-card__meta">
-                    <span>Увеличение скорости работы алгоритмов: 50%-1000%</span>
-                    <span class="optimization-card__price">от 150 000 ₽</span>
-                </div>
-            </article>
-
-            <article class="card optimization-card">
-                <div class="card-art">
-                    <img src="assets/optimization/patents.webp" width="800" height="320" alt="" loading="lazy" decoding="async">
-                </div>
-                <h3 class="card__title">Аудит патентов</h3>
-                <p class="card__text">Проводим анализ патентов на возможность их улучшения и систематизации для избежания "патентных войн" со стороны конкурентов.</p>
-                <div class="optimization-card__meta">
-                    <span>Усиление портфеля патентов</span>
-                    <span class="optimization-card__price">от 300 000 ₽</span>
-                </div>
-            </article>
-        </div>
-
-        <div class="optimization__cta">
-            <a href="#contact" class="btn btn--primary">Получить бесплатный экспресс-аудит</a>
-        </div>
-    </div>
-</section>
-
-    <!-- Trust Section -->
+    <!-- 7. Trust / Founder -->
     <section id="founder" class="trust-section">
         <div class="container">
             <div class="trust-section__header">
@@ -587,60 +641,7 @@
         </div>
     </section>
 
-    <!-- Industries -->
-    <section id="industries" class="industries">
-        <div class="container">
-            <h2 class="section-title">Отрасли, в которых мы работаем<span class="logo__dot">.</span></h2>
-            <p class="section-subtitle">Мы решаем конкретные бизнес-задачи в конкретных отраслях.</p>
-
-            <div class="industries__grid">
-                <article class="card industry-card">
-                    <div class="card-art">
-                        <img src="assets/industries/bank-vault.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title">Финтех и банки</h3>
-                    <p class="card__text">Скоринг, антифрод, обработка документов, предиктивная аналитика. Соответствие стандартам ЦБ РФ и 152-ФЗ.</p>
-                </article>
-                <article class="card industry-card">
-                    <div class="card-art">
-                        <img src="assets/industries/machine-tool.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title">Производство</h3>
-                    <p class="card__text">Контроль качества, прогнозирование спроса, оптимизация запасов. Снижение брака и увеличение выпуска.</p>
-                </article>
-                <article class="card industry-card">
-                    <div class="card-art">
-                        <img src="assets/industries/freight-train.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title">Логистика</h3>
-                    <p class="card__text">Оптимизация маршрутов, автоматизация трекинга, AI-ассистенты для диспетчеров. Снижение издержек на 15-25%.</p>
-                </article>
-                <article class="card industry-card">
-                    <div class="card-art">
-                        <img src="assets/industries/cash-register.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title">Ритейл</h3>
-                    <p class="card__text">Персональные рекомендации, прогноз оттока, визуальный поиск. Рост среднего чека и удержание клиентов.</p>
-                </article>
-                <article class="card industry-card">
-                    <div class="card-art">
-                        <img src="assets/industries/microscope.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title">Медицина</h3>
-                    <p class="card__text">Диагностика по снимкам, автоматизация документооборота, AI-ассистенты для врачей. Ускорение диагностики.</p>
-                </article>
-                <article class="card industry-card">
-                    <div class="card-art">
-                        <img src="assets/industries/open-book.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title">Образование</h3>
-                    <p class="card__text">Адаптивное обучение, автоматизация проверки, RAG-системы для учебных материалов. Персонализация обучения.</p>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <!-- Process -->
+    <!-- 8. Process -->
     <section id="process" class="process">
         <div class="container">
             <h2 class="section-title">Как мы работаем<span class="logo__dot">.</span></h2>
@@ -679,7 +680,7 @@
         </div>
     </section>
 
-    <!-- FAQ -->
+    <!-- 9. FAQ -->
     <section class="faq">
         <div class="container">
             <h2 class="section-title">Частые вопросы<span class="logo__dot">?</span></h2>
@@ -690,7 +691,7 @@
                         <span class="faq__icon" aria-hidden="true">▶</span>
                     </button>
                     <div class="faq__answer" id="faq-answer-1" role="region" aria-labelledby="faq-question-1">
-                        <p>Разработчик решает задачу «чтобы код работал». Мы решаем задачу «чтобы продукт масштабировался, был безопасен и окупался». Мы предоставляем SLA, подписываем NDA, настраиваем мониторинг 24/7 и передаём полную документацию. Это исключает риски переделки через полгода.</p>
+                        <p>Обычный разработчик часто фокусируется на задаче «чтобы код работал». Мы решаем задачу «чтобы продукт масштабировался, был безопасен и окупался». Мы предоставляем SLA, подписываем NDA, настраиваем мониторинг 24/7 и передаём полную документацию. Это исключает риски переделки через полгода.</p>
                     </div>
                 </div>
                 <div class="faq__item">
@@ -742,7 +743,7 @@
         </div>
     </section>
     
-    <!-- Contact -->
+    <!-- 10. Contact -->
     <section id="contact" class="contact">
         <div class="container">
             <div class="contact__content">
@@ -832,7 +833,7 @@
         </div>
     </div>
     
-    <!-- Footer -->
+    <!-- 11. Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer__content">
@@ -844,9 +845,10 @@
                 
                 <nav class="footer__links" aria-label="Навигация по сайту">
                     <a href="#services">Продукты</a>
-                    <a href="#optimization">Оптимизация</a> <!-- ДОБАВИТЬ ЭТУ СТРОКУ -->
-                    <a href="#cases">Кейсы</a>
+                    <a href="#optimization">Оптимизация</a>
                     <a href="#industries">Отрасли</a>
+                    <a href="#cases">Кейсы</a>
+                    <a href="#founder">Экспертиза</a>
                     <a href="#process">Подход</a>
                     <a href="#contact">Контакты</a>
                     <a href="/partners.html">Партнерская программа</a>
@@ -870,7 +872,7 @@
     <!-- Scroll Progress -->
     <div class="scroll-progress" aria-hidden="true"></div>
 
-    <!-- Floating Actions (единый столбец) -->
+    <!-- Floating Actions -->
     <div class="floating-actions">
         <a href="https://t.me/zohrab_ahundov" target="_blank" rel="noopener noreferrer" class="floating-action floating-action--telegram" aria-label="Написать в Telegram">
             <svg width="24" height="24" aria-hidden="true"><use href="#icon-telegram"/></svg>
@@ -885,7 +887,6 @@
         </button>
     </div>
 
-    <script src="script.js?v=flow-1" defer></script>
-    <script src="flow.js?v=2" defer></script>
+    <script src="script.js" defer></script>
 </body>
 </html>
