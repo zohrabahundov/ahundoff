@@ -333,7 +333,6 @@ document.documentElement.classList.add('js');
 
     const Counters = (() => {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
         const easeOutExpo = (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
 
         const animateCounter = (element) => {
@@ -364,43 +363,52 @@ document.documentElement.classList.add('js');
             const stats = document.querySelectorAll('.stat');
             if (!stats.length) return;
 
+            // Для пользователей с отключенной анимацией сразу показываем финальные значения
             if (prefersReducedMotion) {
-                stats.forEach(stat => stat.classList.add('visible'));
+                stats.forEach(stat => {
+                    stat.classList.add('visible');
+                    const counter = stat.querySelector('.stat__number');
+                    if (counter && !counter.dataset.animated) {
+                        counter.dataset.animated = 'true';
+                        counter.textContent = counter.dataset.target + counter.dataset.suffix;
+                    }
+                });
                 return;
             }
 
+            // ЕДИНЫЙ наблюдатель вместо двух
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const stat = entry.target;
+                        const index = parseInt(stat.dataset.animIndex, 10) || 0;
+                        
+                        // 1. Анимация появления карточки
+                        setTimeout(() => {
+                            stat.classList.add('visible');
+                        }, index * 100);
+
+                        // 2. Запуск счетчика с небольшой дополнительной задержкой (+300мс), 
+                        // чтобы цифры начинали бежать, когда карточка уже проявилась (выглядит дороже)
+                        setTimeout(() => {
+                            const counter = stat.querySelector('.stat__number');
+                            if (counter && !counter.dataset.animated) {
+                                counter.dataset.animated = 'true';
+                                animateCounter(counter);
+                            }
+                        }, index * 100 + 300);
+
+                        // Перестаем наблюдать за элементом после срабатывания
+                        obs.unobserve(stat);
+                    }
+                });
+            }, { threshold: 0.3 }); // Один порог срабатывания
+
+            // Инициализируем индексы и запускаем наблюдение
             stats.forEach((stat, index) => {
                 stat.dataset.animIndex = String(index);
+                observer.observe(stat);
             });
-
-            const visibilityObserver = new IntersectionObserver((entries, obs) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const index = parseInt(entry.target.dataset.animIndex, 10) || 0;
-                        setTimeout(() => {
-                            entry.target.classList.add('visible');
-                        }, index * 100);
-                        obs.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.3 });
-
-            stats.forEach(stat => visibilityObserver.observe(stat));
-
-            const counterObserver = new IntersectionObserver((entries, obs) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const counter = entry.target.querySelector('.stat__number');
-                        if (counter && !counter.dataset.animated) {
-                            counter.dataset.animated = 'true';
-                            animateCounter(counter);
-                        }
-                        obs.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            stats.forEach(stat => counterObserver.observe(stat));
         };
 
         return { init };
