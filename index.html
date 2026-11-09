@@ -609,7 +609,7 @@
                 <div class="founder__grid">
                     <div class="founder__photo">
                         <div class="founder__image">
-                            <img src="founder.jpg" alt="Зохраб Ахундов — основатель Ahundoff Studio" loading="lazy" decoding="async" width="800" height="1067">
+                            <img src="assets/trust/founder.jpg" alt="Зохраб Ахундов — основатель Ahundoff Studio" loading="lazy" decoding="async" width="800" height="1067">
                         </div>
                         <div class="founder__photo-badge">
                             <svg width="16" height="16" aria-hidden="true"><use href="#icon-check"/></svg>
@@ -793,6 +793,17 @@
                     <div id="formMessage" style="margin-top:1rem;text-align:center;" role="alert" aria-live="polite"></div>
                 </form>
                 
+                <!-- Блок подтверждения успешной отправки (скрыт по умолчанию) -->
+                <div id="successBlock" style="display:none; text-align:center; padding: 2rem 0;" role="status" aria-live="polite">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--accent); margin: 0 auto 1.5rem;">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">Заявка успешно отправлена!</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.6;">Мы свяжемся с вами в течение 2 часов для бесплатной бизнес-диагностики и расчёта окупаемости.</p>
+                    <button type="button" id="resetFormBtn" class="btn btn--secondary">Оставить ещё одну заявку</button>
+                </div>
+                
                 <address class="contact__info">
                     <div class="contact__link-wrapper">
                         <a href="mailto:info@ahundoff.ru" class="contact__link">
@@ -888,7 +899,7 @@
     </div>
 
     <script src="script.js?v=flow-1" defer></script>
-    <script src="flow.js?v=audit-scroll-1" defer></script>
+    <script src="flow.js?v=audit-cleanup-2" defer></script>
     <script src="optimization-cards.js?v=1" defer></script>
 </body>
 </html>

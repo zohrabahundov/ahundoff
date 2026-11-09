@@ -145,6 +145,12 @@ document.documentElement.classList.add('js');
             const toast = document.createElement('div');
             toast.className = `toast ${isError ? 'toast--error' : 'toast--success'}`;
             toast.textContent = message;
+            
+            // Добавляем ARIA-атрибуты для доступности (WCAG 2.1)
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'polite');
+            toast.setAttribute('aria-atomic', 'true');
+            
             document.body.appendChild(toast);
             
             setTimeout(() => toast.classList.add('toast--visible'), 10);
@@ -162,6 +168,7 @@ document.documentElement.classList.add('js');
             const phoneInput = document.getElementById('phone');
             if (!phoneInput) return;
 
+            // Функция форматирования строки в нужный вид
             const formatPhone = (value) => {
                 let digits = value.replace(/\D/g, '');
                 
@@ -186,30 +193,82 @@ document.documentElement.classList.add('js');
             };
 
             phoneInput.addEventListener('input', (e) => {
-                const cursorPosition = e.target.selectionStart;
-                const oldValue = e.target.value;
-                const newValue = formatPhone(e.target.value);
-                e.target.value = newValue;
+                const input = e.target;
+                const cursorPosition = input.selectionStart || 0;
+                const oldValue = input.value;
+
+                // 1. Считаем, сколько цифр было ДО курсора в старом (неотформатированном) значении
+                let digitsBeforeCursor = 0;
+                for (let i = 0; i < cursorPosition; i++) {
+                    if (/\d/.test(oldValue[i])) {
+                        digitsBeforeCursor++;
+                    }
+                }
+
+                // 2. Получаем новое отформатированное значение
+                const newValue = formatPhone(oldValue);
+                const oldDigits = oldValue.replace(/\D/g, '');
                 
-                const diff = newValue.length - oldValue.length;
-                const newPosition = Math.max(0, cursorPosition + diff);
-                e.target.setSelectionRange(newPosition, newPosition);
+                // 3. Корректируем целевое количество цифр: 
+                // если система автоматически добавила '7' (которой не было в старом вводе), 
+                // нам нужно учесть этот сдвиг, чтобы курсор не откатывался назад.
+                const wasSevenAdded = oldDigits.length > 0 && !oldDigits.startsWith('7') && !oldDigits.startsWith('8');
+                const targetDigits = digitsBeforeCursor + (wasSevenAdded ? 1 : 0);
+
+                // 4. Находим новую позицию курсора в отформатированной строке
+                let newCursorPosition = 0;
+                let currentDigits = 0;
+                let found = false;
+
+                for (let i = 0; i < newValue.length; i++) {
+                    if (/\d/.test(newValue[i])) {
+                        currentDigits++;
+                    }
+                    
+                    // Как только набрали нужное количество цифр, ставим курсор ПОСЛЕ этой цифры
+                    if (currentDigits === targetDigits) {
+                        newCursorPosition = i + 1;
+                        found = true;
+                        break;
+                    }
+                }
+
+                // Если точное совпадение не найдено (например, удалили цифру и их стало меньше), 
+                // ставим курсор в самый конец доступного ввода.
+                if (!found) {
+                    newCursorPosition = newValue.length;
+                }
+
+                // 5. Микро-улучшение UX: если курсор попал ровно перед разделителем (скобкой, тире, пробелом),
+                // перепрыгиваем его, чтобы пользователю было удобнее продолжать ввод или стирание.
+                if (found && newCursorPosition < newValue.length) {
+                    if (/[\s\-\(\)]/.test(newValue[newCursorPosition])) {
+                        newCursorPosition++;
+                    }
+                }
+
+                // Применяем новое значение и позицию курсора
+                input.value = newValue;
+                input.setSelectionRange(newCursorPosition, newCursorPosition);
             });
 
             phoneInput.addEventListener('focus', (e) => {
                 if (!e.target.value) {
                     e.target.value = '+7';
+                    // Ставим курсор после +7, чтобы пользователь сразу начинал вводить номер
+                    setTimeout(() => e.target.setSelectionRange(3, 3), 0);
                 }
             });
 
             phoneInput.addEventListener('blur', (e) => {
-                if (e.target.value === '+7') {
+                if (e.target.value === '+7' || e.target.value === '+7 (') {
                     e.target.value = '';
                 }
             });
 
             phoneInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Backspace' && e.target.value === '+7') {
+                // Запрещаем стирать префикс '+7'
+                if (e.key === 'Backspace' && (e.target.value === '+7' || e.target.selectionStart <= 3)) {
                     e.preventDefault();
                 }
             });
@@ -221,6 +280,8 @@ document.documentElement.classList.add('js');
     const FormHandler = (() => {
         const init = () => {
             const form = document.getElementById('contactForm');
+            const successBlock = document.getElementById('successBlock');
+            const resetBtn = document.getElementById('resetFormBtn');
             if (!form) return;
 
             const submitBtn = document.getElementById('submitBtn');
@@ -235,6 +296,27 @@ document.documentElement.classList.add('js');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Получить расчёт проекта';
             };
+
+            // Переключение между формой и блоком успеха
+            const showSuccess = () => {
+                form.style.display = 'none';
+                if (successBlock) successBlock.style.display = 'block';
+                // Прокручиваем к блоку успеха, чтобы он был виден
+                successBlock?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            };
+
+            const showForm = () => {
+                if (successBlock) successBlock.style.display = 'none';
+                form.style.display = 'flex';
+                form.reset();
+                if (formTimeInput) formTimeInput.value = Math.floor(Date.now() / 1000);
+                formMessage.innerHTML = '';
+            };
+
+            // Обработчик кнопки "Оставить ещё одну заявку"
+            if (resetBtn) {
+                resetBtn.addEventListener('click', showForm);
+            }
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -264,13 +346,8 @@ document.documentElement.classList.add('js');
 
                     if (response.ok && result.success) {
                         Tracker.track('form_submit');
-                        Toast.show('Заявка успешно отправлена!');
-                        form.reset();
-                        if (formTimeInput) formTimeInput.value = Math.floor(Date.now() / 1000);
-                        
-                        setTimeout(() => {
-                            window.location.href = result.redirect || '/success.html';
-                        }, 1500);
+                        // Убрали Toast — блок успеха сам является обратной связью
+                        showSuccess();
                     } else {
                         const errorMsg = typeof result.error === 'string' 
                             ? result.error.replace(/[<>]/g, '') 
@@ -279,6 +356,8 @@ document.documentElement.classList.add('js');
                         resetSubmitButton();
                     }
                 } catch (error) {
+                    // Бонус: логируем реальную ошибку для отладки (пункт 14 из списка)
+                    console.error('Form submission error:', error);
                     Toast.show('Ошибка сети. Напишите напрямую: info@ahundoff.ru', true);
                     resetSubmitButton();
                 }
@@ -313,7 +392,6 @@ document.documentElement.classList.add('js');
 
     const Counters = (() => {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
         const easeOutExpo = (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
 
         const animateCounter = (element) => {
@@ -344,43 +422,52 @@ document.documentElement.classList.add('js');
             const stats = document.querySelectorAll('.stat');
             if (!stats.length) return;
 
+            // Для пользователей с отключенной анимацией сразу показываем финальные значения
             if (prefersReducedMotion) {
-                stats.forEach(stat => stat.classList.add('visible'));
+                stats.forEach(stat => {
+                    stat.classList.add('visible');
+                    const counter = stat.querySelector('.stat__number');
+                    if (counter && !counter.dataset.animated) {
+                        counter.dataset.animated = 'true';
+                        counter.textContent = counter.dataset.target + counter.dataset.suffix;
+                    }
+                });
                 return;
             }
 
+            // ЕДИНЫЙ наблюдатель вместо двух
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const stat = entry.target;
+                        const index = parseInt(stat.dataset.animIndex, 10) || 0;
+                        
+                        // 1. Анимация появления карточки
+                        setTimeout(() => {
+                            stat.classList.add('visible');
+                        }, index * 100);
+
+                        // 2. Запуск счетчика с небольшой дополнительной задержкой (+300мс), 
+                        // чтобы цифры начинали бежать, когда карточка уже проявилась (выглядит дороже)
+                        setTimeout(() => {
+                            const counter = stat.querySelector('.stat__number');
+                            if (counter && !counter.dataset.animated) {
+                                counter.dataset.animated = 'true';
+                                animateCounter(counter);
+                            }
+                        }, index * 100 + 300);
+
+                        // Перестаем наблюдать за элементом после срабатывания
+                        obs.unobserve(stat);
+                    }
+                });
+            }, { threshold: 0.3 }); // Один порог срабатывания
+
+            // Инициализируем индексы и запускаем наблюдение
             stats.forEach((stat, index) => {
                 stat.dataset.animIndex = String(index);
+                observer.observe(stat);
             });
-
-            const visibilityObserver = new IntersectionObserver((entries, obs) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const index = parseInt(entry.target.dataset.animIndex, 10) || 0;
-                        setTimeout(() => {
-                            entry.target.classList.add('visible');
-                        }, index * 100);
-                        obs.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.3 });
-
-            stats.forEach(stat => visibilityObserver.observe(stat));
-
-            const counterObserver = new IntersectionObserver((entries, obs) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const counter = entry.target.querySelector('.stat__number');
-                        if (counter && !counter.dataset.animated) {
-                            counter.dataset.animated = 'true';
-                            animateCounter(counter);
-                        }
-                        obs.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            stats.forEach(stat => counterObserver.observe(stat));
         };
 
         return { init };
@@ -518,37 +605,35 @@ document.documentElement.classList.add('js');
         return { init };
     })();
 
-    const StickyBar = (() => {
+     const StickyBar = (() => {
         const init = () => {
             const stickyBar = document.querySelector('.sticky-bar');
             const footer = document.querySelector('.footer');
             if (!stickyBar || !footer) return;
 
-            let ticking = false;
+            // Создаем наблюдатель за появлением футера в нижней части экрана
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Футер виден: скрываем панель
+                        stickyBar.style.opacity = '0';
+                        stickyBar.style.pointerEvents = 'none';
+                        stickyBar.style.transform = 'translateY(100%)'; // Плавный уезд вниз
+                    } else {
+                        // Футер не виден: показываем панель
+                        stickyBar.style.opacity = '1';
+                        stickyBar.style.pointerEvents = 'auto';
+                        stickyBar.style.transform = 'translateY(0)'; // Возврат на место
+                    }
+                });
+            }, {
+                root: null, // наблюдение относительно окна браузера
+                rootMargin: '0px 0px -80px 0px', // срабатывает чуть раньше, чем футер полностью перекроет панель (высота панели ~70px)
+                threshold: 0 // срабатывает сразу, как только хоть 1 пиксель футера пересек границу
+            });
 
-            const checkFooter = () => {
-                const footerRect = footer.getBoundingClientRect();
-                const windowHeight = window.innerHeight;
-                
-                if (footerRect.top < windowHeight - 50) {
-                    stickyBar.style.opacity = '0';
-                    stickyBar.style.pointerEvents = 'none';
-                } else {
-                    stickyBar.style.opacity = '1';
-                    stickyBar.style.pointerEvents = 'auto';
-                }
-                ticking = false;
-            };
-
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    requestAnimationFrame(checkFooter);
-                    ticking = true;
-                }
-            }, { passive: true });
-
-            window.addEventListener('resize', checkFooter, { passive: true });
-            checkFooter();
+            // Начинаем наблюдение за футером
+            observer.observe(footer);
         };
 
         return { init };
@@ -566,7 +651,7 @@ document.documentElement.classList.add('js');
 
             const ctx = canvas.getContext('2d');
             const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-            let animationId;
+            let animationId = 0;
             let particles = [];
             let mouse = { x: 0, y: 0 };
 
