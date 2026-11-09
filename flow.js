@@ -19,6 +19,8 @@
         let lastTime = 0;
         let time = 0;
         let scroll = window.scrollY;
+        let auditProgress = 0;
+        let auditWeight = 0;
         const timeline = document.querySelector('.process__timeline');
         let timelineVisible = false;
         let timelineHeight = 0;
@@ -28,9 +30,10 @@
         let timelineResizeObserver = null;
 
         function point(y, strand, phase) {
-            const world = (y + scroll * .42) / height;
-            const spread = strand * (.006 + .014 * Math.sin(world * 3.2 + .8));
-            return width * (.72 + .20 * Math.sin(world * 3.8 - .5)
+            const world = (y + scroll * .42 * (1 - auditWeight)) / height
+                + auditProgress * .42 * auditWeight;
+            const spread = strand * (.006 + .014 * Math.sin(world * 3.2 + .8 + auditProgress * auditWeight * .8));
+            return width * (.72 - .2 * auditWeight + .20 * Math.sin(world * 3.8 - .5)
                 + .075 * Math.sin(world * 7 + phase * .18)
                 + spread + .012 * Math.sin(world * 6 + phase + strand * .12));
         }
@@ -124,6 +127,11 @@
             draw();
         }
 
+        function handleAuditFlow(event) {
+            auditProgress = event.detail.progress;
+            auditWeight = reduced.matches ? 0 : event.detail.weight;
+        }
+
         // Функция очистки наблюдателей (для SPA или динамического удаления)
         function cleanup() {
             cancelAnimationFrame(frame);
@@ -138,6 +146,7 @@
             }
             reduced.removeEventListener('change', sync);
             document.removeEventListener('visibilitychange', sync);
+            document.removeEventListener('audit-flow', handleAuditFlow);
             window.removeEventListener('resize', resize);
             if (canvas.parentNode) {
                 canvas.parentNode.removeChild(canvas);
@@ -150,23 +159,24 @@
 
         reduced.addEventListener('change', sync);
         document.addEventListener('visibilitychange', sync);
+        document.addEventListener('audit-flow', handleAuditFlow);
         window.addEventListener('resize', resize, { passive: true });
-        
+
         if (timeline) {
             timelineObserver = new IntersectionObserver(entries => {
                 timelineVisible = entries[0].isIntersecting;
             });
             timelineObserver.observe(timeline);
-            
-            timelineResizeObserver = new ResizeObserver(() => { 
-                timelineHeight = timeline.offsetHeight; 
+
+            timelineResizeObserver = new ResizeObserver(() => {
+                timelineHeight = timeline.offsetHeight;
             });
             timelineResizeObserver.observe(timeline);
         }
-        
+
         resize();
         sync();
-        
+
     } catch (error) {
         console.warn('Flow animation error:', error);
     }
