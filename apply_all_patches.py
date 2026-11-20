@@ -6,7 +6,7 @@ apply_all_patches.py — все правки аудита ahundoff.ru от 21.11
 Без --push только применяет к локальному клону ./ahundoff (можно залить на Timeweb вручную).
 Идемпотентен: повторный запуск пропускает уже применённое.
 """
-import argparse, os, re, subprocess, sys
+import argparse, os, re, shutil, subprocess, sys
 
 REPO_URL = "https://github.com/zohrabahundov/ahundoff.git"
 VER_OLD, VER_NEW = "?v=2026-11-21", "?v=2026-11-21-2"
@@ -36,17 +36,30 @@ def rpatch(d, f, pattern, repl, flags=re.S, required=True):
     return 0
 
 def balance(code):
-    code = re.sub(r"//[^\n]*", "", code)
-    code = re.sub(r"/\*.*?\*/", "", code, flags=re.S)
+    # FIX: сначала строки/шаблоны, потом комментарии —
+    # иначе // внутри URL (https://...) считается комментарием и ломает баланс.
+    code = re.sub(r"`(?:\\.|[^`\\])*`", "``", code, flags=re.S)
     code = re.sub(r"'(?:\\.|[^'\\])*'", "''", code)
     code = re.sub(r'"(?:\\.|[^"\\])*"', '""', code)
-    code = re.sub(r"`(?:\\.|[^`\\])*`", "``", code)
+    code = re.sub(r"/\*.*?\*/", "", code, flags=re.S)
+    code = re.sub(r"//[^\n]*", "", code)
     st = []; pairs = {')': '(', ']': '[', '}': '{'}
     for ch in code:
         if ch in "([{": st.append(ch)
         elif ch in ")]}":
             if not st or st.pop() != pairs[ch]: return False
     return not st
+
+def js_syntax_ok(path):
+    # При наличии node — настоящая проверка синтаксиса; иначе — эвристика.
+    node = shutil.which("node")
+    if node:
+        r = subprocess.run([node, "--check", path], capture_output=True, text=True)
+        if r.returncode != 0:
+            print(r.stderr[:600])
+        return r.returncode == 0
+    with open(path, encoding="utf-8") as fh:
+        return balance(fh.read())
 
 EN_POLICY = """<!DOCTYPE html>
 <html lang="en">
@@ -486,6 +499,12 @@ def main():
     addr = a.address.strip() or "[REGISTERED ADDRESS OF THE SOLE PROPRIETOR PER THE STATE REGISTER]"
     if not os.path.exists(os.path.join(d, "privacy-policy-en.html")):
         save(d, "privacy-policy-en.html", EN_POLICY.replace("__ADDRESS__", addr))
+    elif a.address.strip():
+        # FIX: заполняем адрес и в уже существующей EN-политике (была заглушка).
+        pe = load(d, "privacy-policy-en.html")
+        for placeholder in ("[REGISTERED ADDRESS OF THE SOLE PROPRIETOR PER THE STATE REGISTER]", "__ADDRESS__"):
+            if placeholder in pe:
+                patch(d, "privacy-policy-en.html", placeholder, a.address.strip(), required=False)
     patch(d, "en.html", '<a href="/privacy-policy.html">personal data</a>', '<a href="/privacy-policy-en.html">personal data</a>', required=False)
     patch(d, "partials/footer-en.php", '<a href="/privacy-policy.html">Privacy Policy</a>', '<a href="/privacy-policy-en.html">Privacy Policy</a>', required=False)
 
@@ -527,12 +546,13 @@ def main():
         ("index/en/partners без style=", all('style="' not in load(d, f) for f in ["index.html", "en.html", "partners.html"])),
         ("index/en/partners без inline Метрики", all("initYandexMetrika" not in load(d, f) for f in ["index.html", "en.html", "partners.html"])),
         ("script.js: Метрика + flow + lang", "initYandexMetrika" in s and "light-flow" in s and "formData.append('lang'" in s),
-        ("script.js: синтаксис (баланс)", balance(s)),
+        ("script.js: синтаксис", js_syntax_ok(os.path.join(d, "script.js"))),
         ("send.php: $MSG", "$MSG" in sp and "'error' => 'Доступ запрещен'" not in sp),
         (".htaccess: script-src без unsafe-inline", "script-src 'self' https://mc.yandex.ru https://cdn.jsdelivr.net 'unsafe-eval'" in ht),
         (".htaccess: HTML no-cache", "no-cache, must-revalidate" in ht),
         ("styles.css: утилиты + partners", ".u-offscreen" in load(d, "styles.css") and ".partners-hero" in load(d, "styles.css")),
         ("EN-политика создана", os.path.exists(os.path.join(d, "privacy-policy-en.html"))),
+        ("EN-политика: адрес заполнен (без заглушки)", a.address.strip() == "" or ("[REGISTERED ADDRESS" not in load(d, "privacy-policy-en.html") and "__ADDRESS__" not in load(d, "privacy-policy-en.html"))),
         ("flow.js удалён", not os.path.exists(os.path.join(d, "flow.js"))),
     ]
     ok = True
