@@ -16,7 +16,12 @@
     RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
     RewriteRule ^(.*)$ https://%1/$1 [L,R=301]
 
-    # Блокируем доступ к любым скрытым файлам и папкам (начинаются с точки)
+    # Аудит 21.11.2026: /index.html -> / (устраняем дубль главной для SEO)
+    RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
+    RewriteRule ^index\.html$ / [L,R=301]
+
+    # Блокируем скрытые файлы и папки, КРОМЕ .well-known (нужен для Let's Encrypt и security.txt)
+    RewriteCond %{REQUEST_URI} !^/\.well-known/ [NC]
     RewriteRule (^\.|/\.) - [F]
 
     # Блокируем прямой доступ к папке logs
@@ -54,6 +59,9 @@ AddType application/x-httpd-php .php .html .htm
 # Запрет просмотра содержимого папок
 Options -Indexes
 
+# Аудит 21.11.2026: брендированная страница 404 вместо дефолтной Apache
+ErrorDocument 404 /404.html
+
 # Сжатие данных (ускоряет загрузку)
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
@@ -70,7 +78,8 @@ Options -Indexes
     ExpiresByType text/css "access plus 1 month"
     ExpiresByType application/javascript "access plus 1 month"
     ExpiresByType font/woff2 "access plus 1 year"
-    ExpiresByType text/html "access plus 0 seconds"
+    # Аудит 21.11.2026: убран ExpiresByType text/html — он создавал ВТОРОЙ заголовок
+    # Cache-Control (max-age=0) поверх no-cache ниже. HTML кэшируется только через Header.
 </IfModule>
 
 # favicon — вне годового кэша
@@ -104,8 +113,11 @@ AddDefaultCharset UTF-8
     # Ограничение доступа к API браузера
     Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
 
-    # Content Security Policy (защита от XSS)
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://mc.yandex.ru https://cdn.jsdelivr.net 'unsafe-eval'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://mc.yandex.ru https://fonts.googleapis.com https://fonts.gstatic.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
+    # Content Security Policy (защита от XSS).
+    # Аудит 21.11.2026: убраны 'unsafe-eval' (Metrika его не использует) и cdn.jsdelivr.net
+    # (QR-библиотека теперь self-hosted); img-src сужен; добавлены object-src 'none' и
+    # upgrade-insecure-requests. Шрифты self-hosted — Google больше не нужен.
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://mc.yandex.ru; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://mc.yandex.ru; object-src 'none'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
 
     # Убираем версию сервера
     Header unset X-Powered-By

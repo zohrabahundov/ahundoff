@@ -29,7 +29,7 @@
                     </a>
                 </div>
 
-                <div class="footer__copyright">© 2026 Ahundoff Studio. Все права защищены.</div>
+                <div class="footer__copyright">© <?= date('Y') ?> Ahundoff Studio. Все права защищены.</div>
             </div>
         </div>
     </footer>

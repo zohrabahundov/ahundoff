@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <style>html { background: #030712; }</style>
     <meta name="description" content="Политика конфиденциальности студии Ahundoff. Информация об обработке персональных данных в соответствии с 152-ФЗ.">
     <meta name="robots" content="noindex, follow">
     
@@ -10,38 +12,19 @@
     
     <title>Политика конфиденциальности — Ahundoff</title>
     
-    <!-- Премиальные шрифты -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="stylesheet" href="styles.css?v=2026-11-21-2">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico?v=2">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="styles.css?v=2026-11-21-3">
 </head>
 <body>
+    <a class="skip-link" href="#main">Перейти к содержимому</a>
     <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header__content">
-                <a href="/" class="logo">Ahundoff<span class="logo__dot">.</span></a>
-                <button class="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="main-nav">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <nav class="nav" id="main-nav">
-                    <a href="/#services" class="nav__link">Решения</a>
-                    <a href="/#cases" class="nav__link">Кейсы</a>
-                    <a href="/#founder" class="nav__link">Команда</a>
-                    <a href="/#process" class="nav__link">Подход</a>
-                    <a href="/#contact" class="nav__link nav__link--cta">Обсудить проект</a>
-                </nav>
-            </div>
-        </div>
-    </header>
+    <?php include __DIR__ . '/partials/header-ru.php'; ?>
 
     <!-- Page Hero -->
-    <section class="policy-hero">
+    <section class="policy-hero" id="main">
         <div class="container">
             <div class="policy-hero__content">
                 <span class="policy-hero__badge">Юридический документ</span>
@@ -253,44 +236,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer__content">
-                <div class="footer__brand">
-                    <a href="/" class="logo">Ahundoff<span class="logo__dot">.</span></a>
-                    <p class="footer__tagline">AI-решения для бизнеса</p>
-                    <p class="footer__legal">ИП Ахундов Зохраб Сейфуллаевич | ИНН 054204225330</p>
-                </div>
-                
-                <div class="footer__links">
-                    <a href="/#services">Решения</a>
-                    <a href="/#cases">Кейсы</a>
-                    <a href="/#founder">Команда</a>
-                    <a href="/#process">Подход</a>
-                    <a href="/#contact">Контакты</a>
-                    <a href="/privacy-policy.html">Политика конфиденциальности</a>
-                </div>
-
-                <div class="footer__socials">
-                    <a href="https://wa.me/79295005785" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                        </svg>
-                    </a>
-                    <a href="https://t.me/zohrab_ahundov" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Telegram">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
-                    </a>
-                </div>
-
-                <div class="footer__copyright">
-                    © 2026 Ahundoff Studio. Все права защищены.
-                </div>
-            </div>
-        </div>
-    </footer>
-    <script src="/script.js?v=2026-11-21-2" defer></script>
+    <?php include __DIR__ . '/partials/footer-ru.php'; ?>
+    <script src="/script.js?v=2026-11-21-3" defer></script>
 </body>
 </html>

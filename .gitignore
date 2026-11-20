@@ -1,5 +1,6 @@
-# Логи и данные
-logs/
+# Логи и данные (содержимое logs/ игнорируем, но .htaccess-защиту коммитим)
+logs/*
+!logs/.htaccess
 *.log
 *.json
 !package.json
@@ -17,3 +18,8 @@ logs/
 __pycache__/
 *.pyc
 apply_all_patches.py
+
+# Зависимости и артефакты тестов
+node_modules/
+tests/mail.out
+!package-lock.json

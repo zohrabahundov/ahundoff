@@ -4,26 +4,22 @@
 
 document.documentElement.classList.add('js');
 
-/* Yandex.Metrika — единый загрузчик (вынесен из inline-скриптов всех страниц) */
+/* Yandex.Metrika — единый загрузчик.
+   Аудит 21.11.2026: инициализируем СРАЗУ (tag.js грузится async и не блокирует рендер).
+   Раньше загрузка откладывалась до requestIdleCallback/2с, и цели, отправленные до
+   инициализации (клик по телефону, быстрая отправка формы), молча терялись. */
 (() => {
-    const initYandexMetrika = () => {
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113749509', 'ym');
-        ym(113749509, 'init', {
-            ssr: true, webvisor: false, clickmap: true, ecommerce: "dataLayer",
-            referrer: document.referrer, url: location.href,
-            accurateTrackBounce: true, trackLinks: true
-        });
-        if (location.pathname.indexOf('success.html') !== -1) {
-            ym(113749509, 'reachGoal', 'form_success_page');
-        }
-    };
-    if ('requestIdleCallback' in window) { requestIdleCallback(initYandexMetrika); }
-    else { setTimeout(initYandexMetrika, 2000); }
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113749509', 'ym');
+    ym(113749509, 'init', {
+        ssr: true, webvisor: false, clickmap: true, ecommerce: "dataLayer",
+        referrer: document.referrer, url: location.href,
+        accurateTrackBounce: true, trackLinks: true
+    });
 })();
 
 
@@ -160,9 +156,22 @@ document.documentElement.classList.add('js');
             });
 
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && nav.classList.contains('active')) {
+                if (!nav.classList.contains('active')) return;
+                if (e.key === 'Escape') {
                     toggleMenu(false);
                     burger.focus();
+                    return;
+                }
+                // Аудит 21.11.2026: фокус-ловушка внутри открытого меню (WCAG 2.4.3).
+                if (e.key === 'Tab') {
+                    const focusables = [burger, ...nav.querySelectorAll('a[href]')];
+                    const first = focusables[0];
+                    const last = focusables[focusables.length - 1];
+                    if (e.shiftKey && document.activeElement === first) {
+                        e.preventDefault(); last.focus();
+                    } else if (!e.shiftKey && document.activeElement === last) {
+                        e.preventDefault(); first.focus();
+                    }
                 }
             });
         };
@@ -181,7 +190,10 @@ document.documentElement.classList.add('js');
                     if (target) {
                         e.preventDefault();
                         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        
+                        // Аудит 21.11.2026: переносим фокус на цель для клавиатурных пользователей.
+                        if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+                        target.focus({ preventScroll: true });
+
                         if (history.pushState) {
                             history.pushState(null, null, href);
                         }
@@ -194,23 +206,45 @@ document.documentElement.classList.add('js');
     })();
 
     const Toast = (() => {
+        // Аудит 21.11.2026: единый контейнер-стек вместо наложения тостов друг на друга,
+        // кнопка закрытия, увеличенное время для ошибок, корректные ARIA-роли.
+        let container = null;
+        const getContainer = () => {
+            if (!container || !document.body.contains(container)) {
+                container = document.createElement('div');
+                container.className = 'toast-container';
+                container.setAttribute('aria-live', 'polite');
+                container.setAttribute('aria-relevant', 'additions');
+                document.body.appendChild(container);
+            }
+            return container;
+        };
         const show = (message, isError = false) => {
             const toast = document.createElement('div');
             toast.className = `toast ${isError ? 'toast--error' : 'toast--success'}`;
-            toast.textContent = message;
-            
-            // Добавляем ARIA-атрибуты для доступности (WCAG 2.1)
-            toast.setAttribute('role', 'alert');
-            toast.setAttribute('aria-live', 'polite');
-            toast.setAttribute('aria-atomic', 'true');
-            
-            document.body.appendChild(toast);
-            
-            setTimeout(() => toast.classList.add('toast--visible'), 10);
-            setTimeout(() => {
+            toast.setAttribute('role', isError ? 'alert' : 'status');
+
+            const text = document.createElement('span');
+            text.className = 'toast__text';
+            text.textContent = message;
+            toast.appendChild(text);
+
+            const close = document.createElement('button');
+            close.type = 'button';
+            close.className = 'toast__close';
+            close.setAttribute('aria-label', I18N.lang === 'en' ? 'Close' : 'Закрыть');
+            close.textContent = '×';
+            toast.appendChild(close);
+
+            getContainer().appendChild(toast);
+            requestAnimationFrame(() => toast.classList.add('toast--visible'));
+
+            const dismiss = () => {
                 toast.classList.remove('toast--visible');
                 setTimeout(() => toast.remove(), 300);
-            }, 4000);
+            };
+            close.addEventListener('click', dismiss);
+            setTimeout(dismiss, isError ? 8000 : 4000);
         };
 
         return { show };
@@ -235,6 +269,9 @@ document.documentElement.classList.add('js');
             const mode = (v) => {
                 const t = v.trim();
                 if (t.startsWith('@')) return 'telegram';
+                // Аудит 21.11.2026: если вводят буквы без цифр (Telegram без @) — не стираем,
+                // а автоматически подставляем @. Раньше ввод "durov" превращался в пустую строку.
+                if (/^[A-Za-z]/.test(t) && !/\d/.test(t)) return 'telegram';
                 const d = t.replace(/\D/g, '');
                 if (t.startsWith('+') && d.length > 0 && !d.startsWith('7')) return 'intl';
                 return 'ru';
@@ -295,26 +332,45 @@ document.documentElement.classList.add('js');
             const timeInput = form.querySelector('input[name="form_time"]');
             const setTime = () => { if (timeInput) timeInput.value = Math.floor(Date.now()/1000); };
             setTime();
+            // Аудит 21.11.2026: обновляем метку времени при возврате на вкладку и при первом вводе,
+            // чтобы форма, открытая >24ч, не отклонялась сервером как устаревшая.
+            window.addEventListener('focus', setTime);
+            form.addEventListener('input', setTime, { once: true });
+
             const resetBtn = cfg.reset ? document.getElementById(cfg.reset) : null;
             const showForm = () => { if (successBlock) successBlock.style.display='none';
                 form.style.display='flex'; form.reset(); setTime(); formMessage.innerHTML=''; };
             if (resetBtn) resetBtn.addEventListener('click', showForm);
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                if (consent && !consent.checked) { Toast.show(I18N.t('consentRequired'), true); consent.focus(); return; }
-                submitBtn.disabled = true; submitBtn.textContent = I18N.t('sending'); formMessage.innerHTML='';
+
+            const send = async (isRetry) => {
+                const formData = new FormData(form);
+                formData.append('lang', I18N.lang);
+                // Таймаут запроса: кнопка не зависает навсегда при обрыве сети.
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 15000);
                 try {
-                    const formData = new FormData(form);
-                    formData.append('lang', I18N.lang);
                     const r = await fetch('/send.php', { method:'POST', body:formData,
-                        headers:{'X-Requested-With':'XMLHttpRequest'} });
+                        headers:{'X-Requested-With':'XMLHttpRequest'}, signal: controller.signal });
                     const res = await r.json();
                     if (r.ok && res.success) { Tracker.track(cfg.goal);
                         if (successBlock) { form.style.display='none'; successBlock.style.display='block';
                             successBlock.scrollIntoView({behavior:'smooth',block:'center'}); }
                         else { Toast.show(I18N.lang==='en'?'Request sent! We will contact you soon.':'Заявка отправлена! Мы свяжемся с вами.'); showForm(); }
+                    } else if (res.code === 'form_expired' && !isRetry) {
+                        // Форма устарела — обновляем время и повторяем один раз (лид не теряется).
+                        setTime();
+                        await send(true);
+                        return;
                     } else { Toast.show(typeof res.error==='string'?res.error.replace(/[<>]/g,''):I18N.t('sendError'), true); }
                 } catch (err) { console.error(err); Toast.show(I18N.t('networkError'), true); }
+                finally { clearTimeout(timer); }
+            };
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (consent && !consent.checked) { Toast.show(I18N.t('consentRequired'), true); consent.focus(); return; }
+                submitBtn.disabled = true; submitBtn.textContent = I18N.t('sending'); formMessage.innerHTML='';
+                await send(false);
                 submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.defaultLabel || I18N.t('submitLabel');
             });
         };
@@ -440,7 +496,10 @@ document.documentElement.classList.add('js');
 
             items.forEach(item => {
                 const question = item.querySelector('.faq__question');
-                
+                // Исходное состояние: свёрнутые ответы скрыты от скринридеров.
+                const answer = item.querySelector('.faq__answer');
+                if (answer && !item.classList.contains('active')) answer.setAttribute('aria-hidden', 'true');
+
                 question.addEventListener('click', () => {
                     const isActive = item.classList.contains('active');
 
@@ -448,11 +507,16 @@ document.documentElement.classList.add('js');
                         if (otherItem !== item) {
                             otherItem.classList.remove('active');
                             otherItem.querySelector('.faq__question').setAttribute('aria-expanded', 'false');
+                            // Аудит 21.11.2026: скрываем свёрнутый ответ от скринридеров.
+                            const otherAnswer = otherItem.querySelector('.faq__answer');
+                            if (otherAnswer) otherAnswer.setAttribute('aria-hidden', 'true');
                         }
                     });
 
                     item.classList.toggle('active');
                     question.setAttribute('aria-expanded', String(!isActive));
+                    const answer = item.querySelector('.faq__answer');
+                    if (answer) answer.setAttribute('aria-hidden', String(isActive));
 
                     if (!isActive) Tracker.track('faq_open');
                 });
@@ -467,13 +531,20 @@ document.documentElement.classList.add('js');
             const progressBar = document.querySelector('.scroll-progress');
             if (!progressBar) return;
 
+            // Аудит 21.11.2026: троттлинг через rAF вместо записи стиля на каждое scroll-событие.
+            let ticking = false;
             const updateProgress = () => {
-                const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                const max = document.documentElement.scrollHeight - window.innerHeight;
+                const scrolled = max > 0 ? (window.scrollY / max) * 100 : 0;
                 progressBar.style.width = Math.min(scrolled, 100) + '%';
+                ticking = false;
+            };
+            const onScroll = () => {
+                if (!ticking) { ticking = true; requestAnimationFrame(updateProgress); }
             };
 
-            window.addEventListener('scroll', updateProgress, { passive: true });
-            window.addEventListener('resize', updateProgress, { passive: true });
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll, { passive: true });
             updateProgress();
         };
 
@@ -508,24 +579,41 @@ document.documentElement.classList.add('js');
     })();
 
     const CopyToClipboard = (() => {
+        // Аудит 21.11.2026: fallback через execCommand для http/старых браузеров,
+        // где navigator.clipboard недоступен.
+        const copyText = async (text) => {
+            if (navigator.clipboard) {
+                try { await navigator.clipboard.writeText(text); return; }
+                catch (e) { /* отказ API (permissions/http) — пробуем fallback ниже */ }
+            }
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            const ok = document.execCommand('copy');
+            ta.remove();
+            if (!ok) throw new Error('copy failed');
+        };
         const init = () => {
             document.querySelectorAll('.copy-btn').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    
+
                     try {
-                        await navigator.clipboard.writeText(btn.dataset.copy);
+                        await copyText(btn.dataset.copy);
                         btn.classList.add('copied');
                         btn.innerHTML = '<svg width="16" height="16" aria-hidden="true"><use href="#icon-check"/></svg>';
-                        Toast.show(I18N.t('emailCopied'));                        
-                        
+                        Toast.show(I18N.t('emailCopied'));
+
                         setTimeout(() => {
                             btn.classList.remove('copied');
                             btn.innerHTML = '<svg width="16" height="16" aria-hidden="true"><use href="#icon-code"/></svg>';
                         }, 2000);
                     } catch (err) {
-                        Toast.show(I18N.t('copyFailed'), true);                        
+                        Toast.show(I18N.t('copyFailed'), true);
                     }
                 });
             });
@@ -614,6 +702,8 @@ document.documentElement.classList.add('js');
             let animationId = 0;
             let particles = [];
             let mouse = { x: -1000, y: -1000 };
+            // Аудит 21.11.2026: не рисуем, когда hero вне экрана — экономим CPU/батарею.
+            let heroVisible = true;
 
             const resize = () => {
                 canvas.width = canvas.offsetWidth;
@@ -643,7 +733,7 @@ document.documentElement.classList.add('js');
 
             const draw = () => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                if (document.hidden || reducedMotion.matches || document.body.classList.contains('flow-paused')) {
+                if (document.hidden || !heroVisible || reducedMotion.matches || document.body.classList.contains('flow-paused')) {
                     animationId = 0;
                     return;
                 }
@@ -703,18 +793,33 @@ document.documentElement.classList.add('js');
             resize();
             draw();
 
+            // Аудит 21.11.2026: debounce resize вместо пересчёта частиц на каждое событие.
+            let resizeTimer = 0;
             window.addEventListener('resize', () => {
-                cancelAnimationFrame(animationId);
-                resize();
-                draw();
-            });
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    cancelAnimationFrame(animationId);
+                    resize();
+                    draw();
+                }, 150);
+            }, { passive: true });
+
+            // Пауза, когда hero не виден (IntersectionObserver).
+            if ('IntersectionObserver' in window) {
+                new IntersectionObserver((entries) => {
+                    heroVisible = entries[0].isIntersecting;
+                    if (heroVisible && !animationId) draw();
+                }, { threshold: 0 }).observe(canvas);
+            }
 
             window.addEventListener('mousemove', handleMouseMove, { passive: true });
             document.addEventListener('mouseleave', handleMouseLeave);
             const resume = () => { if (!animationId) draw(); };
             document.addEventListener('flow-motion-change', resume);
             document.addEventListener('visibilitychange', resume);
-            reducedMotion.addEventListener('change', resume);
+            // addEventListener на MediaQueryList поддерживается не везде (старый Safari).
+            if (typeof reducedMotion.addEventListener === 'function') reducedMotion.addEventListener('change', resume);
+            else if (typeof reducedMotion.addListener === 'function') reducedMotion.addListener(resume);
         };
 
         return { init };
@@ -763,22 +868,18 @@ document.documentElement.classList.add('js');
     })();
 
     document.addEventListener('DOMContentLoaded', () => {
-        MobileMenu.init();
-        SmoothScroll.init();
-        FormHandler.init();
-        ScrollAnimations.init();
-        Counters.init();
-        FAQ.init();
-        Tracker.initEvents();
-        
-        ScrollProgress.init();
-        BackToTop.init();
-        CopyToClipboard.init();
-        ProcessTimeline.init();
-        StickyBar.init();
-        PhoneMask.init();
-        HeroGrid.init();
-        MobileTooltip.init();
+        // Аудит 21.11.2026: каждый модуль инициализируется изолированно —
+        // ошибка в одном не блокирует остальные (раньше карточки могли остаться невидимыми).
+        const modules = [
+            ['MobileMenu', MobileMenu], ['SmoothScroll', SmoothScroll], ['FormHandler', FormHandler],
+            ['ScrollAnimations', ScrollAnimations], ['Counters', Counters], ['FAQ', FAQ],
+            ['Tracker', { init: Tracker.initEvents }], ['ScrollProgress', ScrollProgress],
+            ['BackToTop', BackToTop], ['CopyToClipboard', CopyToClipboard], ['ProcessTimeline', ProcessTimeline],
+            ['StickyBar', StickyBar], ['PhoneMask', PhoneMask], ['HeroGrid', HeroGrid], ['MobileTooltip', MobileTooltip]
+        ];
+        modules.forEach(([name, mod]) => {
+            try { mod.init(); } catch (err) { console.error(`[Ahundoff] ${name} init failed:`, err); }
+        });
     });
 })();
 
