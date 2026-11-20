@@ -52,14 +52,12 @@ if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQ
 // Проверка Origin/Referer (CSRF-защита: запрос должен идти с нашего домена)
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 $referer = $_SERVER['HTTP_REFERER'] ?? '';
-$clientHost = $_SERVER['HTTP_HOST'] ?? '';
+$allowedHosts = ['ahundoff.ru', 'www.ahundoff.ru']; // PATCH 2026-11-21: whitelist домена
 $originOk = false;
 if ($origin !== '') {
-    $originHost = parse_url($origin, PHP_URL_HOST);
-    $originOk = ($originHost === $clientHost);
+    $originOk = in_array(parse_url($origin, PHP_URL_HOST), $allowedHosts, true);
 } elseif ($referer !== '') {
-    $refererHost = parse_url($referer, PHP_URL_HOST);
-    $originOk = ($refererHost === $clientHost);
+    $originOk = in_array(parse_url($referer, PHP_URL_HOST), $allowedHosts, true);
 }
 if (!$originOk) {
     http_response_code(403);
@@ -88,12 +86,20 @@ function sanitize($value): string {
 
 function logSpamAttempt(string $reason, array $data): void {
     ensureLogDir();
+    // PATCH 2026-11-21: не пишем лог больше 5 МБ и обрезаем поля до 200 символов
+    if (is_file(SPAM_LOG_FILE) && filesize(SPAM_LOG_FILE) > 5 * 1024 * 1024) {
+        return;
+    }
+    $safe = [];
+    foreach ($data as $k => $v) {
+        if (is_string($v)) { $safe[$k] = mb_substr($v, 0, 200); }
+    }
     $entry = [
         'timestamp' => date('Y-m-d H:i:s'),
         'reason' => $reason,
         'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
-        'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
-        'data' => $data
+        'user_agent' => mb_substr($_SERVER['HTTP_USER_AGENT'] ?? 'unknown', 0, 200),
+        'data' => $safe
     ];
     $logLine = json_encode($entry, JSON_UNESCAPED_UNICODE) . "\n";
     file_put_contents(SPAM_LOG_FILE, $logLine, FILE_APPEND | LOCK_EX);
@@ -109,6 +115,8 @@ function logLead(array $data, string $formType): void {
         'message' => $data['message'] ?? '',
         'company' => $data['company'] ?? '',
         'about' => $data['about'] ?? '',
+        'consent' => isset($_POST['pd-consent']) ? '1' : '0',
+        'policy_version' => '2026-10-28',
         'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
         'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
     ];
@@ -121,45 +129,51 @@ function checkAndRecordRateLimit(): bool {
     ensureLogDir();
     $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
     $now = time();
-    
+
     // 'c+' открывает файл для чтения и записи, создает его, если он не существует
     $fp = fopen(RATE_LIMIT_FILE, 'c+');
     if (!$fp) {
         return true; // В случае критической ошибки файла пропускаем проверку, чтобы не блокировать легитимных пользователей
     }
-    
+
     // Эксклюзивная блокировка файла
     flock($fp, LOCK_EX);
-    
+
     $content = stream_get_contents($fp);
     $data = $content ? json_decode($content, true) : [];
-    
+    // PATCH 2026-11-21: чистим старые записи всех IP, чтобы файл не рос бесконечно
+    $data = is_array($data) ? $data : [];
+    foreach ($data as $k => $timestamps) {
+        $data[$k] = array_values(array_filter((array)$timestamps, fn($ts) => ($now - $ts) < RATE_LIMIT_PERIOD));
+        if (empty($data[$k])) unset($data[$k]);
+    }
+
     if (!isset($data[$ip])) {
         $data[$ip] = [];
     }
-    
+
     // Фильтруем старые записи
     $requests = array_filter($data[$ip], fn($ts) => ($now - $ts) < RATE_LIMIT_PERIOD);
-    
+
     // Проверяем лимит
     if (count($requests) >= RATE_LIMIT_MAX) {
         flock($fp, LOCK_UN);
         fclose($fp);
         return false;
     }
-    
+
     // Добавляем текущий запрос и сохраняем
     $requests[] = $now;
     $data[$ip] = array_values($requests);
-    
+
     ftruncate($fp, 0);
     rewind($fp);
     fwrite($fp, json_encode($data));
     fflush($fp);
-    
+
     flock($fp, LOCK_UN);
     fclose($fp);
-    
+
     return true;
 }
 
@@ -205,6 +219,13 @@ if (($currentTime - $formTime) < MIN_FORM_TIME) {
 // Глупая защита от поддельного будущего timestamp
 if ($formTime > $currentTime + 86400) {
     logSpamAttempt('Form time in the future', $_POST);
+    echo json_encode(['success' => true, 'message' => 'Спасибо!']);
+    exit;
+}
+
+// PATCH 2026-11-21: форма старше 24 часов — отсев (защита от replay)
+if (($currentTime - $formTime) > 86400) {
+    logSpamAttempt('Form time too old', $_POST);
     echo json_encode(['success' => true, 'message' => 'Спасибо!']);
     exit;
 }
@@ -347,7 +368,6 @@ logLead([
 // Формируем корректные заголовки (без невалидного Reply-To с телефоном)
 $headers = [
     'From' => SENDER_NAME . ' <' . SENDER_EMAIL . '>',
-    'X-Mailer' => 'PHP/' . phpversion(),
     'MIME-Version' => '1.0',
     'Content-Type' => 'text/plain; charset=UTF-8',
     'X-Priority' => '1',
@@ -359,7 +379,7 @@ foreach ($headers as $key => $value) {
 }
 
 $additionalParams = '-f ' . SENDER_EMAIL;
-$mailSent = mail(RECIPIENT_EMAIL, $subject, $body, $headerString, $additionalParams);
+$mailSent = mail(RECIPIENT_EMAIL, mb_encode_mimeheader($subject, 'UTF-8', 'B'), $body, $headerString, $additionalParams);
 
 // ==========================================================================
 // 9. ВОЗВРАТ ОТВЕТА
@@ -374,7 +394,7 @@ if ($mailSent) {
 } else {
     // Логируем ошибку в системный лог PHP
     error_log("Ahundoff Studio: Failed to send email for lead: $name ($phone)");
-    
+
     // Честно сообщаем пользователю об ошибке, предлагая альтернативный канал связи
     echo json_encode([
         'success' => false,
