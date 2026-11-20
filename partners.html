@@ -466,11 +466,12 @@
                 <h2 class="section-title">Стать партнером<span class="logo__dot">.</span></h2>
                 <p class="section-subtitle">Оставьте заявку, и я лично свяжусь с вами в течение 24 часов для обсуждения условий.</p>
                 
-                <form class="partners-form" id="partnersForm" novalidate>
+                <form class="partners-form" id="partnersForm" novalidate method="post" action="/send.php">
                     <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;" aria-hidden="true">
                     <input type="hidden" name="form_type" value="partner">
                     <input type="hidden" name="form_time" id="formTime">
-                    
+                    <noscript><p style="color:#F87171;margin:0 0 1rem;">Для отправки формы включите JavaScript или напишите напрямую: <a href="mailto:info@ahundoff.ru">info@ahundoff.ru</a> / <a href="https://t.me/zohrab_ahundov">@zohrab_ahundov</a></p></noscript>                    
+        
                     <div class="form-group">
                         <label for="p-name" class="sr-only">Ваше имя</label>
                         <input type="text" name="name" id="p-name" placeholder="Ваше имя" required minlength="2" maxlength="100" autocomplete="name">
