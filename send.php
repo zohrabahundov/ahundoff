@@ -76,7 +76,7 @@ function ensureLogDir(): void {
 }
 
 function getClientIp(): string {
-    $remote = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $remote = getClientIp();
     // Если REMOTE_ADDR — внутренний адрес прокси хостинга, берём первый публичный IP
     // из X-Forwarded-For (его проставляет наш nginx). Публичный REMOTE_ADDR не подменяем — защита от спуфинга.
     if (filter_var($remote, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
@@ -114,7 +114,7 @@ function logSpamAttempt(string $reason, array $data): void {
     $entry = [
         'timestamp' => date('Y-m-d H:i:s'),
         'reason' => $reason,
-        'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+        'ip' => getClientIp(),
         'user_agent' => mb_substr($_SERVER['HTTP_USER_AGENT'] ?? 'unknown', 0, 200),
         'data' => $safe
     ];
@@ -134,7 +134,7 @@ function logLead(array $data, string $formType): void {
         'about' => $data['about'] ?? '',
         'consent' => isset($_POST['pd-consent']) ? '1' : '0',
         'policy_version' => '2026-11-21',
-        'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+        'ip' => getClientIp(),
         'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
     ];
     $logLine = json_encode($logEntry, JSON_UNESCAPED_UNICODE) . "\n";
@@ -144,7 +144,7 @@ function logLead(array $data, string $formType): void {
 // Атомарная проверка и запись rate limit (решает проблему Race Condition)
 function checkAndRecordRateLimit(): bool {
     ensureLogDir();
-    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $ip = getClientIp();
     $now = time();
 
     // 'c+' открывает файл для чтения и записи, создает его, если он не существует
@@ -345,7 +345,7 @@ if ($formType === 'partner') {
     $body .= "Компания/сфера: $company\n";
     $body .= "Контакт: $phone\n";
     $body .= "Дата: " . date('d.m.Y H:i:s') . "\n";
-    $body .= "IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown') . "\n\n";
+    $body .= "IP: " . (getClientIp()) . "\n\n";
     $body .= "📝 О СЕБЕ\n";
     $body .= "─────────────────────────────────────\n";
     $body .= (!empty($about) ? $about : 'Не указано') . "\n\n";
@@ -362,7 +362,7 @@ if ($formType === 'partner') {
     $body .= "Имя: $name\n";
     $body .= "Контакт: $phone\n";
     $body .= "Дата: " . date('d.m.Y H:i:s') . "\n";
-    $body .= "IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown') . "\n\n";
+    $body .= "IP: " . (getClientIp()) . "\n\n";
     $body .= "📝 СООБЩЕНИЕ\n";
     $body .= "─────────────────────────────────────\n";
     $body .= (!empty($message) ? $message : 'Не указано') . "\n\n";
