@@ -590,7 +590,7 @@ document.documentElement.classList.add('js');
             const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
             let animationId = 0;
             let particles = [];
-            let mouse = { x: 0, y: 0 };
+            let mouse = { x: -1000, y: -1000 };
 
             const resize = () => {
                 canvas.width = canvas.offsetWidth;
@@ -600,7 +600,7 @@ document.documentElement.classList.add('js');
 
             const initParticles = () => {
                 particles = [];
-                const spacing = 60;
+                const spacing = Math.max(60, Math.ceil(Math.sqrt((canvas.width * canvas.height) / 900)));
                 const cols = Math.ceil(canvas.width / spacing);
                 const rows = Math.ceil(canvas.height / spacing);
 
@@ -686,8 +686,8 @@ document.documentElement.classList.add('js');
                 draw();
             });
 
-            canvas.addEventListener('mousemove', handleMouseMove);
-            canvas.addEventListener('mouseleave', handleMouseLeave);
+            window.addEventListener('mousemove', handleMouseMove, { passive: true });
+            document.addEventListener('mouseleave', handleMouseLeave);
             const resume = () => { if (!animationId) draw(); };
             document.addEventListener('flow-motion-change', resume);
             document.addEventListener('visibilitychange', resume);
