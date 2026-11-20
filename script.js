@@ -493,14 +493,16 @@ document.documentElement.classList.add('js');
                         await navigator.clipboard.writeText(btn.dataset.copy);
                         btn.classList.add('copied');
                         btn.innerHTML = '<svg width="16" height="16" aria-hidden="true"><use href="#icon-check"/></svg>';
-                        Toast.show('Email скопирован в буфер обмена');
+                        //Toast.show('Email скопирован в буфер обмена');
+                        Toast.show(I18N.t('emailCopied'));                        
                         
                         setTimeout(() => {
                             btn.classList.remove('copied');
                             btn.innerHTML = '<svg width="16" height="16" aria-hidden="true"><use href="#icon-code"/></svg>';
                         }, 2000);
                     } catch (err) {
-                        Toast.show('Не удалось скопировать', true);
+                        //Toast.show('Не удалось скопировать', true);
+                        Toast.show(I18N.t('copyFailed'), true);                        
                     }
                 });
             });
