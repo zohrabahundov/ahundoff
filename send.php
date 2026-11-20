@@ -35,17 +35,57 @@ header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 
+// PATCH 2026-11-21-2: локализация ответов (en.html отправляет lang=en)
+$lang = (($_POST['lang'] ?? 'ru') === 'en') ? 'en' : 'ru';
+$MSG = [
+    'ru' => [
+        'method' => 'Метод не разрешен',
+        'forbidden' => 'Доступ запрещен',
+        'rate' => 'Слишком много заявок. Попробуйте через час.',
+        'name_required' => 'Имя обязательно для заполнения',
+        'name_short' => 'Имя слишком короткое',
+        'name_long' => 'Имя слишком длинное',
+        'phone_required' => 'Телефон или Telegram обязателен',
+        'phone_long' => 'Слишком длинный контакт (максимум 40 символов)',
+        'phone_invalid' => 'Некорректный контакт: укажите телефон или Telegram (@username)',
+        'consent' => 'Необходимо согласие на обработку персональных данных',
+        'company' => 'Укажите компанию или сферу деятельности',
+        'message_long' => 'Сообщение слишком длинное',
+        'about_long' => 'Описание слишком длинное',
+        'mail_fail' => 'Ошибка отправки. Пожалуйста, напишите нам напрямую: info@ahundoff.ru или в Telegram.',
+        'ok' => 'Заявка успешно отправлена'
+    ],
+    'en' => [
+        'method' => 'Method not allowed',
+        'forbidden' => 'Access denied',
+        'rate' => 'Too many requests. Please try again in an hour.',
+        'name_required' => 'Name is required',
+        'name_short' => 'Name is too short',
+        'name_long' => 'Name is too long',
+        'phone_required' => 'Phone or Telegram is required',
+        'phone_long' => 'Contact is too long (max 40 characters)',
+        'phone_invalid' => 'Invalid contact: enter a phone number or Telegram (@username)',
+        'consent' => 'Consent to personal data processing is required',
+        'company' => 'Please specify your company or field of activity',
+        'message_long' => 'Message is too long',
+        'about_long' => 'Description is too long',
+        'mail_fail' => 'Sending failed. Please contact us directly: info@ahundoff.ru or Telegram.',
+        'ok' => 'Request sent successfully'
+    ]
+];
+
+
 // Разрешаем только POST-запросы
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(['success' => false, 'error' => 'Метод не разрешен']);
+    echo json_encode(['success' => false, 'error' => $MSG[$lang]['method']]);
     exit;
 }
 
 // Проверка AJAX-запроса
 if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
     http_response_code(403);
-    echo json_encode(['success' => false, 'error' => 'Доступ запрещен']);
+    echo json_encode(['success' => false, 'error' => $MSG[$lang]['forbidden']]);
     exit;
 }
 
@@ -61,7 +101,7 @@ if ($origin !== '') {
 }
 if (!$originOk) {
     http_response_code(403);
-    echo json_encode(['success' => false, 'error' => 'Доступ запрещен']);
+    echo json_encode(['success' => false, 'error' => $MSG[$lang]['forbidden']]);
     exit;
 }
 
@@ -255,7 +295,7 @@ if (!checkAndRecordRateLimit()) {
     http_response_code(429);
     echo json_encode([
         'success' => false,
-        'error' => 'Слишком много заявок. Попробуйте через час.'
+        'error' => $MSG[$lang]['rate']
     ]);
     exit;
 }
@@ -283,17 +323,17 @@ if ($formType === 'partner') {
 $errors = [];
 
 if (empty($name)) {
-    $errors[] = 'Имя обязательно для заполнения';
+    $errors[] = $MSG[$lang]['name_required'];
 } elseif (mb_strlen($name) < 2) {
-    $errors[] = 'Имя слишком короткое';
+    $errors[] = $MSG[$lang]['name_short'];
 } elseif (mb_strlen($name) > 100) {
-    $errors[] = 'Имя слишком длинное';
+    $errors[] = $MSG[$lang]['name_long'];
 }
 
 if (empty($phone)) {
-    $errors[] = 'Телефон или Telegram обязателен';
+    $errors[] = $MSG[$lang]['phone_required'];
 } elseif (mb_strlen($phone) > 40) {
-    $errors[] = 'Слишком длинный контакт (максимум 40 символов)';
+    $errors[] = $MSG[$lang]['phone_long'];
 } else {
     // Разрешаем два формата: телефонный номер (не менее 10 цифр)
     // ИЛИ username Telegram вида @nickname (5–32 символа).
@@ -302,24 +342,24 @@ if (empty($phone)) {
     $phoneClean = preg_replace('/[^\d+]/', '', $phone);
     $isPhone = strlen($phoneClean) >= 10;
     if (!$isTelegramUsername && !$isPhone) {
-        $errors[] = 'Некорректный контакт: укажите телефон или Telegram (@username)';
+        $errors[] = $MSG[$lang]['phone_invalid'];
     }
 }
 
 if (!$consent) {
-    $errors[] = 'Необходимо согласие на обработку персональных данных';
+    $errors[] = $MSG[$lang]['consent'];
 }
 
 if ($formType === 'partner' && empty($company)) {
-    $errors[] = 'Укажите компанию или сферу деятельности';
+    $errors[] = $MSG[$lang]['company'];
 }
 
 if (!empty($message) && mb_strlen($message) > 2000) {
-    $errors[] = 'Сообщение слишком длинное';
+    $errors[] = $MSG[$lang]['message_long'];
 }
 
 if (!empty($about) && mb_strlen($about) > 1000) {
-    $errors[] = 'Описание слишком длинное';
+    $errors[] = $MSG[$lang]['about_long'];
 }
 
 if (!empty($errors)) {
@@ -407,7 +447,7 @@ $mailSent = mail(RECIPIENT_EMAIL, mb_encode_mimeheader($subject, 'UTF-8', 'B'), 
 if ($mailSent) {
     echo json_encode([
         'success' => true,
-        'message' => 'Заявка успешно отправлена'
+        'message' => $MSG[$lang]['ok']
         // Параметр redirect удален, так как фронтенд теперь использует DOM-переключение
     ]);
 } else {
@@ -417,7 +457,7 @@ if ($mailSent) {
     // Честно сообщаем пользователю об ошибке, предлагая альтернативный канал связи
     echo json_encode([
         'success' => false,
-        'error' => 'Ошибка отправки. Пожалуйста, напишите нам напрямую: info@ahundoff.ru или в Telegram.'
+        'error' => $MSG[$lang]['mail_fail']
     ]);
 }
 

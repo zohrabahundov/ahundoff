@@ -34,16 +34,13 @@
     
     <title>Ahundoff — AI-решения для бизнеса</title>
     
-    <link rel="stylesheet" href="/styles.css?v=2026-11-21">
+    <link rel="stylesheet" href="/styles.css?v=2026-11-21-2">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="https://fonts.gstatic.com/s/unbounded/v7/Yq6F-LOTXCb04q32xlOZuGkLbqK2jA.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap">
-    </noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap">
     
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
     <link rel="alternate icon" type="image/x-icon" href="/favicon.ico?v=2">
@@ -75,28 +72,7 @@
     }
     </script>
 
-    <script type="text/javascript">
-        function initYandexMetrika() {
-            (function(m,e,t,r,i,k,a){
-                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-                m[i].l=1*new Date();
-                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-            })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113749509', 'ym');
-            
-            ym(113749509, 'init', {
-                ssr: true, webvisor: false, clickmap: true, ecommerce: "dataLayer",
-                referrer: document.referrer, url: location.href,
-                accurateTrackBounce: true, trackLinks: true
-            });
-        }
-        if ('requestIdleCallback' in window) {
-            requestIdleCallback(initYandexMetrika);
-        } else {
-            setTimeout(initYandexMetrika, 2000);
-        }
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/113749509" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript><div><img src="https://mc.yandex.ru/watch/113749509" class="u-offscreen" alt="" /></div></noscript>
 </head>
 <body>
 <?php include __DIR__ . '/partials/header-ru.php'; ?>
@@ -654,9 +630,9 @@
                 </div>
                 
                 <form class="contact__form" id="contactForm" novalidate method="post" action="/send.php">
-                    <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;" aria-hidden="true">
+                    <input type="text" name="website" tabindex="-1" autocomplete="off" class="u-offscreen" aria-hidden="true">
                     <input type="hidden" name="form_time" id="formTime">
-                    <noscript><p style="color:#F87171;margin:0 0 1rem;">Для отправки формы включите JavaScript или напишите напрямую: <a href="mailto:info@ahundoff.ru">info@ahundoff.ru</a> / <a href="https://t.me/zohrab_ahundov">@zohrab_ahundov</a></p></noscript>
+                    <noscript><p class="u-noscript-note">Для отправки формы включите JavaScript или напишите напрямую: <a href="mailto:info@ahundoff.ru">info@ahundoff.ru</a> / <a href="https://t.me/zohrab_ahundov">@zohrab_ahundov</a></p></noscript>
                     
                     <div class="form-group">
                         <label for="name" class="sr-only">Ваше имя</label>
@@ -679,17 +655,17 @@
                     </div>
                     
                     <button type="submit" class="btn btn--primary btn--full" id="submitBtn">Получить расчёт проекта</button>
-                    <div id="formMessage" style="margin-top:1rem;text-align:center;" role="alert" aria-live="polite"></div>
+                    <div id="formMessage" class="form-message" role="alert" aria-live="polite"></div>
                 </form>
                 
                 <!-- Блок подтверждения успешной отправки (скрыт по умолчанию) -->
-                <div id="successBlock" style="display:none; text-align:center; padding: 2rem 0;" role="status" aria-live="polite">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--accent); margin: 0 auto 1.5rem;">
+                <div id="successBlock" class="form-success" role="status" aria-live="polite">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="form-success__icon">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                         <polyline points="22 4 12 14.01 9 11.01"/>
                     </svg>
-                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">Заявка успешно отправлена!</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.6;">Мы свяжемся с вами в течение 2 часов для бесплатной бизнес-диагностики и расчёта окупаемости.</p>
+                    <h3 class="form-success__title">Заявка успешно отправлена!</h3>
+                    <p class="form-success__text">Мы свяжемся с вами в течение 2 часов для бесплатной бизнес-диагностики и расчёта окупаемости.</p>
                     <button type="button" id="resetFormBtn" class="btn btn--secondary">Оставить ещё одну заявку</button>
                 </div>
                 
@@ -754,7 +730,6 @@
         </button>
     </div>
 
-    <script src="/script.js?v=2026-11-21" defer></script>
-    <script src="/flow.js?v=2026-11-21" defer></script>
+    <script src="/script.js?v=2026-11-21-2" defer></script>
 </body>
 </html>
