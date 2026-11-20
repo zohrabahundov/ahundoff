@@ -116,7 +116,7 @@ function logLead(array $data, string $formType): void {
         'company' => $data['company'] ?? '',
         'about' => $data['about'] ?? '',
         'consent' => isset($_POST['pd-consent']) ? '1' : '0',
-        'policy_version' => '2026-10-28',
+        'policy_version' => '2026-11-21',
         'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
         'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
     ];
