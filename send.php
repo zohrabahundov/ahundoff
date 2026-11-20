@@ -49,6 +49,24 @@ if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQ
     exit;
 }
 
+// Проверка Origin/Referer (CSRF-защита: запрос должен идти с нашего домена)
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$referer = $_SERVER['HTTP_REFERER'] ?? '';
+$clientHost = $_SERVER['HTTP_HOST'] ?? '';
+$originOk = false;
+if ($origin !== '') {
+    $originHost = parse_url($origin, PHP_URL_HOST);
+    $originOk = ($originHost === $clientHost);
+} elseif ($referer !== '') {
+    $refererHost = parse_url($referer, PHP_URL_HOST);
+    $originOk = ($refererHost === $clientHost);
+}
+if (!$originOk) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Доступ запрещен']);
+    exit;
+}
+
 // ==========================================================================
 // 3. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
 // ==========================================================================
@@ -146,25 +164,19 @@ function checkAndRecordRateLimit(): bool {
 }
 
 // ==========================================================================
-// 4. ПРОВЕРКА RATE LIMITING
-// ==========================================================================
-
-if (!checkAndRecordRateLimit()) {
-    http_response_code(429);
-    echo json_encode([
-        'success' => false, 
-        'error' => 'Слишком много заявок. Попробуйте через час.'
-    ]);
-    exit;
-}
-
-// ==========================================================================
-// 5. ПОЛУЧЕНИЕ И ВАЛИДАЦИЯ ДАННЫХ
+// 4. ПОЛУЧЕНИЕ И ВАЛИДАЦИЯ ДАННЫХ
+// (проверки honeypot / timestamp выполняются ДО rate limiting,
+//  чтобы спам-запросы не «сжигали» лимит IP реальных пользователей)
 // ==========================================================================
 
 $formType = $_POST['form_type'] ?? 'contact';
+if (!in_array($formType, ['contact', 'partner'], true)) {
+    $formType = 'contact';
+}
 
 // Honeypot проверка
+// ВАЖНО: проверка выполняется ДО rate limiting и ДО валидации,
+// чтобы бот не мог «сжигать» лимит IP реальных пользователей.
 if (!empty($_POST['website'])) {
     logSpamAttempt('Honeypot triggered', $_POST);
     echo json_encode(['success' => true, 'message' => 'Спасибо!']);
@@ -172,12 +184,41 @@ if (!empty($_POST['website'])) {
 }
 
 // Проверка timestamp
-$formTime = (int)($_POST['form_time'] ?? 0);
+// form_time отсутствует или пуст — тоже считаем подозрительным (бот без JS),
+// иначе проверка легко обходилась просто неполучкой этого поля.
+$formTimeRaw = $_POST['form_time'] ?? null;
+$formTime = (int)($formTimeRaw ?? 0);
 $currentTime = time();
 
-if ($formTime > 0 && ($currentTime - $formTime) < MIN_FORM_TIME) {
+if ($formTimeRaw === null || $formTimeRaw === '' || $formTime <= 0) {
+    logSpamAttempt('Missing or invalid form_time', $_POST);
+    echo json_encode(['success' => true, 'message' => 'Спасибо!']);
+    exit;
+}
+
+if (($currentTime - $formTime) < MIN_FORM_TIME) {
     logSpamAttempt('Form filled too fast', $_POST);
     echo json_encode(['success' => true, 'message' => 'Спасибо!']);
+    exit;
+}
+
+// Глупая защита от поддельного будущего timestamp
+if ($formTime > $currentTime + 86400) {
+    logSpamAttempt('Form time in the future', $_POST);
+    echo json_encode(['success' => true, 'message' => 'Спасибо!']);
+    exit;
+}
+
+// ==========================================================================
+// 5. ПРОВЕРКА RATE LIMITING (после спам-фильтров)
+// ==========================================================================
+
+if (!checkAndRecordRateLimit()) {
+    http_response_code(429);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Слишком много заявок. Попробуйте через час.'
+    ]);
     exit;
 }
 
@@ -214,9 +255,14 @@ if (empty($name)) {
 if (empty($phone)) {
     $errors[] = 'Телефон или Telegram обязателен';
 } else {
+    // Разрешаем два формата: телефонный номер (не менее 10 цифр)
+    // ИЛИ username Telegram вида @nickname (5–32 символа).
+    // Раньше любой текст без 10 цифр отвергался, хотя форма явно принимает Telegram.
+    $isTelegramUsername = preg_match('/^@[A-Za-z][A-Za-z0-9_]{4,31}$/', $phone);
     $phoneClean = preg_replace('/[^\d+]/', '', $phone);
-    if (strlen($phoneClean) < 10) {
-        $errors[] = 'Некорректный номер телефона';
+    $isPhone = strlen($phoneClean) >= 10;
+    if (!$isTelegramUsername && !$isPhone) {
+        $errors[] = 'Некорректный контакт: укажите телефон или Telegram (@username)';
     }
 }
 
