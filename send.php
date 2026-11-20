@@ -76,7 +76,7 @@ function ensureLogDir(): void {
 }
 
 function getClientIp(): string {
-    $remote = getClientIp();
+    $remote = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
     // Если REMOTE_ADDR — внутренний адрес прокси хостинга, берём первый публичный IP
     // из X-Forwarded-For (его проставляет наш nginx). Публичный REMOTE_ADDR не подменяем — защита от спуфинга.
     if (filter_var($remote, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
