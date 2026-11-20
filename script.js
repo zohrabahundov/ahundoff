@@ -281,7 +281,9 @@ document.documentElement.classList.add('js');
                 if (consent && !consent.checked) { Toast.show(I18N.t('consentRequired'), true); consent.focus(); return; }
                 submitBtn.disabled = true; submitBtn.textContent = I18N.t('sending'); formMessage.innerHTML='';
                 try {
-                    const r = await fetch('/send.php', { method:'POST', body:new FormData(form),
+                    const formData = new FormData(form);
+                    formData.append('lang', I18N.lang);
+                    const r = await fetch('/send.php', { method:'POST', body:formData,
                         headers:{'X-Requested-With':'XMLHttpRequest'} });
                     const res = await r.json();
                     if (r.ok && res.success) { Tracker.track(cfg.goal);
