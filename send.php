@@ -71,7 +71,7 @@ if (!$originOk) {
 
 function ensureLogDir(): void {
     if (!is_dir(LOG_DIR)) {
-        mkdir(LOG_DIR, 0755, true);
+        mkdir(LOG_DIR, 0750, true);
     }
 }
 
@@ -81,7 +81,9 @@ function sanitize($value): string {
     }
     $value = trim($value);
     $value = strip_tags($value);
-    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+    // Убираем управляющие символы, кроме \t \n \r (переносы строк в сообщении сохраняем).
+    // htmlspecialchars НЕ нужен: данные идут только в plain-text письмо и JSON-лог, в HTML не выводятся.
+    return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $value);
 }
 
 function logSpamAttempt(string $reason, array $data): void {
@@ -275,6 +277,8 @@ if (empty($name)) {
 
 if (empty($phone)) {
     $errors[] = 'Телефон или Telegram обязателен';
+} elseif (mb_strlen($phone) > 40) {
+    $errors[] = 'Слишком длинный контакт (максимум 40 символов)';
 } else {
     // Разрешаем два формата: телефонный номер (не менее 10 цифр)
     // ИЛИ username Telegram вида @nickname (5–32 символа).
