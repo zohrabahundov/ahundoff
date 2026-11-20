@@ -1,2 +1,19 @@
+# Логи и данные
+logs/
+*.log
+*.json
+!package.json
+
+# Переменные окружения
+.env
+.env.local
+
+# ОС и IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Python-артефакты скрипта аудита
 __pycache__/
 *.pyc
+apply_all_patches.py
