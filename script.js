@@ -194,116 +194,69 @@ document.documentElement.classList.add('js');
     })();
 
     const PhoneMask = (() => {
-        const init = () => {
-            const phoneInput = document.getElementById('phone');
-            if (!phoneInput) return;
-
-            // Функция форматирования строки в нужный вид
-            const formatPhone = (value) => {
+        // Универсальное поле контакта: телефон РФ (+7), международный номер (+...) или Telegram (@username).
+        const attach = (input) => {
+            const formatRu = (value) => {
                 let digits = value.replace(/\D/g, '');
-                
-                if (digits.startsWith('8')) {
-                    digits = '7' + digits.slice(1);
-                }
-                
-                if (!digits.startsWith('7') && digits.length > 0) {
-                    digits = '7' + digits;
-                }
-                
+                if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+                if (!digits.startsWith('7') && digits.length > 0) digits = '7' + digits;
                 digits = digits.slice(0, 11);
-                
-                let formatted = '';
-                if (digits.length > 0) formatted = '+7';
-                if (digits.length > 1) formatted += ' (' + digits.slice(1, 4);
-                if (digits.length >= 5) formatted += ') ' + digits.slice(4, 7);
-                if (digits.length >= 8) formatted += '-' + digits.slice(7, 9);
-                if (digits.length >= 10) formatted += '-' + digits.slice(9, 11);
-                
-                return formatted;
+                let out = '';
+                if (digits.length > 0) out = '+7';
+                if (digits.length > 1) out += ' (' + digits.slice(1, 4);
+                if (digits.length >= 5) out += ') ' + digits.slice(4, 7);
+                if (digits.length >= 8) out += '-' + digits.slice(7, 9);
+                if (digits.length >= 10) out += '-' + digits.slice(9, 11);
+                return out;
             };
-
-            phoneInput.addEventListener('input', (e) => {
-                const input = e.target;
-                const cursorPosition = input.selectionStart || 0;
-                const oldValue = input.value;
-
-                // 1. Считаем, сколько цифр было ДО курсора в старом (неотформатированном) значении
-                let digitsBeforeCursor = 0;
-                for (let i = 0; i < cursorPosition; i++) {
-                    if (/\d/.test(oldValue[i])) {
-                        digitsBeforeCursor++;
-                    }
+            const mode = (v) => {
+                const t = v.trim();
+                if (t.startsWith('@')) return 'telegram';
+                const d = t.replace(/\D/g, '');
+                if (t.startsWith('+') && d.length > 0 && !d.startsWith('7')) return 'intl';
+                return 'ru';
+            };
+            input.addEventListener('input', (e) => {
+                const el = e.target;
+                const v = el.value;
+                if (v.trim() === '+') return; // даём начать международный номер
+                const m = mode(v);
+                if (m === 'telegram') {
+                    el.value = '@' + v.replace(/[^A-Za-z0-9_]/g, '').slice(0, 32);
+                    return;
                 }
-
-                // 2. Получаем новое отформатированное значение
-                const newValue = formatPhone(oldValue);
-                const oldDigits = oldValue.replace(/\D/g, '');
-                
-                // 3. Корректируем целевое количество цифр: 
-                // если система автоматически добавила '7' (которой не было в старом вводе), 
-                // нам нужно учесть этот сдвиг, чтобы курсор не откатывался назад.
+                if (m === 'intl') {
+                    el.value = '+' + v.replace(/\D/g, '').slice(0, 15);
+                    return;
+                }
+                // РФ-маска с сохранением позиции курсора
+                const cursor = el.selectionStart || 0;
+                let digitsBefore = 0;
+                for (let i = 0; i < cursor; i++) if (/\d/.test(v[i])) digitsBefore++;
+                const oldDigits = v.replace(/\D/g, '');
                 const wasSevenAdded = oldDigits.length > 0 && !oldDigits.startsWith('7') && !oldDigits.startsWith('8');
-                const targetDigits = digitsBeforeCursor + (wasSevenAdded ? 1 : 0);
-
-                // 4. Находим новую позицию курсора в отформатированной строке
-                let newCursorPosition = 0;
-                let currentDigits = 0;
-                let found = false;
-
-                for (let i = 0; i < newValue.length; i++) {
-                    if (/\d/.test(newValue[i])) {
-                        currentDigits++;
-                    }
-                    
-                    // Как только набрали нужное количество цифр, ставим курсор ПОСЛЕ этой цифры
-                    if (currentDigits === targetDigits) {
-                        newCursorPosition = i + 1;
-                        found = true;
-                        break;
-                    }
+                const target = digitsBefore + (wasSevenAdded ? 1 : 0);
+                const nv = formatRu(v);
+                let pos = nv.length, count = 0;
+                for (let i = 0; i < nv.length; i++) {
+                    if (/\d/.test(nv[i])) count++;
+                    if (count === target) { pos = i + 1; break; }
                 }
-
-                // Если точное совпадение не найдено (например, удалили цифру и их стало меньше), 
-                // ставим курсор в самый конец доступного ввода.
-                if (!found) {
-                    newCursorPosition = newValue.length;
-                }
-
-                // 5. Микро-улучшение UX: если курсор попал ровно перед разделителем (скобкой, тире, пробелом),
-                // перепрыгиваем его, чтобы пользователю было удобнее продолжать ввод или стирание.
-                if (found && newCursorPosition < newValue.length) {
-                    if (/[\s\-\(\)]/.test(newValue[newCursorPosition])) {
-                        newCursorPosition++;
-                    }
-                }
-
-                // Применяем новое значение и позицию курсора
-                input.value = newValue;
-                input.setSelectionRange(newCursorPosition, newCursorPosition);
+                if (pos < nv.length && /[\s\-()]/.test(nv[pos])) pos++;
+                el.value = nv;
+                el.setSelectionRange(pos, pos);
             });
-
-            phoneInput.addEventListener('focus', (e) => {
-                if (!e.target.value) {
-                    e.target.value = '+7';
-                    // Ставим курсор после +7, чтобы пользователь сразу начинал вводить номер
-                    setTimeout(() => e.target.setSelectionRange(3, 3), 0);
-                }
-            });
-
-            phoneInput.addEventListener('blur', (e) => {
-                if (e.target.value === '+7' || e.target.value === '+7 (') {
-                    e.target.value = '';
-                }
-            });
-
-            phoneInput.addEventListener('keydown', (e) => {
-                // Запрещаем стирать префикс '+7'
-                if (e.key === 'Backspace' && (e.target.value === '+7' || e.target.selectionStart <= 3)) {
-                    e.preventDefault();
-                }
+            input.addEventListener('blur', (e) => {
+                const v = e.target.value;
+                if (v === '+7' || v === '+7 (' || v === '+' || v === '@') e.target.value = '';
             });
         };
-
+        const init = () => {
+            ['phone', 'p-contact'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) attach(el);
+            });
+        };
         return { init };
     })();
 
