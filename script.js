@@ -7,6 +7,36 @@ document.documentElement.classList.add('js');
 (() => {
     'use strict';
 
+    // MODULE: i18n — локализация динамических строк.
+    // Исправление уязвимости локализации: en.html подключает этот же script.js,
+    // а раньше все runtime-строки (кнопка, тосты, ошибки) были захардкожены по-русски,
+    // из-за чего на английской версии сайта появлялся русский текст.
+    const I18N = (() => {
+        const lang = (document.documentElement.getAttribute('lang') || 'ru').toLowerCase().split('-')[0];
+        const STRINGS = {
+            ru: {
+                submitLabel: 'Получить расчёт проекта',
+                sending: 'Отправка...',
+                consentRequired: 'Пожалуйста, дайте согласие на обработку персональных данных',
+                sendError: 'Ошибка отправки',
+                networkError: 'Ошибка сети. Напишите напрямую: info@ahundoff.ru',
+                emailCopied: 'Email скопирован в буфер обмена',
+                copyFailed: 'Не удалось скопировать'
+            },
+            en: {
+                submitLabel: 'Get a project estimate',
+                sending: 'Sending...',
+                consentRequired: 'Please consent to the processing of your personal data',
+                sendError: 'Submission failed',
+                networkError: 'Network error. Contact us directly: info@ahundoff.ru',
+                emailCopied: 'Email copied to clipboard',
+                copyFailed: 'Copy failed'
+            }
+        };
+        const t = (key) => (STRINGS[lang] && STRINGS[lang][key]) || STRINGS.ru[key] || key;
+        return { lang, t };
+    })();
+
     const Tracker = (() => {
         const YM_ID = 113749509;
         
@@ -294,7 +324,11 @@ document.documentElement.classList.add('js');
 
             const resetSubmitButton = () => {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Получить расчёт проекта';
+                // Впервые кнопка инициализируется из i18n (или остаётся той, что в HTML)
+                if (!submitBtn.dataset.defaultLabel) {
+                    submitBtn.dataset.defaultLabel = submitBtn.textContent.trim();
+                }
+                submitBtn.textContent = submitBtn.dataset.defaultLabel || I18N.t('submitLabel');
             };
 
             // Переключение между формой и блоком успеха
@@ -323,14 +357,14 @@ document.documentElement.classList.add('js');
                 
                 const consentCheckbox = document.getElementById('pd-consent');
                 if (consentCheckbox && !consentCheckbox.checked) {
-                    Toast.show('Пожалуйста, дайте согласие на обработку персональных данных', true);
+                    Toast.show(I18N.t('consentRequired'), true);
                     resetSubmitButton();
                     consentCheckbox.focus();
                     return;
                 }
 
                 submitBtn.disabled = true;
-                submitBtn.textContent = 'Отправка...';
+                submitBtn.textContent = I18N.t('sending');
                 formMessage.innerHTML = '';
 
                 const formData = new FormData(form);
@@ -351,14 +385,14 @@ document.documentElement.classList.add('js');
                     } else {
                         const errorMsg = typeof result.error === 'string' 
                             ? result.error.replace(/[<>]/g, '') 
-                            : 'Ошибка отправки';
+                            : I18N.t('sendError');
                         Toast.show(errorMsg, true);
                         resetSubmitButton();
                     }
                 } catch (error) {
                     // Бонус: логируем реальную ошибку для отладки (пункт 14 из списка)
                     console.error('Form submission error:', error);
-                    Toast.show('Ошибка сети. Напишите напрямую: info@ahundoff.ru', true);
+                    Toast.show(I18N.t('networkError'), true);
                     resetSubmitButton();
                 }
             });
