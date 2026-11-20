@@ -263,7 +263,8 @@ document.documentElement.classList.add('js');
     const FormHandler = (() => {
         const bind = (cfg) => {
             const form = document.getElementById(cfg.form);
-            if (!form) return;
+            if (!form || form.dataset.bound) return;
+            form.dataset.bound = '1';
             const submitBtn = document.getElementById(cfg.submit);
             const formMessage = document.getElementById(cfg.message);
             const consent = document.getElementById(cfg.consent);
