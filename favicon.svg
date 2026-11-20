@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Ahundoff Studio</title>
+  <rect width="64" height="64" rx="14" fill="#030712"/>
+  <path d="M19 12 L31 12 L43 52 L34 52 L32.2 46 L17.8 46 L16 52 L7 52 Z M25 22 L30.1 39 L19.9 39 Z"
+        fill="#F8FAFC" fill-rule="evenodd" stroke="#F8FAFC" stroke-width="1.5" stroke-linejoin="round"/>
+  <circle cx="51.5" cy="46.5" r="5.5" fill="#3B82F6"/>
+</svg>
