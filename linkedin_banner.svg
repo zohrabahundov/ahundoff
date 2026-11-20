@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1584" height="396" viewBox="0 0 1584 396">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#070C18"/><stop offset="0.55" stop-color="#0D1A33"/><stop offset="1" stop-color="#081226"/></linearGradient>
+    <radialGradient id="glow" cx="0.82" cy="0.1" r="0.75"><stop offset="0" stop-color="#22D3EE" stop-opacity="0.22"/><stop offset="1" stop-color="#22D3EE" stop-opacity="0"/></radialGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22D3EE"/><stop offset="1" stop-color="#3B82F6"/></linearGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#FFFFFF" stroke-opacity="0.035"/></pattern>
+  </defs>
+  <rect width="1584" height="396" fill="url(#bg)"/><rect width="1584" height="396" fill="url(#grid)"/><rect width="1584" height="396" fill="url(#glow)"/>
+  <g stroke="#22D3EE" stroke-opacity="0.28" fill="none" stroke-width="1.2"><path d="M300 96 L392 150 L300 214 L404 268 L330 330"/><path d="M392 150 L470 118 M392 150 L470 200 M404 268 L482 240"/></g>
+  <g fill="#22D3EE" fill-opacity="0.55"><circle cx="300" cy="96" r="4"/><circle cx="392" cy="150" r="5.5"/><circle cx="300" cy="214" r="4"/><circle cx="404" cy="268" r="5.5"/><circle cx="330" cy="330" r="4"/><circle cx="470" cy="118" r="3.5"/><circle cx="470" cy="200" r="3.5"/><circle cx="482" cy="240" r="3.5"/></g>
+  <rect x="560" y="80" width="5" height="212" rx="2.5" fill="url(#bar)"/>
+  <g font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+    <text x="600" y="122" font-size="38" font-weight="700" fill="#F8FAFC">Enterprise AI that ships to production</text>
+    <text x="600" y="172" font-size="23" font-weight="600" fill="#38BDF8">AI Director · Head of MLOps · Patented AutoML Inventor</text>
+    <text x="600" y="218" font-size="21" fill="#CBD5E1">Sberbank 6.5 yrs · 1,500+ org · RUB 10B/yr model revenue · TTM −40%</text>
+    <text x="600" y="268" font-size="20" font-weight="700" fill="#22D3EE">Open to relocation: GCC · EU · USA · Canada — Full-time or Fractional</text>
+    <text x="1392" y="60" font-size="15" fill="#64748B" text-anchor="end">ahundoff.ru</text>
+  </g>
+</svg>
