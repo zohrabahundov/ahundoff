@@ -3,36 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <style>html { background: #030712; }</style>
     <meta name="description" content="Privacy Policy of Ahundoff Studio: how we collect, use, and protect personal data in accordance with Russian Federal Law 152-FZ.">
     <meta name="robots" content="noindex, follow">
     <link rel="canonical" href="https://ahundoff.ru/privacy-policy-en.html">
     <title>Privacy Policy — Ahundoff</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="stylesheet" href="styles.css?v=2026-11-21-2">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico?v=2">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="styles.css?v=2026-11-21-3">
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <div class="header__content">
-                <a href="/en.html" class="logo">Ahundoff<span class="logo__dot">.</span></a>
-                <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav">
-                    <span></span><span></span><span></span>
-                </button>
-                <nav class="nav" id="main-nav">
-                    <a href="/en.html#services" class="nav__link">Solutions</a>
-                    <a href="/en.html#cases" class="nav__link">Cases</a>
-                    <a href="/en.html#founder" class="nav__link">Expertise</a>
-                    <a href="/en.html#process" class="nav__link">Approach</a>
-                    <a href="/en.html#contact" class="nav__link nav__link--cta">Discuss a project</a>
-                </nav>
-            </div>
-        </div>
-    </header>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <?php include __DIR__ . '/partials/header-en.php'; ?>
 
-    <section class="policy-hero">
+    <section class="policy-hero" id="main">
         <div class="container">
             <div class="policy-hero__content">
                 <span class="policy-hero__badge">Legal document</span>
@@ -85,7 +71,7 @@
                             <p>INN (taxpayer number): 054204225330</p>
                             <p>Email: <a href="mailto:info@ahundoff.ru">info@ahundoff.ru</a></p>
                             <p>Phone: <a href="tel:+79295005785">+7 (929) 500-57-85</a></p>
-                            <p>Address: 367000, Республика Дагестан, г. Махачкала, ул. Амет-Хана Султана, д. 10</p>
+                            <p>Address: 10 Amet-Khan Sultan St., Makhachkala, Republic of Dagestan, 367000, Russia</p>
                         </div>
                     </section>
 
@@ -227,34 +213,7 @@
         </div>
     </section>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer__content">
-                <div class="footer__brand">
-                    <a href="/en.html" class="logo">Ahundoff<span class="logo__dot">.</span></a>
-                    <p class="footer__tagline">AI solutions for business</p>
-                    <p class="footer__legal">Sole Proprietor Zohrab Seifullaevich Akhundov | INN 054204225330</p>
-                </div>
-                <div class="footer__links">
-                    <a href="/en.html#services">Solutions</a>
-                    <a href="/en.html#cases">Cases</a>
-                    <a href="/en.html#founder">Expertise</a>
-                    <a href="/en.html#process">Approach</a>
-                    <a href="/en.html#contact">Contacts</a>
-                    <a href="/privacy-policy-en.html">Privacy Policy</a>
-                </div>
-                <div class="footer__socials">
-                    <a href="https://wa.me/79295005785" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-                    </a>
-                    <a href="https://t.me/zohrab_ahundov" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Telegram">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                    </a>
-                </div>
-                <div class="footer__copyright">© 2026 Ahundoff Studio. All rights reserved.</div>
-            </div>
-        </div>
-    </footer>
-    <script src="/script.js?v=2026-11-21-2" defer></script>
+    <?php include __DIR__ . '/partials/footer-en.php'; ?>
+    <script src="/script.js?v=2026-11-21-3" defer></script>
 </body>
 </html>

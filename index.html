@@ -20,6 +20,9 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://ahundoff.ru">
     <meta property="og:image" content="https://ahundoff.ru/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:image" content="https://ahundoff.ru/og-image.jpg">
     <meta property="og:locale" content="ru_RU">
     <meta name="yandex-verification" content="18ffb19ae3c0a614" />
     
@@ -27,20 +30,11 @@
     <meta name="twitter:title" content="Ahundoff — AI-решения для бизнеса">
     <meta name="twitter:description" content="Превращаем хаос бизнес-процессов в автономные AI-системы. Запуск за 14 дней.">
     
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     
     <title>Ahundoff — AI-решения для бизнеса</title>
     
-    <link rel="stylesheet" href="/styles.css?v=2026-11-21-2">
+    <link rel="stylesheet" href="/styles.css?v=2026-11-21-3">
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="https://fonts.gstatic.com/s/unbounded/v7/Yq6F-LOTXCb04q32xlOZuGkLbqK2jA.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap">
     
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
     <link rel="alternate icon" type="image/x-icon" href="/favicon.ico?v=2">
@@ -72,13 +66,14 @@
     }
     </script>
 
-    <noscript><div><img src="https://mc.yandex.ru/watch/113749509" class="u-offscreen" alt="" /></div></noscript>
-</head>
+    </head>
 <body>
+    <noscript><div><img src="https://mc.yandex.ru/watch/113749509" class="u-offscreen" alt="" /></div></noscript>
+<a class="skip-link" href="#main">Перейти к содержимому</a>
 <?php include __DIR__ . '/partials/header-ru.php'; ?>
 
     <!-- 1. Hero -->
-    <section class="hero">
+    <section class="hero" id="main">
         <canvas class="hero__grid" aria-hidden="true"></canvas>
         <div class="container">
             <div class="hero__content">
@@ -100,25 +95,25 @@
                 <div class="stat">
                     <div class="stat__number" data-target="10" data-suffix="+ лет">10+ лет</div>
                     <div class="stat__label">
-                        <span class="tooltip" data-tooltip="Опыт работы с крупнейшими банками и телеком-компаниями РФ, включая управление AI-трансформацией">экспертиза в AI</span>
+                        <span class="tooltip" tabindex="0" data-tooltip="Опыт работы с крупнейшими банками и телеком-компаниями РФ, включая управление AI-трансформацией">экспертиза в AI</span>
                     </div>
                 </div>
                 <div class="stat">
                     <div class="stat__number" data-target="50" data-suffix=" млрд ₽">50 млрд ₽</div>
                     <div class="stat__label">
-                        <span class="tooltip" data-tooltip="Портфель ИТ-инициатив в крупнейших банках и телеком-компаниях РФ, включая внедрение AI-моделей скоринга и антифрода">портфель AI-проектов</span>
+                        <span class="tooltip" tabindex="0" data-tooltip="Портфель ИТ-инициатив в крупнейших банках и телеком-компаниях РФ, включая внедрение AI-моделей скоринга и антифрода">портфель AI-проектов</span>
                     </div>
                 </div>
                 <div class="stat">
                     <div class="stat__number" data-target="14" data-suffix=" дней">14 дней</div>
                     <div class="stat__label">
-                        <span class="tooltip" data-tooltip="Средний срок от первой встречи до запуска рабочего MVP. Благодаря готовым архитектурным шаблонам">средний срок запуска MVP</span>
+                        <span class="tooltip" tabindex="0" data-tooltip="Средний срок от первой встречи до запуска рабочего MVP. Благодаря готовым архитектурным шаблонам">средний срок запуска MVP</span>
                     </div>
                 </div>
                 <div class="stat">
                     <div class="stat__number" data-target="100" data-suffix="%">100%</div>
                     <div class="stat__label">
-                        <span class="tooltip" data-tooltip="Каждый проект сдаётся с SLA, мониторингом 24/7, документацией и обучением команды">проектов сдаются с корпоративным SLA</span>
+                        <span class="tooltip" tabindex="0" data-tooltip="Каждый проект сдаётся с SLA, мониторингом 24/7, документацией и обучением команды">проектов сдаются с корпоративным SLA</span>
                     </div>
                 </div>
             </div>
@@ -148,7 +143,7 @@
                         <img src="assets/products/inspection-gauge.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
                     </div>
                     <h3 class="card__title">Контроль качества на производстве</h3>
-                    <p class="card__text">Детекция дефектов и брака в реальном времени. <span class="tooltip" data-tooltip="Развертывание AI-модели непосредственно на устройстве (камере, сервере) без отправки данных в облако">Edge-развертывание</span> без задержек и передачи данных в облако. Снижение рекламаций и повышение качества продукции.</p>
+                    <p class="card__text">Детекция дефектов и брака в реальном времени. <span class="tooltip" tabindex="0" data-tooltip="Развертывание AI-модели непосредственно на устройстве (камере, сервере) без отправки данных в облако">Edge-развертывание</span> без задержек и передачи данных в облако. Снижение рекламаций и повышение качества продукции.</p>
                     <div class="service-card__meta">
                         <span>Снижение брака: до 80%</span>
                         <span>Срок: от 3 недель</span>
@@ -184,7 +179,7 @@
                         <img src="assets/products/ct-scanner.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
                     </div>
                     <h3 class="card__title">Медицинская диагностика</h3>
-                    <p class="card__text">AI-ассистент для врачей: обнаружение патологий на рентгене, КТ и МРТ. Интеграция с <span class="tooltip" data-tooltip="Медицинская информационная система — программное обеспечение для автоматизации работы клиники">МИС</span>. Ускорение диагностики и снижение нагрузки на специалистов.</p>
+                    <p class="card__text">AI-ассистент для врачей: обнаружение патологий на рентгене, КТ и МРТ. Интеграция с <span class="tooltip" tabindex="0" data-tooltip="Медицинская информационная система — программное обеспечение для автоматизации работы клиники">МИС</span>. Ускорение диагностики и снижение нагрузки на специалистов.</p>
                     <div class="service-card__meta">
                         <span>Чувствительность: >95%</span>
                         <span>Срок: от 4 недель</span>
@@ -195,7 +190,7 @@
                     <div class="card-art">
                         <img src="assets/products/card-catalog.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
                     </div>
-                    <h3 class="card__title">Корпоративные <span class="tooltip" data-tooltip="Retrieval-Augmented Generation — AI-система, которая ищет ответы в ваших внутренних документах и базах знаний">RAG</span>-системы</h3>
+                    <h3 class="card__title">Корпоративные <span class="tooltip" tabindex="0" data-tooltip="Retrieval-Augmented Generation — AI-система, которая ищет ответы в ваших внутренних документах и базах знаний">RAG</span>-системы</h3>
                     <p class="card__text">Умный поиск по базам знаний и автоматизация поддержки. Безопасное развертывание на серверах в РФ с GigaChat или YandexGPT. Соответствие 152-ФЗ.</p>
                     <div class="service-card__meta">
                         <span>Экономия времени: до 40%</span>
@@ -473,7 +468,7 @@
                 <div class="founder__grid">
                     <div class="founder__photo">
                         <div class="founder__image">
-                            <img src="assets/trust/founder.jpg" alt="Зохраб Ахундов — основатель Ahundoff Studio" loading="lazy" decoding="async" width="800" height="1067">
+                            <img src="assets/trust/founder.jpg?v=1" alt="Зохраб Ахундов — основатель Ahundoff Studio" loading="lazy" decoding="async" width="800" height="1143">
                         </div>
                         <div class="founder__photo-badge">
                             <svg width="16" height="16" aria-hidden="true"><use href="#icon-check"/></svg>
@@ -630,7 +625,7 @@
                 </div>
                 
                 <form class="contact__form" id="contactForm" novalidate method="post" action="/send.php">
-                    <input type="text" name="website" tabindex="-1" autocomplete="off" class="u-offscreen" aria-hidden="true">
+                    <input type="text" name="website" tabindex="-1" autocomplete="new-password" class="u-offscreen" aria-hidden="true">
                     <input type="hidden" name="form_time" id="formTime">
                     <noscript><p class="u-noscript-note">Для отправки формы включите JavaScript или напишите напрямую: <a href="mailto:info@ahundoff.ru">info@ahundoff.ru</a> / <a href="https://t.me/zohrab_ahundov">@zohrab_ahundov</a></p></noscript>
                     
@@ -650,7 +645,7 @@
                     <div class="form-consent">
                         <input type="checkbox" id="pd-consent" name="pd-consent" required>
                         <label for="pd-consent">
-                            Я даю согласие на обработку моих <a href="/privacy-policy.html">персональных данных</a> в соответствии с 152-ФЗ.
+                            Я даю согласие на обработку моих <a href="/privacy-policy.html" target="_blank" rel="noopener noreferrer">персональных данных</a> в соответствии с 152-ФЗ.
                         </label>
                     </div>
                     
@@ -730,6 +725,6 @@
         </button>
     </div>
 
-    <script src="/script.js?v=2026-11-21-2" defer></script>
+    <script src="/script.js?v=2026-11-21-3" defer></script>
 </body>
 </html>

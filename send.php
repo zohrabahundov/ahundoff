@@ -2,46 +2,62 @@
 /**
  * Ahundoff Studio - Обработчик форм
  * Поддерживает: обычные заявки (contact) и заявки партнеров (partner)
- * Защита: honeypot, timestamp, атомарный rate limiting, валидация, санитизация
+ * Защита: honeypot, timestamp, двухуровневый rate limiting, валидация, санитизация
+ *
+ * Аудит-рефакторинг 21.11.2026:
+ *  - getClientIp(): берём ПРАВЫЙ публичный IP из X-Forwarded-For (его дописывает наш nginx),
+ *    а не первый — первый контролируется клиентом и позволял обходить rate limit.
+ *  - Валидация UTF-8 на входе: невалидные байты больше не роняют sanitize() в TypeError (500).
+ *  - Согласие проверяется по значению ('on'), а не по isset(): pd-consent=0 больше не считается согласием.
+ *  - Rate limit разделён: «попытки» (30/час, анти-брут) и «отправки» (5/час, только успешные).
+ *    Ошибки валидации больше не «сжигают» лимит реальных отправок.
+ *  - Устаревшая форма (>24ч) возвращает честную ошибку form_expired (фронтенд обновляет время и повторяет),
+ *    а не фейковый успех с тихой потерей лида.
+ *  - Телефон: строгий формат ^\+?\d{10,15}$ после удаления пробелов/скобок/дефисов.
+ *  - Минимизация ПДн: spam.log пишет только длины полей, error_log — без имени/телефона.
+ *  - Ротация leads.log (>5 МБ) и ограничение числа IP в rate_limit.json.
  */
 
 // ==========================================================================
 // 1. КОНФИГУРАЦИЯ
 // ==========================================================================
 
-// Email для получения заявок
 define('RECIPIENT_EMAIL', 'info@ahundoff.ru');
 define('SENDER_EMAIL', 'noreply@ahundoff.ru');
 define('SENDER_NAME', 'Ahundoff Studio');
 
-// Пути к файлам (теперь внутри директории скрипта для гарантии прав на запись)
 define('LOG_DIR', __DIR__ . '/logs');
 define('LOG_FILE', LOG_DIR . '/leads.log');
 define('RATE_LIMIT_FILE', LOG_DIR . '/rate_limit.json');
 define('SPAM_LOG_FILE', LOG_DIR . '/spam.log');
 
-// Настройки rate limiting
-define('RATE_LIMIT_MAX', 5); // Максимум заявок
-define('RATE_LIMIT_PERIOD', 3600); // За 1 час (в секундах)
+// Двухуровневый rate limiting
+define('RATE_LIMIT_SENDS', 5);      // успешных заявок с одного IP
+define('RATE_LIMIT_ATTEMPTS', 30);  // всего попыток (включая ошибки валидации) с одного IP
+define('RATE_LIMIT_PERIOD', 3600);  // за 1 час
+define('RATE_LIMIT_MAX_IPS', 5000); // потолок числа IP в файле (защита от раздувания)
 
-// Минимальное время заполнения формы (защита от ботов)
-define('MIN_FORM_TIME', 3); // 3 секунды
+define('MIN_FORM_TIME', 3);         // минимальное время заполнения, сек
+define('MAX_FORM_AGE', 86400);      // форма старше 24ч требует повторной отправки
+define('LOG_ROTATE_SIZE', 5 * 1024 * 1024); // 5 МБ
 
 // ==========================================================================
-// 2. ЗАГОЛОВКИ И НАСТРОЙКИ
+// 2. ЗАГОЛОВКИ, ЛОКАЛИЗАЦИЯ, БАЗОВЫЕ ПРОВЕРКИ
 // ==========================================================================
 
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
+header('Cache-Control: no-store');
 
-// PATCH 2026-11-21-2: локализация ответов (en.html отправляет lang=en)
 $lang = (($_POST['lang'] ?? 'ru') === 'en') ? 'en' : 'ru';
 $MSG = [
     'ru' => [
         'method' => 'Метод не разрешен',
         'forbidden' => 'Доступ запрещен',
         'rate' => 'Слишком много заявок. Попробуйте через час.',
+        'rate_attempts' => 'Слишком много попыток. Попробуйте через час.',
+        'encoding' => 'Некорректная кодировка данных. Пожалуйста, заполните форму заново.',
         'name_required' => 'Имя обязательно для заполнения',
         'name_short' => 'Имя слишком короткое',
         'name_long' => 'Имя слишком длинное',
@@ -52,13 +68,17 @@ $MSG = [
         'company' => 'Укажите компанию или сферу деятельности',
         'message_long' => 'Сообщение слишком длинное',
         'about_long' => 'Описание слишком длинное',
+        'form_expired' => 'Форма устарела. Пожалуйста, отправьте заявку ещё раз.',
         'mail_fail' => 'Ошибка отправки. Пожалуйста, напишите нам напрямую: info@ahundoff.ru или в Telegram.',
-        'ok' => 'Заявка успешно отправлена'
+        'ok' => 'Заявка успешно отправлена',
+        'thanks' => 'Спасибо!'
     ],
     'en' => [
         'method' => 'Method not allowed',
         'forbidden' => 'Access denied',
         'rate' => 'Too many requests. Please try again in an hour.',
+        'rate_attempts' => 'Too many attempts. Please try again in an hour.',
+        'encoding' => 'Invalid data encoding. Please fill out the form again.',
         'name_required' => 'Name is required',
         'name_short' => 'Name is too short',
         'name_long' => 'Name is too long',
@@ -69,30 +89,32 @@ $MSG = [
         'company' => 'Please specify your company or field of activity',
         'message_long' => 'Message is too long',
         'about_long' => 'Description is too long',
+        'form_expired' => 'The form has expired. Please submit your request again.',
         'mail_fail' => 'Sending failed. Please contact us directly: info@ahundoff.ru or Telegram.',
-        'ok' => 'Request sent successfully'
+        'ok' => 'Request sent successfully',
+        'thanks' => 'Thank you!'
     ]
 ];
 
+function respond(array $payload, int $code = 200): void {
+    http_response_code($code);
+    echo json_encode($payload, JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
-// Разрешаем только POST-запросы
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'error' => $MSG[$lang]['method']]);
-    exit;
+    respond(['success' => false, 'error' => $MSG[$lang]['method']], 405);
 }
 
-// Проверка AJAX-запроса
+// Проверка AJAX-запроса (кастомный заголовок требует CORS preflight -> защита от CSRF)
 if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
-    http_response_code(403);
-    echo json_encode(['success' => false, 'error' => $MSG[$lang]['forbidden']]);
-    exit;
+    respond(['success' => false, 'error' => $MSG[$lang]['forbidden']], 403);
 }
 
-// Проверка Origin/Referer (CSRF-защита: запрос должен идти с нашего домена)
+// Проверка Origin/Referer (запрос должен идти с нашего домена)
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 $referer = $_SERVER['HTTP_REFERER'] ?? '';
-$allowedHosts = ['ahundoff.ru', 'www.ahundoff.ru']; // PATCH 2026-11-21: whitelist домена
+$allowedHosts = ['ahundoff.ru', 'www.ahundoff.ru'];
 $originOk = false;
 if ($origin !== '') {
     $originOk = in_array(parse_url($origin, PHP_URL_HOST), $allowedHosts, true);
@@ -100,9 +122,7 @@ if ($origin !== '') {
     $originOk = in_array(parse_url($referer, PHP_URL_HOST), $allowedHosts, true);
 }
 if (!$originOk) {
-    http_response_code(403);
-    echo json_encode(['success' => false, 'error' => $MSG[$lang]['forbidden']]);
-    exit;
+    respond(['success' => false, 'error' => $MSG[$lang]['forbidden']], 403);
 }
 
 // ==========================================================================
@@ -117,13 +137,14 @@ function ensureLogDir(): void {
 
 function getClientIp(): string {
     $remote = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-    // Если REMOTE_ADDR — внутренний адрес прокси хостинга, берём первый публичный IP
-    // из X-Forwarded-For (его проставляет наш nginx). Публичный REMOTE_ADDR не подменяем — защита от спуфинга.
+    // Если REMOTE_ADDR — внутренний адрес прокси хостинга, берём ПРАВЫЙ публичный IP
+    // из X-Forwarded-For: наш nginx дописывает реальный IP клиента в конец цепочки
+    // (proxy_add_x_forwarded_for). Левые записи контролируются клиентом и могут быть подделаны.
     if (filter_var($remote, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
-        foreach (explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '') as $candidate) {
-            $candidate = trim($candidate);
-            if (filter_var($candidate, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
-                return $candidate;
+        $candidates = array_map('trim', explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'] ?? ''));
+        for ($i = count($candidates) - 1; $i >= 0; $i--) {
+            if (filter_var($candidates[$i], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
+                return $candidates[$i];
             }
         }
     }
@@ -136,20 +157,25 @@ function sanitize($value): string {
     }
     $value = trim($value);
     $value = strip_tags($value);
-    // Убираем управляющие символы, кроме \t \n \r (переносы строк в сообщении сохраняем).
-    // htmlspecialchars НЕ нужен: данные идут только в plain-text письмо и JSON-лог, в HTML не выводятся.
-    return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $value);
+    // /u-модификатор возвращает null на невалидном UTF-8 — страхуемся оператором ??.
+    // Невалидный UTF-8 отсекается на входе (см. ниже), здесь — defence in depth.
+    return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $value) ?? '';
 }
 
 function logSpamAttempt(string $reason, array $data): void {
     ensureLogDir();
-    // PATCH 2026-11-21: не пишем лог больше 5 МБ и обрезаем поля до 200 символов
-    if (is_file(SPAM_LOG_FILE) && filesize(SPAM_LOG_FILE) > 5 * 1024 * 1024) {
-        return;
+    if (is_file(SPAM_LOG_FILE) && filesize(SPAM_LOG_FILE) > LOG_ROTATE_SIZE) {
+        @rename(SPAM_LOG_FILE, SPAM_LOG_FILE . '.1'); // ротация вместо тихого отказа
     }
+    // Минимизация ПДн: значения персональных полей не пишем, только их длины.
     $safe = [];
     foreach ($data as $k => $v) {
-        if (is_string($v)) { $safe[$k] = mb_substr($v, 0, 200); }
+        if (!is_string($v)) { continue; }
+        if (in_array($k, ['name', 'phone', 'message', 'company', 'about'], true)) {
+            $safe[$k . '_len'] = mb_strlen($v);
+        } else {
+            $safe[$k] = mb_substr($v, 0, 100);
+        }
     }
     $entry = [
         'timestamp' => date('Y-m-d H:i:s'),
@@ -158,12 +184,15 @@ function logSpamAttempt(string $reason, array $data): void {
         'user_agent' => mb_substr($_SERVER['HTTP_USER_AGENT'] ?? 'unknown', 0, 200),
         'data' => $safe
     ];
-    $logLine = json_encode($entry, JSON_UNESCAPED_UNICODE) . "\n";
-    file_put_contents(SPAM_LOG_FILE, $logLine, FILE_APPEND | LOCK_EX);
+    file_put_contents(SPAM_LOG_FILE, json_encode($entry, JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND | LOCK_EX);
 }
 
 function logLead(array $data, string $formType): void {
     ensureLogDir();
+    // Ротация при превышении размера (храним одно предыдущее поколение).
+    if (is_file(LOG_FILE) && filesize(LOG_FILE) > LOG_ROTATE_SIZE) {
+        @rename(LOG_FILE, LOG_FILE . '.1');
+    }
     $logEntry = [
         'timestamp' => date('Y-m-d H:i:s'),
         'type' => $formType,
@@ -172,72 +201,101 @@ function logLead(array $data, string $formType): void {
         'message' => $data['message'] ?? '',
         'company' => $data['company'] ?? '',
         'about' => $data['about'] ?? '',
-        'consent' => isset($_POST['pd-consent']) ? '1' : '0',
+        'consent' => '1', // логируем только заявки с подтверждённым согласием
         'policy_version' => '2026-11-21',
         'ip' => getClientIp(),
-        'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
+        'user_agent' => mb_substr($_SERVER['HTTP_USER_AGENT'] ?? 'unknown', 0, 200)
     ];
-    $logLine = json_encode($logEntry, JSON_UNESCAPED_UNICODE) . "\n";
-    file_put_contents(LOG_FILE, $logLine, FILE_APPEND | LOCK_EX);
+    file_put_contents(LOG_FILE, json_encode($logEntry, JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND | LOCK_EX);
 }
 
-// Атомарная проверка и запись rate limit (решает проблему Race Condition)
-function checkAndRecordRateLimit(): bool {
+/**
+ * Атомарная работа с бакетом rate limit.
+ * $record = true  — проверить и сразу записать попытку (для бакета attempts).
+ * $record = false — только проверить (для бакета sends; запись после успешной отправки).
+ */
+function rateLimitBucket(string $bucket, int $max, bool $record): bool {
     ensureLogDir();
     $ip = getClientIp();
     $now = time();
 
-    // 'c+' открывает файл для чтения и записи, создает его, если он не существует
     $fp = fopen(RATE_LIMIT_FILE, 'c+');
     if (!$fp) {
-        return true; // В случае критической ошибки файла пропускаем проверку, чтобы не блокировать легитимных пользователей
+        error_log('Ahundoff: rate limit file unavailable, failing open');
+        return true;
     }
-
-    // Эксклюзивная блокировка файла
     flock($fp, LOCK_EX);
 
     $content = stream_get_contents($fp);
     $data = $content ? json_decode($content, true) : [];
-    // PATCH 2026-11-21: чистим старые записи всех IP, чтобы файл не рос бесконечно
     $data = is_array($data) ? $data : [];
-    foreach ($data as $k => $timestamps) {
-        $data[$k] = array_values(array_filter((array)$timestamps, fn($ts) => ($now - $ts) < RATE_LIMIT_PERIOD));
+
+    // Чистим протухшие записи всех IP и ограничиваем размер файла.
+    foreach ($data as $k => $buckets) {
+        if (!is_array($buckets)) { unset($data[$k]); continue; }
+        foreach ($buckets as $b => $timestamps) {
+            $data[$k][$b] = array_values(array_filter((array)$timestamps, fn($ts) => ($now - $ts) < RATE_LIMIT_PERIOD));
+            if (empty($data[$k][$b])) unset($data[$k][$b]);
+        }
         if (empty($data[$k])) unset($data[$k]);
     }
-
-    if (!isset($data[$ip])) {
-        $data[$ip] = [];
+    if (count($data) > RATE_LIMIT_MAX_IPS) {
+        // Удаляем IP с самыми старыми последними активностями
+        $lastActivity = [];
+        foreach ($data as $k => $buckets) {
+            $max = 0;
+            foreach ($buckets as $timestamps) {
+                foreach ((array)$timestamps as $ts) { if ($ts > $max) $max = $ts; }
+            }
+            $lastActivity[$k] = $max;
+        }
+        asort($lastActivity);
+        $keep = array_slice(array_keys($lastActivity), -RATE_LIMIT_MAX_IPS, null, true);
+        $data = array_intersect_key($data, array_flip($keep));
     }
 
-    // Фильтруем старые записи
-    $requests = array_filter($data[$ip], fn($ts) => ($now - $ts) < RATE_LIMIT_PERIOD);
-
-    // Проверяем лимит
-    if (count($requests) >= RATE_LIMIT_MAX) {
+    $requests = $data[$ip][$bucket] ?? [];
+    if (count($requests) >= $max) {
         flock($fp, LOCK_UN);
         fclose($fp);
         return false;
     }
 
-    // Добавляем текущий запрос и сохраняем
-    $requests[] = $now;
-    $data[$ip] = array_values($requests);
+    if ($record) {
+        $requests[] = $now;
+        $data[$ip][$bucket] = array_values($requests);
+        ftruncate($fp, 0);
+        rewind($fp);
+        fwrite($fp, json_encode($data));
+        fflush($fp);
+    }
 
+    flock($fp, LOCK_UN);
+    fclose($fp);
+    return true;
+}
+
+function recordSend(): void {
+    ensureLogDir();
+    $ip = getClientIp();
+    $now = time();
+    $fp = fopen(RATE_LIMIT_FILE, 'c+');
+    if (!$fp) return;
+    flock($fp, LOCK_EX);
+    $content = stream_get_contents($fp);
+    $data = $content ? json_decode($content, true) : [];
+    $data = is_array($data) ? $data : [];
+    $data[$ip]['sends'][] = $now;
     ftruncate($fp, 0);
     rewind($fp);
     fwrite($fp, json_encode($data));
     fflush($fp);
-
     flock($fp, LOCK_UN);
     fclose($fp);
-
-    return true;
 }
 
 // ==========================================================================
-// 4. ПОЛУЧЕНИЕ И ВАЛИДАЦИЯ ДАННЫХ
-// (проверки honeypot / timestamp выполняются ДО rate limiting,
-//  чтобы спам-запросы не «сжигали» лимит IP реальных пользователей)
+// 4. ПОЛУЧЕНИЕ ДАННЫХ И АНТИСПАМ (до rate limiting, чтобы боты не «жгли» лимит)
 // ==========================================================================
 
 $formType = $_POST['form_type'] ?? 'contact';
@@ -245,66 +303,59 @@ if (!in_array($formType, ['contact', 'partner'], true)) {
     $formType = 'contact';
 }
 
-// Honeypot проверка
-// ВАЖНО: проверка выполняется ДО rate limiting и ДО валидации,
-// чтобы бот не мог «сжигать» лимит IP реальных пользователей.
+// Honeypot
 if (!empty($_POST['website'])) {
     logSpamAttempt('Honeypot triggered', $_POST);
-    echo json_encode(['success' => true, 'message' => 'Спасибо!']);
-    exit;
+    respond(['success' => true, 'message' => $MSG[$lang]['thanks']]);
 }
 
-// Проверка timestamp
-// form_time отсутствует или пуст — тоже считаем подозрительным (бот без JS),
-// иначе проверка легко обходилась просто неполучкой этого поля.
+// Timestamp
 $formTimeRaw = $_POST['form_time'] ?? null;
 $formTime = (int)($formTimeRaw ?? 0);
 $currentTime = time();
 
 if ($formTimeRaw === null || $formTimeRaw === '' || $formTime <= 0) {
     logSpamAttempt('Missing or invalid form_time', $_POST);
-    echo json_encode(['success' => true, 'message' => 'Спасибо!']);
-    exit;
+    respond(['success' => true, 'message' => $MSG[$lang]['thanks']]);
 }
-
 if (($currentTime - $formTime) < MIN_FORM_TIME) {
-    logSpamAttempt('Form filled too fast', $_POST);
-    echo json_encode(['success' => true, 'message' => 'Спасибо!']);
-    exit;
+    // Сюда же попадают будущие timestamp (отрицательная разница) — отдельная проверка не нужна.
+    logSpamAttempt('Form filled too fast or future timestamp', $_POST);
+    respond(['success' => true, 'message' => $MSG[$lang]['thanks']]);
 }
-
-// Глупая защита от поддельного будущего timestamp
-if ($formTime > $currentTime + 86400) {
-    logSpamAttempt('Form time in the future', $_POST);
-    echo json_encode(['success' => true, 'message' => 'Спасибо!']);
-    exit;
-}
-
-// PATCH 2026-11-21: форма старше 24 часов — отсев (защита от replay)
-if (($currentTime - $formTime) > 86400) {
+if (($currentTime - $formTime) > MAX_FORM_AGE) {
+    // Честная ошибка: фронтенд обновит form_time и повторит отправку (лид не теряется).
     logSpamAttempt('Form time too old', $_POST);
-    echo json_encode(['success' => true, 'message' => 'Спасибо!']);
-    exit;
+    respond(['success' => false, 'code' => 'form_expired', 'error' => $MSG[$lang]['form_expired']], 400);
 }
 
 // ==========================================================================
-// 5. ПРОВЕРКА RATE LIMITING (после спам-фильтров)
+// 5. ВАЛИДАЦИЯ КОДИРОВКИ (защита от TypeError/500 на невалидном UTF-8)
 // ==========================================================================
 
-if (!checkAndRecordRateLimit()) {
-    http_response_code(429);
-    echo json_encode([
-        'success' => false,
-        'error' => $MSG[$lang]['rate']
-    ]);
-    exit;
+foreach (['name', 'phone', 'message', 'company', 'about'] as $field) {
+    if (isset($_POST[$field]) && is_string($_POST[$field]) && !mb_check_encoding($_POST[$field], 'UTF-8')) {
+        respond(['success' => false, 'error' => $MSG[$lang]['encoding']], 400);
+    }
 }
 
-// Извлекаем и очищаем данные
+// ==========================================================================
+// 6. RATE LIMITING: бакет попыток (анти-брут, включает ошибки валидации)
+// ==========================================================================
+
+if (!rateLimitBucket('attempts', RATE_LIMIT_ATTEMPTS, true)) {
+    respond(['success' => false, 'error' => $MSG[$lang]['rate_attempts']], 429);
+}
+
+// ==========================================================================
+// 7. ИЗВЛЕЧЕНИЕ И ВАЛИДАЦИЯ ДАННЫХ
+// ==========================================================================
+
 $name = sanitize($_POST['name'] ?? '');
 $phone = sanitize($_POST['phone'] ?? '');
 $message = sanitize($_POST['message'] ?? '');
-$consent = isset($_POST['pd-consent']);
+// Согласие — строго по значению чекбокса, а не по факту наличия поля.
+$consent = isset($_POST['pd-consent']) && $_POST['pd-consent'] === 'on';
 
 $phone = preg_replace('/[\r\n]/', '', $phone);
 $name = preg_replace('/[\r\n]/', '', $name);
@@ -316,13 +367,9 @@ if ($formType === 'partner') {
     $about = sanitize($_POST['about'] ?? '');
 }
 
-// ==========================================================================
-// 6. ВАЛИДАЦИЯ ОБЯЗАТЕЛЬНЫХ ПОЛЕЙ
-// ==========================================================================
-
 $errors = [];
 
-if (empty($name)) {
+if ($name === '') {
     $errors[] = $MSG[$lang]['name_required'];
 } elseif (mb_strlen($name) < 2) {
     $errors[] = $MSG[$lang]['name_short'];
@@ -330,17 +377,15 @@ if (empty($name)) {
     $errors[] = $MSG[$lang]['name_long'];
 }
 
-if (empty($phone)) {
+if ($phone === '') {
     $errors[] = $MSG[$lang]['phone_required'];
 } elseif (mb_strlen($phone) > 40) {
     $errors[] = $MSG[$lang]['phone_long'];
 } else {
-    // Разрешаем два формата: телефонный номер (не менее 10 цифр)
-    // ИЛИ username Telegram вида @nickname (5–32 символа).
-    // Раньше любой текст без 10 цифр отвергался, хотя форма явно принимает Telegram.
+    // Telegram: @username (5–32 символа). Телефон: 10–15 цифр, опциональный ведущий +.
     $isTelegramUsername = preg_match('/^@[A-Za-z][A-Za-z0-9_]{4,31}$/', $phone);
-    $phoneClean = preg_replace('/[^\d+]/', '', $phone);
-    $isPhone = strlen($phoneClean) >= 10;
+    $phoneNormalized = preg_replace('/[\s\-()]/', '', $phone);
+    $isPhone = preg_match('/^\+?\d{10,15}$/', $phoneNormalized);
     if (!$isTelegramUsername && !$isPhone) {
         $errors[] = $MSG[$lang]['phone_invalid'];
     }
@@ -349,29 +394,30 @@ if (empty($phone)) {
 if (!$consent) {
     $errors[] = $MSG[$lang]['consent'];
 }
-
-if ($formType === 'partner' && empty($company)) {
+if ($formType === 'partner' && $company === '') {
     $errors[] = $MSG[$lang]['company'];
 }
-
-if (!empty($message) && mb_strlen($message) > 2000) {
+if ($message !== '' && mb_strlen($message) > 2000) {
     $errors[] = $MSG[$lang]['message_long'];
 }
-
-if (!empty($about) && mb_strlen($about) > 1000) {
+if ($about !== '' && mb_strlen($about) > 1000) {
     $errors[] = $MSG[$lang]['about_long'];
 }
 
 if (!empty($errors)) {
-    echo json_encode([
-        'success' => false,
-        'error' => implode('. ', $errors)
-    ]);
-    exit;
+    respond(['success' => false, 'error' => implode('. ', $errors)]);
 }
 
 // ==========================================================================
-// 7. ФОРМИРОВАНИЕ ПИСЬМА
+// 8. RATE LIMITING: бакет успешных отправок (ошибки валидации его не расходуют)
+// ==========================================================================
+
+if (!rateLimitBucket('sends', RATE_LIMIT_SENDS, false)) {
+    respond(['success' => false, 'error' => $MSG[$lang]['rate']], 429);
+}
+
+// ==========================================================================
+// 9. ФОРМИРОВАНИЕ ПИСЬМА
 // ==========================================================================
 
 if ($formType === 'partner') {
@@ -385,10 +431,10 @@ if ($formType === 'partner') {
     $body .= "Компания/сфера: $company\n";
     $body .= "Контакт: $phone\n";
     $body .= "Дата: " . date('d.m.Y H:i:s') . "\n";
-    $body .= "IP: " . (getClientIp()) . "\n\n";
+    $body .= "IP: " . getClientIp() . "\n\n";
     $body .= "📝 О СЕБЕ\n";
     $body .= "─────────────────────────────────────\n";
-    $body .= (!empty($about) ? $about : 'Не указано') . "\n\n";
+    $body .= ($about !== '' ? $about : 'Не указано') . "\n\n";
     $body .= "═══════════════════════════════════════\n";
     $body .= "Действия:\n1. Связаться в течение 24 часов\n2. Обсудить условия партнерства\n3. Отправить агентский договор\n";
     $body .= "═══════════════════════════════════════\n";
@@ -402,20 +448,20 @@ if ($formType === 'partner') {
     $body .= "Имя: $name\n";
     $body .= "Контакт: $phone\n";
     $body .= "Дата: " . date('d.m.Y H:i:s') . "\n";
-    $body .= "IP: " . (getClientIp()) . "\n\n";
+    $body .= "IP: " . getClientIp() . "\n\n";
     $body .= "📝 СООБЩЕНИЕ\n";
     $body .= "─────────────────────────────────────\n";
-    $body .= (!empty($message) ? $message : 'Не указано') . "\n\n";
+    $body .= ($message !== '' ? $message : 'Не указано') . "\n\n";
     $body .= "═══════════════════════════════════════\n";
     $body .= "Действия:\n1. Связаться в течение 2 часов\n2. Провести бизнес-диагностику\n3. Подготовить коммерческое предложение\n";
     $body .= "═══════════════════════════════════════\n";
 }
 
 // ==========================================================================
-// 8. ОТПРАВКА ПИСЬМА И ЛОГИРОВАНИЕ
+// 10. ОТПРАВКА И ЛОГИРОВАНИЕ
 // ==========================================================================
 
-// Сначала логируем заявку, чтобы она точно сохранилась даже при сбое почты
+// Сначала логируем заявку — она сохранится даже при сбое почты.
 logLead([
     'name' => $name,
     'phone' => $phone,
@@ -424,14 +470,12 @@ logLead([
     'about' => $about
 ], $formType);
 
-// Формируем корректные заголовки (без невалидного Reply-To с телефоном)
 $headers = [
     'From' => SENDER_NAME . ' <' . SENDER_EMAIL . '>',
     'MIME-Version' => '1.0',
     'Content-Type' => 'text/plain; charset=UTF-8',
     'X-Priority' => '1',
 ];
-
 $headerString = '';
 foreach ($headers as $key => $value) {
     $headerString .= "$key: $value\r\n";
@@ -440,25 +484,11 @@ foreach ($headers as $key => $value) {
 $additionalParams = '-f ' . SENDER_EMAIL;
 $mailSent = mail(RECIPIENT_EMAIL, mb_encode_mimeheader($subject, 'UTF-8', 'B'), $body, $headerString, $additionalParams);
 
-// ==========================================================================
-// 9. ВОЗВРАТ ОТВЕТА
-// ==========================================================================
-
 if ($mailSent) {
-    echo json_encode([
-        'success' => true,
-        'message' => $MSG[$lang]['ok']
-        // Параметр redirect удален, так как фронтенд теперь использует DOM-переключение
-    ]);
+    recordSend(); // засчитываем только успешную отправку
+    respond(['success' => true, 'message' => $MSG[$lang]['ok']]);
 } else {
-    // Логируем ошибку в системный лог PHP
-    error_log("Ahundoff Studio: Failed to send email for lead: $name ($phone)");
-
-    // Честно сообщаем пользователю об ошибке, предлагая альтернативный канал связи
-    echo json_encode([
-        'success' => false,
-        'error' => $MSG[$lang]['mail_fail']
-    ]);
+    // Без ПДн в системном логе: только тип формы и IP.
+    error_log('Ahundoff Studio: mail() failed, type=' . $formType . ', ip=' . getClientIp());
+    respond(['success' => false, 'error' => $MSG[$lang]['mail_fail']], 502);
 }
-
-exit;
