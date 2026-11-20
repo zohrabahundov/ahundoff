@@ -308,96 +308,43 @@ document.documentElement.classList.add('js');
     })();
 
     const FormHandler = (() => {
-        const init = () => {
-            const form = document.getElementById('contactForm');
-            const successBlock = document.getElementById('successBlock');
-            const resetBtn = document.getElementById('resetFormBtn');
+        const bind = (cfg) => {
+            const form = document.getElementById(cfg.form);
             if (!form) return;
-
-            const submitBtn = document.getElementById('submitBtn');
-            const formMessage = document.getElementById('formMessage');
-            const formTimeInput = document.getElementById('formTime');
-
-            if (formTimeInput) {
-                formTimeInput.value = Math.floor(Date.now() / 1000);
-            }
-
-            const resetSubmitButton = () => {
-                submitBtn.disabled = false;
-                // Впервые кнопка инициализируется из i18n (или остаётся той, что в HTML)
-                if (!submitBtn.dataset.defaultLabel) {
-                    submitBtn.dataset.defaultLabel = submitBtn.textContent.trim();
-                }
-                submitBtn.textContent = submitBtn.dataset.defaultLabel || I18N.t('submitLabel');
-            };
-
-            // Переключение между формой и блоком успеха
-            const showSuccess = () => {
-                form.style.display = 'none';
-                if (successBlock) successBlock.style.display = 'block';
-                // Прокручиваем к блоку успеха, чтобы он был виден
-                successBlock?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            };
-
-            const showForm = () => {
-                if (successBlock) successBlock.style.display = 'none';
-                form.style.display = 'flex';
-                form.reset();
-                if (formTimeInput) formTimeInput.value = Math.floor(Date.now() / 1000);
-                formMessage.innerHTML = '';
-            };
-
-            // Обработчик кнопки "Оставить ещё одну заявку"
-            if (resetBtn) {
-                resetBtn.addEventListener('click', showForm);
-            }
-
+            const submitBtn = document.getElementById(cfg.submit);
+            const formMessage = document.getElementById(cfg.message);
+            const consent = document.getElementById(cfg.consent);
+            const successBlock = cfg.success ? document.getElementById(cfg.success) : null;
+            const timeInput = form.querySelector('input[name="form_time"]');
+            const setTime = () => { if (timeInput) timeInput.value = Math.floor(Date.now()/1000); };
+            setTime();
+            const resetBtn = cfg.reset ? document.getElementById(cfg.reset) : null;
+            const showForm = () => { if (successBlock) successBlock.style.display='none';
+                form.style.display='flex'; form.reset(); setTime(); formMessage.innerHTML=''; };
+            if (resetBtn) resetBtn.addEventListener('click', showForm);
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                
-                const consentCheckbox = document.getElementById('pd-consent');
-                if (consentCheckbox && !consentCheckbox.checked) {
-                    Toast.show(I18N.t('consentRequired'), true);
-                    resetSubmitButton();
-                    consentCheckbox.focus();
-                    return;
-                }
-
-                submitBtn.disabled = true;
-                submitBtn.textContent = I18N.t('sending');
-                formMessage.innerHTML = '';
-
-                const formData = new FormData(form);
-
+                if (consent && !consent.checked) { Toast.show(I18N.t('consentRequired'), true); consent.focus(); return; }
+                submitBtn.disabled = true; submitBtn.textContent = I18N.t('sending'); formMessage.innerHTML='';
                 try {
-                    const response = await fetch('/send.php', {
-                        method: 'POST',
-                        body: formData,
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                    });
-
-                    const result = await response.json();
-
-                    if (response.ok && result.success) {
-                        Tracker.track('form_submit');
-                        // Убрали Toast — блок успеха сам является обратной связью
-                        showSuccess();
-                    } else {
-                        const errorMsg = typeof result.error === 'string' 
-                            ? result.error.replace(/[<>]/g, '') 
-                            : I18N.t('sendError');
-                        Toast.show(errorMsg, true);
-                        resetSubmitButton();
-                    }
-                } catch (error) {
-                    // Бонус: логируем реальную ошибку для отладки (пункт 14 из списка)
-                    console.error('Form submission error:', error);
-                    Toast.show(I18N.t('networkError'), true);
-                    resetSubmitButton();
-                }
+                    const r = await fetch('/send.php', { method:'POST', body:new FormData(form),
+                        headers:{'X-Requested-With':'XMLHttpRequest'} });
+                    const res = await r.json();
+                    if (r.ok && res.success) { Tracker.track(cfg.goal);
+                        if (successBlock) { form.style.display='none'; successBlock.style.display='block';
+                            successBlock.scrollIntoView({behavior:'smooth',block:'center'}); }
+                        else { Toast.show(I18N.lang==='en'?'Request sent! We will contact you soon.':'Заявка отправлена! Мы свяжемся с вами.'); showForm(); }
+                    } else { Toast.show(typeof res.error==='string'?res.error.replace(/[<>]/g,''):I18N.t('sendError'), true); }
+                } catch (err) { console.error(err); Toast.show(I18N.t('networkError'), true); }
+                submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.defaultLabel || I18N.t('submitLabel');
             });
         };
-
+        const init = () => {
+            bind({form:'contactForm', submit:'submitBtn', message:'formMessage', consent:'pd-consent',
+                  success:'successBlock', reset:'resetFormBtn', goal:'form_submit'});
+            bind({form:'partnersForm', submit:'p-submitBtn', message:'p-formMessage', consent:'p-pd-consent',
+                  success:null, reset:null, goal:'partner_submit'});
+        };
         return { init };
     })();
 
