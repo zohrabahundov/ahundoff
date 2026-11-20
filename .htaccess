@@ -105,7 +105,7 @@ AddDefaultCharset UTF-8
     Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
 
     # Content Security Policy (защита от XSS)
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://mc.yandex.ru 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://mc.yandex.ru; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://mc.yandex.ru https://cdn.jsdelivr.net 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://mc.yandex.ru https://fonts.googleapis.com https://fonts.gstatic.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
 
     # Убираем версию сервера
     Header unset X-Powered-By
