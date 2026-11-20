@@ -1,14 +1,2 @@
-# Логи и данные
-logs/
-*.log
-*.json
-!package.json
-
-# Переменные окружения
-.env
-.env.local
-
-# ОС и IDE
-.DS_Store
-.vscode/
-.idea/
+__pycache__/
+*.pyc
