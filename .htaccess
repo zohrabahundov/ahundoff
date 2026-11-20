@@ -1,12 +1,13 @@
 # ==========================================================================
 # AHUNDOFF.RU - Исправленная конфигурация для Timeweb (без циклов редиректов)
+# Версия 21.11.2026: + PHP внутри .html (шаблоны partials/) + защита partials/
 # ==========================================================================
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
 
-    # !!! ЗАКОММЕНТИРОВАНО: Редирект на HTTPS через .htaccess на Timeweb 
+    # !!! ЗАКОММЕНТИРОВАНО: Редирект на HTTPS через .htaccess на Timeweb
     # часто вызывает бесконечный цикл. HTTPS включается в панели хостинга.
     # RewriteCond %{HTTPS} off
     # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
@@ -17,10 +18,22 @@
 
     # Блокируем доступ к любым скрытым файлам и папкам (начинаются с точки)
     RewriteRule (^\.|/\.) - [F]
-    
+
     # Блокируем прямой доступ к папке logs
     RewriteRule ^logs/ - [F,L]
+
+    # === ДОБАВЛЕНО 21.11.2026: блокируем прямой доступ к фрагментам шаблонов ===
+    RewriteRule ^partials/ - [F,L]
 </IfModule>
+
+# ==========================================================================
+# === ДОБАВЛЕНО 21.11.2026: PHP внутри .html — для шаблонов header/footer ===
+# ==========================================================================
+RemoveHandler .html .htm
+AddType application/x-httpd-php .php .html .htm
+# Если test-php.html отдаёт сырой код или скачивается — закомментируйте две
+# строки выше и раскомментируйте строку ниже:
+# AddHandler application/x-httpd-php .html .htm
 
 # Защита конкретных файлов (синтаксис Apache 2.4)
 <FilesMatch "^\.">
@@ -78,22 +91,22 @@ AddDefaultCharset UTF-8
 <IfModule mod_headers.c>
     # HSTS — принудительный HTTPS на 1 год
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-    
+
     # Защита от clickjacking (запрет встраивания в iframe)
     Header always set X-Frame-Options "SAMEORIGIN"
-    
+
     # Защита от MIME-sniffing
     Header always set X-Content-Type-Options "nosniff"
-    
+
     # Контроль referrer-информации
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    
+
     # Ограничение доступа к API браузера
     Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
-    
+
     # Content Security Policy (защита от XSS)
     Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://mc.yandex.ru 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://mc.yandex.ru; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
-    
+
     # Убираем версию сервера
     Header unset X-Powered-By
 </IfModule>
