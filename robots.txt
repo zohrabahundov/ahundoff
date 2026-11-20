@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /logs/
+Disallow: /partials/
+Disallow: /send.php
+
 Sitemap: https://ahundoff.ru/sitemap.xml
