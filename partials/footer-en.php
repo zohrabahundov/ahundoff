@@ -17,7 +17,7 @@
                     <a href="<?= $home ?>#process">Approach</a>
                     <a href="<?= $home ?>#contact">Contacts</a>
                     <a href="/partners.html">Partner program</a>
-                    <a href="/privacy-policy.html">Privacy Policy</a>
+                    <a href="/privacy-policy-en.html">Privacy Policy</a>
                 </nav>
 
                 <div class="footer__socials">
