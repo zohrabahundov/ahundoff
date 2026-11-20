@@ -31,6 +31,12 @@
     Require all denied
 </FilesMatch>
 
+# .htaccess — вывести favicon из годового кэша
+<FilesMatch "^favicon\.(svg|ico)$">
+    ExpiresActive Off
+    Header set Cache-Control "no-cache, must-revalidate"
+</FilesMatch>
+
 # send.php — разрешаем ТОЛЬКО POST-запросы (защита формы)
 <Files "send.php">
     <LimitExcept POST>
