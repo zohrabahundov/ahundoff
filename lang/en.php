@@ -69,7 +69,7 @@ TXT,
     'hero_badge' => 'Boutique AI Studio',
     'hero_title' => 'AI solutions for your business',
     'hero_subtitle' => 'We develop, optimize, and protect AI solutions for business: from computer vision and RAG systems to security and patent audits. MVP launch in 14 days with a quality guarantee.',
-    'hero_cta' => 'Get a project estimate',
+    'hero_cta' => 'Get a free assessment',
     'hero_btn_cases' => 'View cases',
 
     // Главная: Stats
@@ -241,13 +241,10 @@ TXT,
     'contact_badges_aria' => 'Security guarantees',
     'contact_badge_nda' => 'We work under NDA',
     'contact_badge_fz' => 'Data in Russia (152-FZ)',
-    'contact_badge_llm' => 'Certified LLMs (GigaChat)',
     'contact_noscript' => 'Please enable JavaScript or contact us directly: ',
     'form_name' => 'Your name',
     'form_phone_label' => 'Phone or Telegram',
     'form_phone_placeholder' => 'Phone (+country code) or @username',
-    'form_message_label' => 'Business task description',
-    'form_message_placeholder' => 'Describe your business task',
     'form_consent_prefix' => <<<'TXT'
 
                             I consent to the processing of my 
@@ -257,7 +254,7 @@ TXT,
  in accordance with 152-FZ (Russian personal data law).
                         
 TXT,
-    'form_submit' => 'Get a project estimate',
+    'form_submit' => 'Get a free assessment',
 
     // Главная: Успешная отправка
     'success_title' => 'Request sent successfully!',

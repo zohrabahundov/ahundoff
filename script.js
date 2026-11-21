@@ -21,7 +21,7 @@ document.documentElement.classList.add('js');
         const lang = (document.documentElement.getAttribute('lang') || 'ru').toLowerCase().split('-')[0];
         const STRINGS = {
             ru: {
-                submitLabel: 'Получить расчёт проекта',
+                submitLabel: 'Получить бесплатную диагностику',
                 sending: 'Отправка...',
                 consentRequired: 'Пожалуйста, дайте согласие на обработку персональных данных',
                 sendError: 'Ошибка отправки',
@@ -30,7 +30,7 @@ document.documentElement.classList.add('js');
                 copyFailed: 'Не удалось скопировать'
             },
             en: {
-                submitLabel: 'Get a project estimate',
+                submitLabel: 'Get a free assessment',
                 sending: 'Sending...',
                 consentRequired: 'Please consent to the processing of your personal data',
                 sendError: 'Submission failed',

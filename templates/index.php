@@ -494,10 +494,6 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
                         <svg width="16" height="16" aria-hidden="true"><use href="#icon-lock"/></svg>
                         <span><?= $t['contact_badge_fz'] ?></span>
                     </div>
-                    <div class="security-badge" role="listitem">
-                        <svg width="16" height="16" aria-hidden="true"><use href="#icon-check"/></svg>
-                        <span><?= $t['contact_badge_llm'] ?></span>
-                    </div>
                 </div>
                 
                 <form class="contact__form" id="contactForm" novalidate method="post" action="/send.php">
@@ -512,10 +508,6 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
                     <div class="form-group">
                         <label for="phone" class="sr-only"><?= $t['form_phone_label'] ?></label>
                         <input type="text" name="phone" id="phone" placeholder="<?= h($t['form_phone_placeholder']) ?>" required autocomplete="tel" inputmode="text" maxlength="40">
-                    </div>
-                    <div class="form-group">
-                        <label for="message" class="sr-only"><?= $t['form_message_label'] ?></label>
-                        <textarea name="message" id="message" placeholder="<?= h($t['form_message_placeholder']) ?>" rows="4" maxlength="2000"></textarea>
                     </div>
                     
                     <div class="form-consent">
@@ -600,6 +592,6 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
     </div>
 
     <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
-    <script src="/script.js?v=2026-11-21-4" defer></script>
+    <script src="/script.js?v=2026-11-21-5" defer></script>
 </body>
 </html>

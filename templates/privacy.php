@@ -242,6 +242,6 @@ $canonical = $lang === 'en' ? 'https://ahundoff.ru/privacy-policy-en.html' : 'ht
     <!-- Footer -->
     <?php include __DIR__ . '/../partials/footer.php'; ?>
     <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
-    <script src="/script.js?v=2026-11-21-4" defer></script>
+    <script src="/script.js?v=2026-11-21-5" defer></script>
 </body>
 </html>

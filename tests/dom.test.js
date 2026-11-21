@@ -51,6 +51,7 @@ const setInput = (w, id, v) => { const el = w.document.getElementById(id); el.va
   const d = w.document;
   ok('T1 класс js добавлен', d.documentElement.classList.contains('js'));
   ok('T2 partials отрендерены (header+sprite)', !!d.querySelector('.header') && !!d.querySelector('#icon-telegram'));
+  ok('T2b форма: имя+контакт, без textarea; бейджей 2', !!d.getElementById('name') && !!d.getElementById('phone') && !d.getElementById('message') && d.querySelectorAll('.security-badge').length === 2);
 
   // T3: отправка без согласия
   setInput(w, 'name', 'Иван Тестов'); setInput(w, 'phone', '+79295005785');
@@ -68,7 +69,7 @@ const setInput = (w, id, v) => { const el = w.document.getElementById(id); el.va
   const fd = call.opts.body;
   ok('T4c FormData: lang=ru, form_time свежий', fd.get('lang') === 'ru' && Math.abs(Date.now()/1000 - Number(fd.get('form_time'))) < 60);
   ok('T4d successBlock показан, форма скрыта', d.getElementById('successBlock').style.display === 'block' && d.getElementById('contactForm').style.display === 'none');
-  ok('T4e кнопка разблокирована, label восстановлен', !d.getElementById('submitBtn').disabled && d.getElementById('submitBtn').textContent === 'Получить расчёт проекта');
+  ok('T4e кнопка разблокирована, label восстановлен', !d.getElementById('submitBtn').disabled && d.getElementById('submitBtn').textContent === 'Получить бесплатную диагностику');
   const ymCalls = (w.ym && w.ym.a) || [];
   ok('T4f ИСПРАВЛЕНО: цель form_submit отправляется (Метрика инициализируется сразу)', ymCalls.some(c => c[1] === 'reachGoal' && c[2] === 'form_submit'), JSON.stringify(ymCalls).slice(0,120));
 
@@ -169,7 +170,7 @@ const setInput = (w, id, v) => { const el = w.document.getElementById(id); el.va
   we.__fetchQueue.push({ ok: true, body: { success: true } });
   submit(we, 'contactForm'); await tick(30);
   ok('T19 EN: lang=en в FormData', we.__fetchCalls[0].opts.body.get('lang') === 'en');
-  ok('T20 EN: label кнопки восстановлен по-английски', de.getElementById('submitBtn').textContent === 'Get a project estimate');
+  ok('T20 EN: label кнопки восстановлен по-английски', de.getElementById('submitBtn').textContent === 'Get a free assessment');
 
   // ================= PARTNERS =================
   const wp = await makeWindow('/partners.html'); await tick(40);
