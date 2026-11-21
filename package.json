@@ -9,9 +9,10 @@
     "test:send": "bash tests/send.test.sh",
     "test:structure": "python3 tests/structure.py",
     "test:i18n": "php tests/i18n.test.php",
-    "test": "npm run test:i18n && npm run test:send && npm run test:dom && npm run test:structure && npm run test:fonts",
+    "test": "npm run test:i18n && npm run test:send && npm run test:dom && npm run test:structure && npm run test:fonts && npm run test:backgrounds",
     "test:fonts": "python3 tests/fonts.py",
-    "build:fonts": "python3 tools/build-fonts.py"
+    "build:fonts": "python3 tools/build-fonts.py",
+    "test:backgrounds": "python3 tests/backgrounds.py"
   },
   "devDependencies": {
     "jsdom": "^24.0.0"

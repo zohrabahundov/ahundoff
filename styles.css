@@ -415,8 +415,12 @@
     .stat__label { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.4; }
 
     /* --- Global Section Padding --- */
-    .services, .trust-section { padding: 120px 0; background: var(--bg-primary); }
-    .industries, .cases, .process, .contact { padding: 120px 0; background: var(--bg-secondary); }
+    /* Шахматный порядок фонов: hero(т) - stats(с) - Услуги(т) - Отрасли(с) -
+       Кейсы(т) - Экспертиза(с) - Подход(т) - Контакты(с) - подвал(т).
+       Группировка ОБЯЗАНА совпадать с @layer flow ниже — иначе режим с canvas
+       красит секции иначе, чем базовый. Проверяется tests/backgrounds.py. */
+    .services, .cases, .process { padding: 120px 0; background: var(--bg-primary); }
+    .industries, .trust-section, .contact { padding: 120px 0; background: var(--bg-secondary); }
 
     /* --- Optimization Suite --- */
     .optimization__grid {
@@ -1116,11 +1120,11 @@
         pointer-events: none;
     }
     
-    .flow-enabled :is(.services, .industries, .trust-section) {
+    .flow-enabled :is(.services, .cases, .process) {
         background: rgba(3, 7, 18, .62);
     }
     
-    .flow-enabled :is(.cases, .process, .contact) {
+    .flow-enabled :is(.industries, .trust-section, .contact) {
         background: rgba(15, 23, 42, .78);
     }
     
