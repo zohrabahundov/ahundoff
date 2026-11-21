@@ -39,7 +39,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
     
     <title><?= $t['site_title'] ?></title>
     
-    <link rel="stylesheet" href="/styles.css?v=2026-11-21-7">
+    <link rel="stylesheet" href="/styles.css?v=2026-11-21-8">
     
     
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
