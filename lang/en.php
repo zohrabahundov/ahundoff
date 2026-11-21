@@ -220,15 +220,15 @@ TXT,
 
     // Главная: Процесс
     'process_title' => 'How we work',
-    'process_subtitle' => 'From first call to production — transparent at every stage.',
+    'process_subtitle' => 'A transparent process from the first meeting to production launch. You always know what stage your project is at.',
     'process_step1_title' => 'Business diagnostics',
-    'process_step1_text' => 'Free, 30 minutes. You get an action plan.',
+    'process_step1_text' => 'Free, 30 minutes. We analyze your processes, find bottlenecks, and determine where automation will yield the maximum ROI. You get a clear action plan.',
     'process_step2_title' => 'Prototype & ROI calculation',
-    'process_step2_text' => 'A working prototype in 3–5 days: architecture, risks and ROI.',
+    'process_step2_text' => 'In 3-5 days, we build a working prototype. You see the architecture, assess risks, and understand how it will work before spending budget on full development.',
     'process_step3_title' => 'Development & implementation',
-    'process_step3_text' => 'Weekly demos, 24/7 monitoring, team training and an SLA.',
+    'process_step3_text' => 'Weekly demos, full transparency. We set up 24/7 monitoring, train your team, and guarantee an SLA. AI becomes part of your daily operations.',
     'process_step4_title' => 'Scaling',
-    'process_step4_text' => 'We scale the solution to other teams and processes — gains compound.',
+    'process_step4_text' => 'After a successful launch, we help scale the solution to other departments or processes, ensuring cumulative growth in business efficiency.',
     
     // Общий заголовок FAQ (используется на партнёрской странице)
     'faq_title' => 'Frequently asked questions',
