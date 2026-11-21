@@ -16,7 +16,6 @@ include __DIR__ . '/sprite.php';
                 </button>
                 <nav class="nav" id="main-nav" aria-label="<?= h($t['header_nav_aria']) ?>">
                     <a href="<?= $home ?>#services" class="nav__link"><?= $t['nav_services'] ?></a>
-                    <a href="<?= $home ?>#optimization" class="nav__link"><?= $t['nav_optimization'] ?></a>
                     <a href="<?= $home ?>#industries" class="nav__link"><?= $t['nav_industries'] ?></a>
                     <a href="<?= $home ?>#cases" class="nav__link"><?= $t['nav_cases'] ?></a>
                     <a href="<?= $home ?>#founder" class="nav__link"><?= $t['nav_founder'] ?></a>

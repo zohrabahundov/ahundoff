@@ -13,7 +13,7 @@ $home = in_array($_SERVER['SCRIPT_NAME'] ?? '', ['/', '/index.html', '/en.html']
 
                 <nav class="footer__links" aria-label="<?= h($t['footer_nav_aria']) ?>">
                     <a href="<?= $home ?>#services"><?= $t['nav_services'] ?></a>
-                    <a href="<?= $home ?>#optimization"><?= $t['nav_optimization'] ?></a>
+                    <a href="<?= $home ?>#optimization"><?= $t['services_tab_opt'] ?></a>
                     <a href="<?= $home ?>#industries"><?= $t['nav_industries'] ?></a>
                     <a href="<?= $home ?>#cases"><?= $t['nav_cases'] ?></a>
                     <a href="<?= $home ?>#founder"><?= $t['nav_founder'] ?></a>

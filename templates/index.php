@@ -39,7 +39,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
     
     <title><?= $t['site_title'] ?></title>
     
-    <link rel="stylesheet" href="/styles.css?v=2026-11-21-6">
+    <link rel="stylesheet" href="/styles.css?v=2026-11-21-7">
     
     
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
@@ -102,153 +102,164 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
         </div>
     </section>
 
-    <!-- 3. Services -->
+    <!-- 3. Services: Продукты + Оптимизация в табах -->
     <section id="services" class="services">
         <div class="container">
             <h2 class="section-title"><?= $t['services_title'] ?><span class="logo__dot">.</span></h2>
             <p class="section-subtitle"><?= $t['services_subtitle'] ?></p>
-            <div class="services__grid">
-                <article class="card service-card service-card--feature">
-                    <div class="card-art">
-                        <img src="assets/products/document-scanner.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title"><?= $t['svc_docs_title'] ?></h3>
-                    <p class="card__text"><?= $t['svc_docs_text'] ?></p>
-                    <div class="service-card__meta">
-                        <span><?= $t['svc_docs_metric'] ?></span>
-                        <span><?= $t['svc_docs_term'] ?></span>
-                        <span class="service-card__price"><?= $t['svc_docs_price'] ?></span>
-                    </div>
-                </article>
-                <article class="card service-card service-card--compact">
-                    <div class="card-art">
-                        <img src="assets/products/inspection-gauge.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title"><?= $t['svc_quality_title'] ?></h3>
-                    <p class="card__text"><?= $t['svc_quality_text'] ?><span class="tooltip" tabindex="0" data-tooltip="<?= h($t['svc_quality_edge_tooltip']) ?>"><?= $t['svc_quality_edge_term'] ?></span><?= $t['svc_quality_text_tail'] ?></p>
-                    <div class="service-card__meta">
-                        <span><?= $t['svc_quality_metric'] ?></span>
-                        <span><?= $t['svc_quality_term'] ?></span>
-                        <span class="service-card__price"><?= $t['svc_quality_price'] ?></span>
-                    </div>
-                </article>
-                <article class="card service-card service-card--compact service-card--accent">
-                    <div class="card-art">
-                        <img src="assets/products/video-camera.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title"><?= $t['svc_video_title'] ?></h3>
-                    <p class="card__text"><?= $t['svc_video_text'] ?></p>
-                    <div class="service-card__meta">
-                        <span><?= $t['svc_video_metric'] ?></span>
-                        <span><?= $t['svc_video_term'] ?></span>
-                        <span class="service-card__price"><?= $t['svc_video_price'] ?></span>
-                    </div>
-                </article>
-                <article class="card service-card service-card--wide">
-                    <div class="card-art">
-                        <img src="assets/products/product-search.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title"><?= $t['svc_search_title'] ?></h3>
-                    <p class="card__text"><?= $t['svc_search_text'] ?></p>
-                    <div class="service-card__meta">
-                        <span><?= $t['svc_search_metric'] ?></span>
-                        <span><?= $t['svc_search_term'] ?></span>
-                        <span class="service-card__price"><?= $t['svc_search_price'] ?></span>
-                    </div>
-                </article>
-                <article class="card service-card">
-                    <div class="card-art">
-                        <img src="assets/products/ct-scanner.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title"><?= $t['svc_med_title'] ?></h3>
-                    <p class="card__text"><?= $t['svc_med_text'] ?><span class="tooltip" tabindex="0" data-tooltip="<?= h($t['svc_med_mis_tooltip']) ?>"><?= $t['svc_med_mis_term'] ?></span><?= $t['svc_med_text_tail'] ?></p>
-                    <div class="service-card__meta">
-                        <span><?= $t['svc_med_metric'] ?></span>
-                        <span><?= $t['svc_med_term'] ?></span>
-                        <span class="service-card__price"><?= $t['svc_med_price'] ?></span>
-                    </div>
-                </article>
-                <article class="card service-card">
-                    <div class="card-art">
-                        <img src="assets/products/card-catalog.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title"><?= $t['svc_rag_title_prefix'] ?><span class="tooltip" tabindex="0" data-tooltip="<?= h($t['svc_rag_tooltip']) ?>">RAG</span><?= $t['svc_rag_title_suffix'] ?></h3>
-                    <p class="card__text"><?= $t['svc_rag_text'] ?></p>
-                    <div class="service-card__meta">
-                        <span><?= $t['svc_rag_metric'] ?></span>
-                        <span><?= $t['svc_rag_term'] ?></span>
-                        <span class="service-card__price"><?= $t['svc_rag_price'] ?></span>
-                    </div>
-                </article>
+
+            <div class="tabs" role="tablist" aria-label="<?= h($t['services_tabs_aria']) ?>">
+                <button class="tabs__btn" type="button" id="tab-products" role="tab" aria-selected="true" aria-controls="panel-products" tabindex="0">
+                    <span class="tabs__label"><?= $t['services_tab_products'] ?></span>
+                    <span class="tabs__hint"><?= $t['services_tab_products_hint'] ?></span>
+                </button>
+                <button class="tabs__btn" type="button" id="tab-optimization" role="tab" aria-selected="false" aria-controls="optimization" tabindex="-1">
+                    <span class="tabs__label"><?= $t['services_tab_opt'] ?></span>
+                    <span class="tabs__hint"><?= $t['services_tab_opt_hint'] ?></span>
+                </button>
+            </div>
+
+            <div class="services__panel" id="panel-products" role="tabpanel" aria-labelledby="tab-products" tabindex="0">
+                <h3 class="panel-title"><?= $t['services_tab_products'] ?></h3>
+                <div class="services__grid">
+                                <article class="card service-card service-card--feature">
+                                    <div class="card-art">
+                                        <img src="assets/products/document-scanner.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                    </div>
+                                    <h3 class="card__title"><?= $t['svc_docs_title'] ?></h3>
+                                    <p class="card__text"><?= $t['svc_docs_text'] ?></p>
+                                    <div class="service-card__meta">
+                                        <span><?= $t['svc_docs_metric'] ?></span>
+                                        <span><?= $t['svc_docs_term'] ?></span>
+                                        <span class="service-card__price"><?= $t['svc_docs_price'] ?></span>
+                                    </div>
+                                </article>
+                                <article class="card service-card service-card--compact">
+                                    <div class="card-art">
+                                        <img src="assets/products/inspection-gauge.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                    </div>
+                                    <h3 class="card__title"><?= $t['svc_quality_title'] ?></h3>
+                                    <p class="card__text"><?= $t['svc_quality_text'] ?><span class="tooltip" tabindex="0" data-tooltip="<?= h($t['svc_quality_edge_tooltip']) ?>"><?= $t['svc_quality_edge_term'] ?></span><?= $t['svc_quality_text_tail'] ?></p>
+                                    <div class="service-card__meta">
+                                        <span><?= $t['svc_quality_metric'] ?></span>
+                                        <span><?= $t['svc_quality_term'] ?></span>
+                                        <span class="service-card__price"><?= $t['svc_quality_price'] ?></span>
+                                    </div>
+                                </article>
+                                <article class="card service-card service-card--compact service-card--accent">
+                                    <div class="card-art">
+                                        <img src="assets/products/video-camera.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                    </div>
+                                    <h3 class="card__title"><?= $t['svc_video_title'] ?></h3>
+                                    <p class="card__text"><?= $t['svc_video_text'] ?></p>
+                                    <div class="service-card__meta">
+                                        <span><?= $t['svc_video_metric'] ?></span>
+                                        <span><?= $t['svc_video_term'] ?></span>
+                                        <span class="service-card__price"><?= $t['svc_video_price'] ?></span>
+                                    </div>
+                                </article>
+                                <article class="card service-card service-card--wide">
+                                    <div class="card-art">
+                                        <img src="assets/products/product-search.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                    </div>
+                                    <h3 class="card__title"><?= $t['svc_search_title'] ?></h3>
+                                    <p class="card__text"><?= $t['svc_search_text'] ?></p>
+                                    <div class="service-card__meta">
+                                        <span><?= $t['svc_search_metric'] ?></span>
+                                        <span><?= $t['svc_search_term'] ?></span>
+                                        <span class="service-card__price"><?= $t['svc_search_price'] ?></span>
+                                    </div>
+                                </article>
+                                <article class="card service-card">
+                                    <div class="card-art">
+                                        <img src="assets/products/ct-scanner.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                    </div>
+                                    <h3 class="card__title"><?= $t['svc_med_title'] ?></h3>
+                                    <p class="card__text"><?= $t['svc_med_text'] ?><span class="tooltip" tabindex="0" data-tooltip="<?= h($t['svc_med_mis_tooltip']) ?>"><?= $t['svc_med_mis_term'] ?></span><?= $t['svc_med_text_tail'] ?></p>
+                                    <div class="service-card__meta">
+                                        <span><?= $t['svc_med_metric'] ?></span>
+                                        <span><?= $t['svc_med_term'] ?></span>
+                                        <span class="service-card__price"><?= $t['svc_med_price'] ?></span>
+                                    </div>
+                                </article>
+                                <article class="card service-card">
+                                    <div class="card-art">
+                                        <img src="assets/products/card-catalog.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                    </div>
+                                    <h3 class="card__title"><?= $t['svc_rag_title_prefix'] ?><span class="tooltip" tabindex="0" data-tooltip="<?= h($t['svc_rag_tooltip']) ?>">RAG</span><?= $t['svc_rag_title_suffix'] ?></h3>
+                                    <p class="card__text"><?= $t['svc_rag_text'] ?></p>
+                                    <div class="service-card__meta">
+                                        <span><?= $t['svc_rag_metric'] ?></span>
+                                        <span><?= $t['svc_rag_term'] ?></span>
+                                        <span class="service-card__price"><?= $t['svc_rag_price'] ?></span>
+                                    </div>
+                                </article>
+                            </div>
+            </div>
+
+            <div class="services__panel" id="optimization" role="tabpanel" aria-labelledby="tab-optimization" tabindex="0">
+                <h3 class="panel-title"><?= $t['opt_title'] ?></h3>
+                <p class="section-subtitle panel-intro"><?= $t['opt_subtitle'] ?></p>
+                <div class="optimization__grid">
+                            <article class="card optimization-card">
+                                <div class="card-art">
+                                    <img src="assets/optimization/security.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                </div>
+                                <h3 class="card__title"><?= $t['opt_security_title'] ?></h3>
+                                <p class="card__text"><?= $t['opt_security_text'] ?></p>
+                                <div class="optimization-card__meta">
+                                    <span><?= $t['opt_security_metric'] ?></span>
+                                    <span><?= $t['opt_security_term'] ?></span>
+                                    <span class="optimization-card__price"><?= $t['opt_security_price'] ?></span>
+                                </div>
+                            </article>
+
+                            <article class="card optimization-card">
+                                <div class="card-art">
+                                    <img src="assets/optimization/llm-cost.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                </div>
+                                <h3 class="card__title"><?= $t['opt_llm_title'] ?></h3>
+                                <p class="card__text"><?= $t['opt_llm_text'] ?></p>
+                                <div class="optimization-card__meta">
+                                    <span><?= $t['opt_llm_metric'] ?></span>
+                                    <span><?= $t['opt_llm_term'] ?></span>
+                                    <span class="optimization-card__price"><?= $t['opt_llm_price'] ?></span>
+                                </div>
+                            </article>
+
+                            <article class="card optimization-card">
+                                <div class="card-art">
+                                    <img src="assets/optimization/algorithms.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                </div>
+                                <h3 class="card__title"><?= $t['opt_algo_title'] ?></h3>
+                                <p class="card__text"><?= $t['opt_algo_text'] ?></p>
+                                <div class="optimization-card__meta">
+                                    <span><?= $t['opt_algo_metric'] ?></span>
+                                    <span class="optimization-card__price"><?= $t['opt_algo_price'] ?></span>
+                                </div>
+                            </article>
+
+                            <article class="card optimization-card">
+                                <div class="card-art">
+                                    <img src="assets/optimization/patents.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                </div>
+                                <h3 class="card__title"><?= $t['opt_patent_title'] ?></h3>
+                                <p class="card__text"><?= $t['opt_patent_text'] ?></p>
+                                <div class="optimization-card__meta">
+                                    <span><?= $t['opt_patent_metric'] ?></span>
+                                    <span class="optimization-card__price"><?= $t['opt_patent_price'] ?></span>
+                                </div>
+                            </article>
+                        </div>
+            </div>
+
+            <div class="services__cta">
+                <a href="#contact" class="btn btn--primary"><?= $t['opt_cta'] ?></a>
             </div>
         </div>
     </section>
 
-    <!-- 4. Optimization -->
-    <section id="optimization" class="optimization">
-    <div class="container">
-        <h2 class="section-title"><?= $t['opt_title'] ?><span class="logo__dot">.</span></h2>
-        <p class="section-subtitle"><?= $t['opt_subtitle'] ?></p>
-
-        <div class="optimization__grid">
-            <article class="card optimization-card">
-                <div class="card-art">
-                    <img src="assets/optimization/security.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                </div>
-                <h3 class="card__title"><?= $t['opt_security_title'] ?></h3>
-                <p class="card__text"><?= $t['opt_security_text'] ?></p>
-                <div class="optimization-card__meta">
-                    <span><?= $t['opt_security_metric'] ?></span>
-                    <span><?= $t['opt_security_term'] ?></span>
-                    <span class="optimization-card__price"><?= $t['opt_security_price'] ?></span>
-                </div>
-            </article>
-
-            <article class="card optimization-card">
-                <div class="card-art">
-                    <img src="assets/optimization/llm-cost.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                </div>
-                <h3 class="card__title"><?= $t['opt_llm_title'] ?></h3>
-                <p class="card__text"><?= $t['opt_llm_text'] ?></p>
-                <div class="optimization-card__meta">
-                    <span><?= $t['opt_llm_metric'] ?></span>
-                    <span><?= $t['opt_llm_term'] ?></span>
-                    <span class="optimization-card__price"><?= $t['opt_llm_price'] ?></span>
-                </div>
-            </article>
-
-            <article class="card optimization-card">
-                <div class="card-art">
-                    <img src="assets/optimization/algorithms.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                </div>
-                <h3 class="card__title"><?= $t['opt_algo_title'] ?></h3>
-                <p class="card__text"><?= $t['opt_algo_text'] ?></p>
-                <div class="optimization-card__meta">
-                    <span><?= $t['opt_algo_metric'] ?></span>
-                    <span class="optimization-card__price"><?= $t['opt_algo_price'] ?></span>
-                </div>
-            </article>
-
-            <article class="card optimization-card">
-                <div class="card-art">
-                    <img src="assets/optimization/patents.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
-                </div>
-                <h3 class="card__title"><?= $t['opt_patent_title'] ?></h3>
-                <p class="card__text"><?= $t['opt_patent_text'] ?></p>
-                <div class="optimization-card__meta">
-                    <span><?= $t['opt_patent_metric'] ?></span>
-                    <span class="optimization-card__price"><?= $t['opt_patent_price'] ?></span>
-                </div>
-            </article>
-        </div>
-
-        <div class="optimization__cta">
-            <a href="#contact" class="btn btn--primary"><?= $t['opt_cta'] ?></a>
-        </div>
-    </div>
-</section>
-
-    <!-- 5. Industries -->
+    <!-- 4. Industries -->
     <section id="industries" class="industries">
         <div class="container">
             <h2 class="section-title"><?= $t['industries_title'] ?><span class="logo__dot">.</span></h2>
@@ -301,7 +312,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
         </div>
     </section>
 
-    <!-- 6. Cases -->
+    <!-- 5. Cases -->
     <section id="cases" class="cases">
         <div class="container">
             <h2 class="section-title"><?= $t['cases_title'] ?><span class="logo__dot">.</span></h2>
@@ -370,7 +381,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
         </div>
     </section>
 
-    <!-- 7. Trust / Founder -->
+    <!-- 6. Trust / Founder -->
     <section id="founder" class="trust-section">
         <div class="container">
             <div class="trust-section__header">
@@ -439,7 +450,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
         </div>
     </section>
 
-    <!-- 8. Process -->
+    <!-- 7. Process -->
     <section id="process" class="process">
         <div class="container">
             <h2 class="section-title"><?= $t['process_title'] ?><span class="logo__dot">.</span></h2>
@@ -478,7 +489,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
         </div>
     </section>
 
-    <!-- 9. Contact -->
+    <!-- 8. Contact -->
     <section id="contact" class="contact">
         <div class="container">
             <div class="contact__content">
@@ -570,7 +581,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
         </div>
     </div>
     
-    <!-- 10. Footer -->
+    <!-- 9. Footer -->
 <?php include __DIR__ . '/../partials/footer.php'; ?>
 
     <!-- Scroll Progress -->
@@ -592,6 +603,6 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
     </div>
 
     <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
-    <script src="/script.js?v=2026-11-21-5" defer></script>
+    <script src="/script.js?v=2026-11-21-6" defer></script>
 </body>
 </html>

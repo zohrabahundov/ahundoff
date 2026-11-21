@@ -38,7 +38,7 @@ $og_url    = $canonical;
 
     <script type="application/ld+json"><?= $t['partner_jsonld'] ?></script>
 
-    <link rel="stylesheet" href="/styles.css?v=2026-11-21-6">
+    <link rel="stylesheet" href="/styles.css?v=2026-11-21-7">
 
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
@@ -336,7 +336,7 @@ $og_url    = $canonical;
     </div>
 
     <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
-    <script src="/script.js?v=2026-11-21-5" defer></script>
+    <script src="/script.js?v=2026-11-21-6" defer></script>
 
     </body>
 </html>

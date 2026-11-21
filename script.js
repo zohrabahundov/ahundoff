@@ -426,6 +426,68 @@ document.documentElement.classList.add('js');
         return { init };
     })();
 
+    // Табы «Продукты / Оптимизация» в секции Услуги.
+    // Разметка не содержит hidden: без JS видны обе группы, скрипт только прячет неактивную.
+    const ServiceTabs = (() => {
+        const init = () => {
+            const list = document.querySelector('.tabs[role="tablist"]');
+            if (!list) return;
+            const tabs = Array.from(list.querySelectorAll('[role="tab"]'));
+            const panels = tabs.map(t => document.getElementById(t.getAttribute('aria-controls')));
+            if (!tabs.length || panels.some(p => !p)) return;
+
+            const activate = (tab, opts = {}) => {
+                tabs.forEach((t, i) => {
+                    const on = t === tab;
+                    t.setAttribute('aria-selected', on ? 'true' : 'false');
+                    t.tabIndex = on ? 0 : -1;
+                    panels[i].hidden = !on;
+                    // Карточки анимируются по IntersectionObserver: в скрытой панели он не
+                    // срабатывает, и после переключения они могли остаться с opacity:0.
+                    if (on) panels[i].querySelectorAll('.service-card, .optimization-card')
+                        .forEach(c => c.classList.add('animated'));
+                });
+                if (opts.focus) tab.focus();
+                if (opts.scroll) {
+                    const sec = document.getElementById('services');
+                    if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                if (opts.track) Tracker.track(tab.id === 'tab-optimization' ? 'services_tab_optimization' : 'services_tab_products');
+            };
+
+            tabs.forEach((tab, i) => {
+                tab.addEventListener('click', () => activate(tab, { track: true }));
+                tab.addEventListener('keydown', (e) => {
+                    let next = null;
+                    if (e.key === 'ArrowRight') next = (i + 1) % tabs.length;
+                    else if (e.key === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+                    else if (e.key === 'Home') next = 0;
+                    else if (e.key === 'End') next = tabs.length - 1;
+                    if (next === null) return;
+                    e.preventDefault();
+                    activate(tabs[next], { focus: true, track: true });
+                });
+            });
+
+            // Deep-link: /#optimization открывает второй таб (старые ссылки и закладки живут).
+            const fromHash = (scroll) => {
+                if (location.hash === '#optimization') activate(tabs[1], { scroll });
+                else if (location.hash === '#services') activate(tabs[0], { scroll });
+            };
+            activate(location.hash === '#optimization' ? tabs[1] : tabs[0]);
+            window.addEventListener('hashchange', () => fromHash(true));
+            window.addEventListener('popstate', () => fromHash(false));
+            // SmoothScroll перехватывает клики по якорям и не вызывает hashchange,
+            // поэтому переключаем таб и докручиваем сами.
+            document.addEventListener('click', (e) => {
+                const a = e.target instanceof Element ? e.target.closest('a[href="#optimization"], a[href="#services"]') : null;
+                if (!a) return;
+                activate(a.getAttribute('href') === '#optimization' ? tabs[1] : tabs[0], { scroll: true });
+            });
+        };
+        return { init };
+    })();
+
     const ScrollAnimations = (() => {
         const init = () => {
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -957,7 +1019,7 @@ document.documentElement.classList.add('js');
         // ошибка в одном не блокирует остальные (раньше карточки могли остаться невидимыми).
         const modules = [
             ['MobileMenu', MobileMenu], ['SmoothScroll', SmoothScroll], ['FormHandler', FormHandler],
-            ['ScrollAnimations', ScrollAnimations], ['Counters', Counters], ['FAQ', FAQ],
+            ['ScrollAnimations', ScrollAnimations], ['ServiceTabs', ServiceTabs], ['Counters', Counters], ['FAQ', FAQ],
             ['Tracker', { init: Tracker.initEvents }], ['ScrollProgress', ScrollProgress],
             ['BackToTop', BackToTop], ['CopyToClipboard', CopyToClipboard], ['ProcessTimeline', ProcessTimeline],
             ['StickyBar', StickyBar], ['PhoneMask', PhoneMask], ['HeroGrid', HeroGrid], ['MobileTooltip', MobileTooltip],
