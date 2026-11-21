@@ -1027,7 +1027,7 @@
         .process__timeline { padding-left: 60px; }
         .process__line { left: 19px; }
         .process__dot { left: -60px; width: 40px; height: 40px; font-size: 0.9rem; }
-        .process__content { padding: 1.5rem; }
+        .process__content { padding: 1rem 1.25rem; }
 
         .founder__guarantee { margin-top: 0; padding-top: 3rem; }
         .founder__guarantee::before { font-size: 0.75rem; padding: 0 1rem; }
@@ -1085,7 +1085,7 @@
         .process__timeline { padding-left: 50px; }
         .process__line { left: 15px; }
         .process__dot { left: -50px; width: 32px; height: 32px; font-size: 0.8rem; }
-        .process__content { padding: 1.25rem; }
+        .process__content { padding: 0.875rem 1rem; }
         .process__title { font-size: 1.1rem; }
     }
 
