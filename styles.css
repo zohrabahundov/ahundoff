@@ -286,6 +286,14 @@
         font-size: 1.1rem;
         line-height: 1.6;
     }
+
+    .services > .container > .section-title,
+    .industries > .container > .section-title,
+    .cases > .container > .section-title,
+    .process > .container > .section-title,
+    .partners-section > .container > .section-title { margin-bottom: 3rem; }
+    .trust-section__header { margin-bottom: 3rem; }
+    .trust-section__header .section-title { margin-bottom: 0; }
 }
 
 /* ==========================================================================
