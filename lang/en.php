@@ -232,21 +232,8 @@ TXT,
     'process_step4_title' => 'Scaling',
     'process_step4_text' => 'After a successful launch, we help scale the solution to other departments or processes, ensuring cumulative growth in business efficiency.',
 
-    // Главная: FAQ
+    // Общий заголовок FAQ (используется на партнёрской странице)
     'faq_title' => 'Frequently asked questions',
-    'faq_title_dot' => '.',
-    'faq_q1' => 'How is working with you different from working with a freelancer?',
-    'faq_a1' => 'A typical developer often focuses on "making the code work". We solve for "a product that scales, is secure, and pays off". We provide an SLA, sign an NDA, set up 24/7 monitoring, and hand over full documentation. This eliminates the risk of rework in six months.',
-    'faq_q2' => 'What is included in "corporate-level reliability"?',
-    'faq_a2' => 'Every project is delivered with industrial infrastructure: 24/7 monitoring (Prometheus/Grafana), centralized logging (ELK), vulnerability protection, automated backups, API documentation, and training for your team.',
-    'faq_q3' => 'How do you guarantee the 14-day deadline?',
-    'faq_a3' => 'Thanks to 10 years of experience and ready-made architectural templates, we don\'t reinvent the wheel. We use proven solutions that already work in production. Weekly demos show progress.',
-    'faq_q4' => 'How much does AI implementation cost?',
-    'faq_a4' => 'We don\'t sell "boxed solutions", so the cost depends on the task. Typical audit and prototyping start from $600. Full MVP development starts from $1,800, and complex AI systems from $4,900. We fix the budget before work begins. USD prices are indicative at the current exchange rate; the final amount is fixed in the contract.',
-    'faq_q5' => 'Where and how is data processed?',
-    'faq_a5' => 'All data is stored and processed on servers in Russia in full compliance with 152-FZ (Russian personal data law). For AI solutions, we use certified models (GigaChat by Sber) or open-source solutions deployed within your perimeter. We sign an NDA before the project starts.',
-    'faq_q6' => 'What technologies do you use?',
-    'faq_a6' => 'We use a proven stack: Python (FastAPI, Aiogram), PostgreSQL, Redis, Docker for backend. For AI — GigaChat, YandexGPT, LangChain, RAG, LightGBM. Monitoring via Prometheus/Grafana. Integrations with 1C, Bitrix24, Telegram Bot API. All technologies are deployed on servers in Russia for 152-FZ compliance.',
 
     // Главная: Контакты / форма
     'contact_title' => 'Ready to discuss your project',

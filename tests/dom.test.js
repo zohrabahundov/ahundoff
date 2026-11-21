@@ -109,12 +109,8 @@ const setInput = (w, id, v) => { const el = w.document.getElementById(id); el.va
   const plus7 = setInput(w, 'phone', '+7'); plus7.dispatchEvent(new w.Event('blur', { bubbles: true }));
   ok('T10f +7 на blur очищается', plus7.value === '');
 
-  // T11: FAQ-аккордеон
-  const q1 = d.getElementById('faq-question-1'), q2 = d.getElementById('faq-question-2');
-  q1.dispatchEvent(new w.Event('click', { bubbles: true }));
-  ok('T11a FAQ открыт, aria-expanded=true', q1.getAttribute('aria-expanded') === 'true' && q1.closest('.faq__item').classList.contains('active'));
-  q2.dispatchEvent(new w.Event('click', { bubbles: true }));
-  ok('T11b предыдущий закрыт', q1.getAttribute('aria-expanded') === 'false');
+  // T11: FAQ на главной удалён (ужатие); аккордеон проверяется на партнёрке — см. T11a/T11b ниже
+  ok('T11 на главной нет секции FAQ', !d.querySelector('section.faq') && !d.getElementById('faq-question-1'));
 
   // T12: бургер-меню
   const burger = d.querySelector('.burger'), nav = d.querySelector('.nav');
@@ -188,6 +184,12 @@ const setInput = (w, id, v) => { const el = w.document.getElementById(id); el.va
   ok('T22 partner: label восстановлен из data-default-label', dp.getElementById('p-submitBtn').textContent === 'Отправить заявку');
   ok('T23 partner: без successBlock -> тост (RU)', [...dp.querySelectorAll('.toast--success')].some(t => t.textContent.includes('Заявка отправлена')));
   ok('P8 RU partners: cross-link на EN-версию', !!dp.querySelector('.partners-hero__alt a[href="/partners-en.html"]'));
+  // T11a/T11b: FAQ-аккордеон (перенесён с главной — на главной блок удалён)
+  const pq1 = dp.getElementById('pfaq-q-1'), pq2 = dp.getElementById('pfaq-q-2');
+  pq1.dispatchEvent(new wp.Event('click', { bubbles: true }));
+  ok('T11a FAQ открыт, aria-expanded=true', pq1.getAttribute('aria-expanded') === 'true' && pq1.closest('.faq__item').classList.contains('active'));
+  pq2.dispatchEvent(new wp.Event('click', { bubbles: true }));
+  ok('T11b предыдущий закрыт', pq1.getAttribute('aria-expanded') === 'false');
 
   // ================= COOKIE-NOTICE с opt-out (аудит п.8) =================
   const wc = await makeWindow('/', {consent:null}); await tick(40);
