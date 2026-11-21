@@ -1,24 +1,47 @@
 # Ahundoff Studio — сайт
 
 Статический сайт (HTML/CSS/JS) с PHP-обработчиком заявок `send.php`. Хостинг — Timeweb
-(nginx + Apache, `.html` исполняется как PHP через `.htaccess`, шаблоны в `partials/`).
+(nginx + Apache, `.html` исполняется как PHP через `.htaccess`). RU- и EN-версии страниц
+собраны из **одного общего шаблона** (`templates/`) и меняются только текста (`lang/`).
 
 ## Структура
 
 | Файл | Назначение |
 |---|---|
-| `index.html`, `en.html` | Главная (RU/EN) |
-| `partners.html` | Партнёрская программа |
-| `privacy-policy*.html` | Политика конфиденциальности (RU/EN) |
+| `index.html`, `en.html` | Тонкие обёртки главной (задают `LANG` и подключают `templates/index.php`) |
+| `privacy-policy*.html` | Тонкие обёртки политики конфиденциальности (`templates/privacy.php`) |
+| `templates/` | Общая разметка страниц RU/EN (`index.php`, `privacy.php`) |
+| `lang/` | Словари текстов `ru.php` / `en.php` (одинаковый набор ключей) |
+| `i18n.php` | Bootstrap локализации: грузит словарь в `$t`, задаёт `$lang` и URL-хелперы |
+| `partners.html` | Партнёрская программа (только RU; общие шапка/подвал) |
 | `vizitka-studio.html` + `vizitka.js` | Генератор визиток (препресс, QR, экспорт SVG/PNG) |
 | `mail.html` | Шаблон email-рассылки (не публичная страница) |
 | `404.html` | Брендированная страница ошибки |
 | `send.php` | Обработчик форм (contact / partner) |
 | `script.js`, `styles.css` | Общие JS и CSS |
-| `partials/` | header/footer/sprite (PHP-инклюды) |
+| `partials/` | Общие header/footer/sprite (PHP-инклюды, принимают `$lang`/`$t`) |
 | `assets/fonts/` | Self-hosted шрифты Inter / Unbounded (variable, cyrillic+latin) |
 | `assets/vendor/qrcode.min.js` | Self-hosted QR-библиотека (qrcode-generator 1.4.4) |
 | `tests/` | Регрессионные тесты (см. ниже) |
+
+## Локализация (RU/EN)
+
+Разметка и текста разделены, чтобы локали не разъезжались:
+
+- **Обёртка** (`index.html`, `en.html`, …) только задаёт язык и подключает шаблон:
+  `define('LANG', 'en'); require __DIR__ . '/templates/index.php';`
+- **Шаблон** (`templates/*.php`) содержит общую HTML-разметку и вставляет текста через
+  `<?= $t['key'] ?>` (значения атрибутов — через `<?= h($t['key']) ?>`).
+- **Словари** (`lang/ru.php`, `lang/en.php`) — ассоциативные массивы с одинаковым набором
+  ключей. Чтобы поменять текст, правьте **оба** словаря; чтобы поменять разметку — шаблон.
+- `i18n.php` грузит словарь по `LANG`, задаёт `$lang`, `$privacy_url`, `$alt_policy_url`,
+  `$home_contact` и хелпер `h()`. SEO (title/description/canonical/hreflang/og/JSON-LD)
+  берётся из словаря и переменных шаблона — у каждого языка свои.
+- URL не меняются: `/`, `/en.html`, `/privacy-policy.html`, `/privacy-policy-en.html`.
+- `templates/`, `lang/`, `i18n.php` закрыты от прямого доступа (403 в `.htaccess` и стенде).
+
+Парность локалей проверяет офлайн-тест `php tests/i18n.test.php` (ключи совпадают, пустых
+значений нет, все ключи разметки покрыты, JSON-LD валиден).
 
 ## Локальный запуск
 
@@ -36,6 +59,7 @@ php -d sendmail_path="$PWD/tests/mailcatch.sh" -S 0.0.0.0:8088 -t . tests/router
 
 ```bash
 npm install
+php tests/i18n.test.php                                   # 16 офлайн-проверок парности RU/EN
 TEST_HOST=http://127.0.0.1:8088 bash tests/send.test.sh   # 35 тестов обработчика форм
 TEST_HOST=http://127.0.0.1:8088 node tests/dom.test.js    # 37 DOM-тестов (jsdom)
 TEST_HOST=http://127.0.0.1:8088 python3 tests/structure.py# структурные проверки HTML
@@ -51,9 +75,9 @@ i18n, аналитику, автоповтор при `form_expired`.
 
 1. Загрузить файлы на Timeweb (корень сайта). `.htaccess` и `logs/.htaccess` обязательны.
 2. **Версионирование ассетов:** при изменении `styles.css`/`script.js`/`vizitka.js` поднимать
-   `?v=...` во всех HTML (сейчас `2026-11-21-3`). nginx кэширует статику на год — без смены
-   версии пользователи не увидят обновлений. Изображения без версии (например `founder.jpg`)
-   при замене тоже требуют `?v=`.
+   `?v=...` в шаблонах (`templates/`) и оставшихся HTML (`partners`, `vizitka`, `mail`, `404`)
+   — сейчас `2026-11-21-3`. nginx кэширует статику на год — без смены версии пользователи не
+   увидят обновлений. Изображения без версии (например `founder.jpg`) при замене тоже требуют `?v=`.
 3. Убедиться, что `logs/` недоступна извне (403) и права на запись есть у PHP.
 4. HTTPS и редирект с www включаются в панели хостинга (в `.htaccess` редирект HTTPS
    закомментирован во избежание циклов).
@@ -88,6 +112,11 @@ i18n, аналитику, автоповтор при `form_expired`.
   self-hosted); контраст primary-кнопок (3.68→5.17); невалидный `noscript` в `head`;
   дубль `inLanguage` в JSON-LD EN; неверный URL в JSON-LD partners; разрозненные header/footer
   политик; отсутствие skip-link, safe-area, 404-страницы.
+- **DRY-локализация:** RU/EN-версии главной и политики объединены в общие шаблоны
+  (`templates/`) со словарями (`lang/`) — разметка одна, меняются только текста. Устранён
+  рассинхрон локалей (в EN не было `yandex-verification` и вступительной фразы в §5 политики,
+  порядок пунктов хранения данных отличался); CTA политики теперь ведёт на форму текущего
+  языка. Добавлен офлайн-тест парности словарей.
 - **.htaccess:** двойной `Cache-Control`; избыточный CSP (`unsafe-eval`, jsdelivr, широкий
   `img-src`); блокировка `.well-known`; дубль `/index.html`.
 - **vizitka:** страница была полностью сломана собственным CSP (inline-скрипт + cdnjs) —
