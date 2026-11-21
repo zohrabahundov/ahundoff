@@ -20,7 +20,7 @@ check(!$emptyRu, 'нет пустых значений в ru' . ($emptyRu ? ': '
 check(!$emptyEn, 'нет пустых значений в en' . ($emptyEn ? ': ' . implode(',', $emptyEn) : ''));
 
 // Все ключи, используемые в общей разметке.
-$files = ['templates/index.php', 'templates/privacy.php', 'partials/header.php', 'partials/footer.php'];
+$files = ['templates/index.php', 'templates/privacy.php', 'templates/partners.php', 'partials/header.php', 'partials/footer.php', 'partials/cookie-banner.php'];
 $used = [];
 foreach ($files as $f) {
     preg_match_all("/\\\$t\['([a-z0-9_]+)'\]/", file_get_contents($root . '/' . $f), $m);

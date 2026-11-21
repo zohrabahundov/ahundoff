@@ -38,7 +38,7 @@ $og_url    = $canonical;
 
     <script type="application/ld+json"><?= $t['partner_jsonld'] ?></script>
 
-    <link rel="stylesheet" href="/styles.css?v=2026-11-21-4">
+    <link rel="stylesheet" href="/styles.css?v=2026-11-21-5">
 
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">

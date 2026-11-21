@@ -638,19 +638,6 @@
     .trust-section { position: relative; overflow: hidden; }
     .trust-section__header { margin-bottom: 4rem; }
 
-    .security-section {
-        margin-top: 5rem; padding: 3rem; background: var(--bg-card);
-        border: 1px solid var(--border); border-radius: var(--radius);
-        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    }
-    .security-section__title { font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem; text-align: center; color: var(--text-primary); }
-    .security-section__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
-    .security-section__item { padding: 1rem; border-radius: var(--radius-sm); transition: var(--transition); }
-    .security-section__item:hover { background: rgba(59, 130, 246, 0.05); }
-    .security-section__item .card-art { margin-bottom: 1rem; }
-    .security-section__content h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary); }
-    .security-section__content p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; margin: 0; }
-
     .founder__guarantee { margin-top: 6rem; padding-top: 6rem; border-top: 1px solid var(--border); position: relative; }
     .founder__guarantee::before {
         content: 'Личная гарантия качества'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
@@ -1024,10 +1011,6 @@
         .services__grid, .cases__grid, .why__grid, .industries__grid, .optimization__grid { 
             grid-template-columns: 1fr; 
         }
-
-        .security-section { padding: 2rem 1.5rem; margin-top: 3rem; }
-        .security-section__grid { grid-template-columns: 1fr; gap: 1rem; }
-        .security-section__item { padding: 0.75rem; }
 
         .process__timeline { padding-left: 60px; }
         .process__line { left: 19px; }

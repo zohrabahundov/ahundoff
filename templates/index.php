@@ -39,7 +39,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
     
     <title><?= $t['site_title'] ?></title>
     
-    <link rel="stylesheet" href="/styles.css?v=2026-11-21-4">
+    <link rel="stylesheet" href="/styles.css?v=2026-11-21-5">
     
     
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
@@ -399,49 +399,6 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
                     </div>
                     <h3 class="card__title"><?= $t['trust_speed_title'] ?></h3>
                     <p class="card__text"><?= $t['trust_speed_text'] ?></p>
-                </div>
-            </div>
-
-            <!-- Блок защиты данных -->
-            <div class="security-section">
-                <h3 class="security-section__title"><?= $t['security_title'] ?></h3>
-                <div class="security-section__grid">
-                    <div class="security-section__item">
-                        <div class="card-art">
-                            <img src="assets/trust/seal.webp?v=cutout-1" width="640" height="256" alt="" loading="lazy" decoding="async">
-                        </div>
-                        <div class="security-section__content">
-                            <h4><?= $t['security_nda_title'] ?></h4>
-                            <p><?= $t['security_nda_text'] ?></p>
-                        </div>
-                    </div>
-                    <div class="security-section__item">
-                        <div class="card-art">
-                            <img src="assets/trust/archive.webp?v=cutout-1" width="640" height="256" alt="" loading="lazy" decoding="async">
-                        </div>
-                        <div class="security-section__content">
-                            <h4><?= $t['security_fz_title'] ?></h4>
-                            <p><?= $t['security_fz_text'] ?></p>
-                        </div>
-                    </div>
-                    <div class="security-section__item">
-                        <div class="card-art">
-                            <img src="assets/trust/model.webp?v=cutout-1" width="640" height="256" alt="" loading="lazy" decoding="async">
-                        </div>
-                        <div class="security-section__content">
-                            <h4><?= $t['security_llm_title'] ?></h4>
-                            <p><?= $t['security_llm_text'] ?></p>
-                        </div>
-                    </div>
-                    <div class="security-section__item">
-                        <div class="card-art">
-                            <img src="assets/trust/cipher.webp?v=cutout-1" width="640" height="256" alt="" loading="lazy" decoding="async">
-                        </div>
-                        <div class="security-section__content">
-                            <h4><?= $t['security_arch_title'] ?></h4>
-                            <p><?= $t['security_arch_text'] ?></p>
-                        </div>
-                    </div>
                 </div>
             </div>
 

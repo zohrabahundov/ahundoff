@@ -204,17 +204,6 @@ TXT,
     'trust_speed_title' => 'Speed without compromise',
     'trust_speed_text' => 'Thanks to Rapid Prototyping experience and ready-made architectural templates, we launch MVPs in 14 days, while large agencies are still approving the SOW.',
 
-    // Главная: Защита данных
-    'security_title' => 'How we protect your data',
-    'security_nda_title' => 'Strict NDA',
-    'security_nda_text' => 'We sign a non-disclosure agreement before work begins. All project details are legally protected.',
-    'security_fz_title' => '152-FZ (data residency)',
-    'security_fz_text' => 'All data is stored and processed on servers in Russia. Full compliance with the Russian personal data law (152-FZ).',
-    'security_llm_title' => 'Certified LLMs',
-    'security_llm_text' => 'We use GigaChat by Sber and domestic solutions. Data never leaves the client\'s perimeter.',
-    'security_arch_title' => 'Secure architecture',
-    'security_arch_text' => 'Data encryption, protection against SQLi/XSS/IDOR, regular security audits.',
-
     // Главная: Основатель
     'founder_photo_alt' => 'Zohrab Ahundov — Founder of Ahundoff Studio',
     'founder_badge' => '10+ years · MBA · Patent in AI',
