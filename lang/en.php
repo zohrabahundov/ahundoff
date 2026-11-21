@@ -201,12 +201,6 @@ TXT,
     // Главная: Почему мы
     'trust_title' => 'Why choose Ahundoff',
     'trust_subtitle' => 'We don\'t just write code. We take full responsibility for the result, security, and ROI of your AI investments.',
-    'trust_results_title' => 'Focus on business results',
-    'trust_results_text' => 'We speak the language of business: cost reduction, conversion growth, and measurable ROI. 10 years of experience managing AI transformation in Russia\'s largest banks and telecom companies.',
-    'trust_reliability_title' => 'Corporate reliability',
-    'trust_reliability_text' => 'Every project is delivered with industrial infrastructure, 24/7 monitoring, data protection, and full technical documentation. We work strictly under NDA.',
-    'trust_speed_title' => 'Speed without compromise',
-    'trust_speed_text' => 'Thanks to Rapid Prototyping experience and ready-made architectural templates, we launch MVPs in 14 days, while large agencies are still approving the SOW.',
 
     // Главная: Основатель
     'founder_photo_alt' => 'Zohrab Ahundov — Founder of Ahundoff Studio',
