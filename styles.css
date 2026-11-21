@@ -1,1360 +1,584 @@
-@font-face {
-    font-family: 'Unbounded Fallback';
-    src: local('Arial');
-    size-adjust: 89%;
-    ascent-override: 95%;
-    descent-override: 10%;
-    line-gap-override: 15%;
-}
-
-
-/* Self-hosted шрифты (аудит 21.11.2026): убрали Google Fonts — быстрее, без сторонних
-   запросов и без противоречия с заявлением «данные не покидают РФ» (152-ФЗ). */
-@font-face {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400 600;
-    font-display: swap;
-    src: url('assets/fonts/inter-cyrillic.woff2') format('woff2');
-    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-}
-@font-face {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400 600;
-    font-display: swap;
-    src: url('assets/fonts/inter-latin.woff2?v=2026-11-21-1') format('woff2');
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+20BD, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-    font-family: 'Unbounded';
-    font-style: normal;
-    font-weight: 500 700;
-    font-display: swap;
-    src: url('assets/fonts/unbounded-cyrillic.woff2') format('woff2');
-    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-}
-@font-face {
-    font-family: 'Unbounded';
-    font-style: normal;
-    font-weight: 500 700;
-    font-display: swap;
-    src: url('assets/fonts/unbounded-latin.woff2?v=2026-11-21-1') format('woff2');
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+20BD, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@layer reset, tokens, base, components, sections, flow, utilities, responsive;
-
-/* ==========================================================================
-   1. TOKENS (ПЕРЕМЕННЫЕ)
-   ========================================================================== */
-@layer tokens {
-    :root {
-        --bg-primary: #030712;
-        --bg-secondary: #0F172A;
-        --bg-card: rgba(30, 41, 59, 0.4);
-        --text-primary: #F8FAFC;
-        --text-secondary: #94A3B8;
-        --accent: #3B82F6;
-        --accent-hover: #2563EB;
-        --accent-glow: rgba(59, 130, 246, 0.15);
-        --border: rgba(148, 163, 184, 0.1);
-        --whatsapp: #25D366;
-        --telegram: #229ED9;
-        
-        --radius: 16px;
-        --radius-sm: 8px;
-        --radius-full: 100px;
-        
-        --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        --transition-fast: all 0.2s ease;
-        
-        --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        --font-display: 'Unbounded', 'Unbounded Fallback', sans-serif;
-    }
-}
-
-/* ==========================================================================
-   2. RESET (СБРОС)
-   ========================================================================== */
-@layer reset {
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-}
-
-/* ==========================================================================
-   3. BASE (БАЗОВЫЕ СТИЛИ)
-   ========================================================================== */
-@layer base {
-    html {
-        scroll-behavior: smooth;
-        scroll-padding-top: 80px;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    body {
-        font-family: var(--font-sans);
-        background: var(--bg-primary);
-        color: var(--text-primary);
-        line-height: 1.7;
-        overflow-x: hidden;
-        -webkit-font-smoothing: antialiased;
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    h1, h2, h3, .logo, .stat__number, .process__number, .process__dot {
-        font-family: var(--font-display);
-        letter-spacing: -0.02em;
-    }
-
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 24px;
-    }
-
-    :focus-visible {
-        outline: 2px solid var(--accent);
-        outline-offset: 2px;
-        border-radius: 4px;
-    }
-
-    .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-    }
-
-    div[style*="position: fixed"][style*="bottom"]:not(.floating-actions):not(.floating-action):not(.sticky-bar),
-    button[aria-label*="наверх" i]:not(.floating-action--top),
-    a[aria-label*="наверх" i]:not(.floating-action--top) {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-    }
-}
-
-/* ==========================================================================
-   4. COMPONENTS (КОМПОНЕНТЫ)
-   ========================================================================== */
-@layer components {
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 0.875rem 2rem;
-        border-radius: var(--radius);
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 1rem;
-        transition: var(--transition);
-        cursor: pointer;
-        border: none;
-    }
-
-    .btn--primary {
-        background: var(--accent-hover); /* #2563EB: контраст белого текста 5.17:1 (WCAG AA) */
-        color: white;
-        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .btn--primary::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transform: translateX(-100%);
-        transition: transform 0.6s;
-    }
-
-    .btn--primary:hover {
-        background: #1D4ED8;
-        transform: translateY(-2px);
-        box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
-    }
-
-    .btn--primary:hover::after { transform: translateX(100%); }
-
-    .btn--secondary {
-        background: transparent;
-        color: var(--text-primary);
-        border: 1px solid var(--border);
-    }
-
-    .btn--secondary:hover {
-        background: var(--bg-card);
-        border-color: var(--text-secondary);
-    }
-
-    .btn--full { width: 100%; }
-    .btn--sm { padding: 0.5rem 1.25rem; font-size: 0.9rem; white-space: nowrap; }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-    .card {
-        background: var(--bg-card);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 2rem;
-        transition: var(--transition);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .card::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: var(--radius);
-        padding: 1px;
-        background: conic-gradient(from var(--gradient-angle, 0deg), transparent 40%, var(--accent) 50%, transparent 60%);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        pointer-events: none;
-    }
-
-    .card:hover {
-        border-color: rgba(59, 130, 246, 0.4);
-        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3), 0 0 20px var(--accent-glow);
-        transform: translateY(-4px);
-    }
-
-    .card:hover::before {
-        opacity: 1;
-        animation: rotateGradient 4s linear infinite;
-    }
-
-    @property --gradient-angle {
-        syntax: '<angle>';
-        initial-value: 0deg;
-        inherits: false;
-    }
-
-    @keyframes rotateGradient {
-        to { --gradient-angle: 360deg; }
-    }
-
-    .card__icon {
-        width: 56px;
-        height: 56px;
-        background: var(--accent-glow);
-        border: 1px solid rgba(59, 130, 246, 0.2);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1.5rem;
-        color: var(--accent);
-    }
-
-    .card__title {
-        font-size: 1.35rem;
-        margin-bottom: 1rem;
-    }
-
-    .card__text {
-        color: var(--text-secondary);
-        margin-bottom: 1.5rem;
-        line-height: 1.6;
-    }
-
-    .section-title {
-        font-size: clamp(2rem, 4vw, 2.5rem);
-        font-weight: 700;
-        margin-bottom: 1.5rem;
-        text-align: center;
-    }
-
-    .section-subtitle {
-        text-align: center;
-        color: var(--text-secondary);
-        max-width: 700px;
-        margin: 0 auto 3rem auto;
-        font-size: 1.1rem;
-        line-height: 1.6;
-    }
-
-    .services > .container > .section-title,
-    .industries > .container > .section-title,
-    .cases > .container > .section-title,
-    .process > .container > .section-title,
-    .partners-section > .container > .section-title { margin-bottom: 3rem; }
-    .trust-section__header { margin-bottom: 3rem; }
-    .trust-section__header .section-title { margin-bottom: 0; }
-}
-
-/* ==========================================================================
-   5. SECTIONS (СЕКЦИИ)
-   ========================================================================== */
-@layer sections {
-    /* --- Header --- */
-    .header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        background: rgba(3, 7, 18, 0.8);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid var(--border);
-        z-index: 1000;
-        padding: 1rem 0;
-    }
-    .header__content { display: flex; justify-content: space-between; align-items: center; }
-
-    .header__lang {
-        display: flex;
-        gap: 16px;
-    }
-    .header__lang a {
-        color: #94A3B8;
-        text-decoration: none;
-        font-family: 'Unbounded', sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        transition: color 0.2s;
-    }
-    .header__lang a:hover,
-    .header__lang a.active { color: #F8FAFC; }
+<?php
+// Общий шаблон главной страницы (RU/EN). Меняются только текста — см. lang/.
+require __DIR__ . '/../i18n.php';
+$canonical = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.ru/';
+$og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.ru';
+?>
+<!DOCTYPE html>
+<html lang="<?= $lang ?>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <style>html { background: #030712; }</style>
+    <meta name="description" content="<?= h($t['meta_description']) ?>">
+    <meta name="keywords" content="<?= h($t['meta_keywords']) ?>">
+    <meta name="author" content="<?= h($t['founder_name']) ?>">
+    <meta name="robots" content="index, follow">
     
-
-    .logo { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); text-decoration: none; }
-    .logo__dot { color: var(--accent); }
+    <link rel="canonical" href="<?= $canonical ?>">
+    <link rel="alternate" hreflang="ru" href="https://ahundoff.ru/">
+    <link rel="alternate" hreflang="en" href="https://ahundoff.ru/en.html">
+    <link rel="alternate" hreflang="x-default" href="https://ahundoff.ru/">
     
-    .nav { display: flex; gap: 2rem; align-items: center; }
-    .nav__link { color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; transition: var(--transition); }
-    .nav__link:hover { color: var(--text-primary); }
-    .nav__link--cta { background: var(--accent-hover); color: white; padding: 0.5rem 1.5rem; border-radius: var(--radius); }
-    .nav__link--cta:hover { background: #1D4ED8; color: white; }
-
-    .burger { 
-        display: none; 
-        flex-direction: column; 
-        gap: 5px; 
-        background: none; 
-        border: none; 
-        cursor: pointer; 
-        padding: 5px; 
-        z-index: 1002; /* Убедимся, что кнопка всегда поверх меню */
-    }
-    .burger span { 
-        width: 24px; 
-        height: 2px; 
-        background: var(--text-primary); 
-        transition: var(--transition); 
-        transform-origin: center;
-    }
+    <meta property="og:title" content="<?= h($t['site_title']) ?>">
+    <meta property="og:description" content="<?= h($t['og_description']) ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<?= $og_url ?>">
+    <meta property="og:image" content="https://ahundoff.ru/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:image" content="https://ahundoff.ru/og-image.jpg">
+    <meta property="og:locale" content="<?= h($t['og_locale']) ?>">
+    <meta name="yandex-verification" content="18ffb19ae3c0a614" />
     
-    /* Анимация превращения бургера в крестик */
-    .burger.active span:nth-child(1) {
-        transform: translateY(7px) rotate(45deg);
-    }
-    .burger.active span:nth-child(2) {
-        opacity: 0;
-        transform: scaleX(0);
-    }
-    .burger.active span:nth-child(3) {
-        transform: translateY(-7px) rotate(-45deg);
-    }
-
-    /* --- Hero --- */
-    .hero { 
-        position: relative; 
-        padding: 180px 0 120px; 
-        background: var(--bg-primary); 
-        overflow: hidden; 
-    }
-    .hero__grid {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-        opacity: 0.4;
-        pointer-events: none;
-    }
-    .hero::before {
-        content: ''; position: absolute; top: -20%; right: -10%; width: 600px; height: 600px;
-        background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-        filter: blur(80px); z-index: 0; pointer-events: none;
-    }
-    .hero__content { position: relative; z-index: 1; max-width: 800px; }
-    .hero__badge {
-        display: inline-block; background: var(--bg-card); color: var(--accent);
-        padding: 0.5rem 1rem; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 500;
-        margin-bottom: 1.5rem; border: 1px solid var(--border); backdrop-filter: blur(8px);
-    }
-    .hero__title {
-        font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; line-height: 1.1; margin-bottom: 1.5rem;
-        background: linear-gradient(to right, #F8FAFC, #94A3B8);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    .hero__title .logo__dot {
-        -webkit-text-fill-color: var(--accent);
-        color: var(--accent);
-        background: none;
-        text-shadow: 0 0 20px var(--accent-glow);
-    }
-    .hero__subtitle { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2.5rem; max-width: 600px; }
-    .hero__actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-
-    /* --- Stats --- */
-    .stats { padding: 60px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--bg-secondary); }
-    .stats__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; }
-    .stat { text-align: center; transition: opacity 0.6s ease, transform 0.6s ease; }
-    .js .stat { opacity: 0; transform: translateY(20px); }
-    .js .stat.visible { opacity: 1; transform: translateY(0); }
-    .stat__number { font-size: 2.5rem; font-weight: 700; color: var(--accent); margin-bottom: 0.5rem; }
-    .stat__label { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.4; }
-
-    /* --- Global Section Padding --- */
-    /* Шахматный порядок фонов: hero(т) - stats(с) - Услуги(т) - Отрасли(с) -
-       Кейсы(т) - Экспертиза(с) - Подход(т) - Контакты(с) - подвал(т).
-       Группировка ОБЯЗАНА совпадать с @layer flow ниже — иначе режим с canvas
-       красит секции иначе, чем базовый. Проверяется tests/backgrounds.py. */
-    .services, .cases, .process { padding: 120px 0; background: var(--bg-primary); }
-    .industries, .trust-section, .contact { padding: 120px 0; background: var(--bg-secondary); }
-
-    /* --- Optimization Suite --- */
-    .optimization__grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 2rem;
-    }
-    .optimization-card {
-        position: relative;
-        overflow: visible;
-        transition: var(--transition);
-    }
-    .optimization-card::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: var(--radius);
-        padding: 1px;
-        background: conic-gradient(from var(--gradient-angle, 0deg), transparent 40%, var(--accent) 50%, transparent 60%);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        pointer-events: none;
-    }
-    .optimization-card:hover {
-        border-color: rgba(59, 130, 246, 0.4);
-        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3), 0 0 20px var(--accent-glow);
-        transform: translateY(-4px);
-    }
-    .optimization-card:hover::before {
-        opacity: 1;
-        animation: rotateGradient 4s linear infinite;
-    }
-    .optimization-card__meta {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid var(--border);
-        font-size: 0.9rem;
-        color: var(--text-secondary);
-        margin-top: 1.5rem;
-    }
-    .optimization-card__price {
-        color: var(--accent);
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-top: 0.5rem;
-    }
-    .services__cta {
-        text-align: center;
-        margin-top: 3rem;
-    }
-    .services__cta .btn--primary {
-        padding: 1rem 2.5rem;
-        font-size: 1.1rem;
-    }
-
-    /* --- Services Grid & Cards --- */
-    /* --- Табы «Продукты / Оптимизация» (секция Услуги) --- */
-    /* Без JS табов нет, а обе панели видны: контент не зависит от скрипта. */
-    .tabs { display: none; }
-    .js .tabs {
-        display: flex; flex-wrap: wrap; justify-content: center; gap: 0.375rem;
-        width: fit-content; max-width: 100%; margin: 0 auto 2.5rem; padding: 0.375rem;
-        background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-full);
-    }
-    .tabs__btn {
-        display: inline-flex; flex-direction: column; align-items: center; gap: 0.125rem;
-        padding: 0.625rem 1.5rem; font-family: inherit; font-size: 1rem; font-weight: 600;
-        color: var(--text-secondary); background: transparent; border: 0;
-        border-radius: var(--radius-full); cursor: pointer; transition: var(--transition);
-    }
-    .tabs__btn:hover { color: var(--text-primary); }
-    .tabs__btn[aria-selected="true"] { color: #fff; background: var(--accent); box-shadow: 0 6px 20px var(--accent-glow); }
-    .tabs__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-    .tabs__hint { font-size: 0.8rem; font-weight: 500; opacity: 0.75; }
-    .services__panel[hidden] { display: none; }
-    .services__panel:focus { outline: none; }
-    /* Заголовки групп нужны только в no-JS режиме — с табами их роль берут табы. */
-    .panel-title { font-size: 1.5rem; margin: 2.5rem 0 1.25rem; text-align: center; }
-    .js .panel-title { display: none; }
-    .panel-intro { margin-bottom: 2rem; }
-
-    .services__grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: clamp(14px, 1.5vw, 22px);
-    }
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= h($t['site_title']) ?>">
+    <meta name="twitter:description" content="<?= h($t['og_description']) ?>">
     
-    /* Services specific overrides */
-    .services .section-title, 
-    .services .section-subtitle { 
-        text-align: center; 
-    }
-    .services .section-subtitle { 
-        margin-inline: auto; 
-    }
-    .services .service-card__meta { 
-        flex-flow: row wrap; 
-        align-items: baseline; 
-        gap: 0.25rem 1.25rem; 
-    }
-    .services .service-card__price { 
-        flex-basis: 100%; 
-    }
-
-    .service-card__meta {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid var(--border);
-        font-size: 0.9rem;
-        color: var(--text-secondary);
-    }
-    .service-card__price { color: var(--accent); font-size: 1.1rem; font-weight: 600; }
-
-    .service-card--feature {
-        background: radial-gradient(ellipse at 64% 12%, #254977 0%, transparent 58%),
-                    linear-gradient(155deg, #132642, #091324 82%);
-    }
-    .service-card--feature .card__title { font-size: clamp(1.55rem, 3vw, 2.65rem); line-height: 1.17; }
     
-    .service-card--accent {
-        background: linear-gradient(125deg, #193d9e, #2359b9);
-        --text-secondary: #e4edff;
-        --border: rgba(198, 219, 255, .35);
-        --accent: #fff;
-    }
-
-    /* --- Cases & Industries --- */
-    .cases__grid, .why__grid, .industries__grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 2rem;
-    }
-    .cases__grid { overflow-x: clip; }
-    .industry-card .card__icon { width: 48px; height: 48px; }
-
-    /* Выравнивание высоты карточек в сетках Industries и Why */
-    .industry-card,
-    .why__item {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
+    <title><?= $t['site_title'] ?></title>
     
-    .industry-card .card__text,
-    .why__item .card__text {
-        flex-grow: 1;
-    }
-
-    .case-card { position: relative; overflow: visible; }
-    .service-card, .industry-card { overflow: clip; }
+    <link rel="stylesheet" href="/styles.css?v=2026-11-21-9">
     
-    .card-art {
-        overflow: hidden;
-        aspect-ratio: 5 / 2;
-        margin-bottom: 1.5rem;
-        mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
-        view-timeline-name: --illustration;
-    }
-    .card-art img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    @keyframes case-engraving-drift {
-        from { transform: scale(1.04) translateY(2.5%); }
-        to { transform: scale(1.04) translateY(-2.5%); }
-    }
-    @media (prefers-reduced-motion: no-preference) {
-        @supports (animation-timeline: view()) {
-            .card-art img {
-                animation: case-engraving-drift linear both;
-                animation-timeline: --illustration;
-                animation-range: entry 0% exit 100%;
-            }
-        }
-    }
-
-    .case-card__header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .case-card .card__title { flex: 1; min-width: 200px; }
-    .case-card__btn {
-        display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem;
-        background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm);
-        color: var(--text-primary); font-size: 0.85rem; font-weight: 500; text-decoration: none;
-        white-space: nowrap; transition: var(--transition); backdrop-filter: blur(8px);
-    }
-    .case-card__btn svg { color: var(--accent); transition: var(--transition); }
-    .case-card__btn:hover {
-        border-color: var(--accent);
-        background: rgba(59, 130, 246, 0.1);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-    }
-    .case-card__btn:hover svg { transform: translate(2px, -2px); }
-    .case-card__text { color: var(--text-secondary); margin-bottom: 0.5rem; line-height: 1.6; font-size: 0.95rem; }
-    .case-card__text strong { color: var(--text-primary); }
-
-    .case-card__impact {
-        margin-top: 1.5rem;
-        padding: 1rem;
-        background: rgba(59, 130, 246, 0.05);
-        border-left: 3px solid var(--accent);
-        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-        display: flex;
-        gap: 0.75rem;
-        align-items: flex-start;
-    }
-    .case-card__impact svg { color: var(--accent); flex-shrink: 0; margin-top: 2px; }
-    .case-card__impact p {
-        font-size: 0.9rem; color: var(--text-primary); font-style: italic; line-height: 1.5; margin: 0;
-    }
-    .case-card__btn--nda {
-        cursor: default; background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.3); color: var(--accent);
-    }
-    .case-card__btn--nda:hover { transform: none; box-shadow: none; background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.3); }
-    .case-card__btn--nda svg { color: var(--accent); }
-
-    /* --- Trust & Founder --- */
-    .trust-section { position: relative; overflow: hidden; }
-    .trust-section__header { margin-bottom: 4rem; }
-
-    .founder__guarantee { margin-top: 0; padding-top: 4rem; border-top: 1px solid var(--border); position: relative; }
-    .founder__grid { display: grid; grid-template-columns: 380px 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1; }
-    .founder__photo { position: relative; }
-    .founder__image {
-        width: 100%; aspect-ratio: 3 / 4; background: linear-gradient(135deg, var(--bg-secondary), var(--bg-card));
-        border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; backdrop-filter: blur(12px);
-    }
-    .founder__image img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .founder__photo-badge {
-        position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%);
-        display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1.25rem; background: var(--bg-secondary);
-        border: 1px solid var(--accent); border-radius: var(--radius-full); font-size: 0.85rem; color: var(--accent);
-        white-space: nowrap; box-shadow: 0 0 20px var(--accent-glow);
-    }
-    .founder__label { display: inline-block; color: var(--accent); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
-    .founder__name { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 0.5rem; color: var(--text-primary); }
-    .founder__name .logo__dot { color: var(--accent); text-shadow: 0 0 15px var(--accent-glow); }
-    .founder__role { color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 2rem; }
-    .founder__bio { margin-bottom: 2rem; }
-    .founder__bio p { color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.8; font-size: 1.05rem; }
-    .founder__bio strong { color: var(--text-primary); font-weight: 600; }
-    .founder__actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-
-    /* --- Process --- */
-    .process__timeline {
-        position: relative;
-        max-width: 800px;
-        margin: 0 auto;
-        padding-left: 100px; /* ← было 60px */
-    }
-    .process__line {
-        position: absolute;
-        left: 29px;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background: var(--border);
-    }
-    .process__step { position: relative; margin-bottom: 3rem; opacity: 0; transform: translateX(-20px); transition: all 0.6s ease; }
-    .process__step.animated { opacity: 1; transform: translateX(0); }
-    .process__step:last-child { margin-bottom: 0; }
-    .process__dot {
-        position: absolute; left: -100px; top: 0; width: 60px; height: 60px;
-        background: var(--bg-card); border: 2px solid var(--border); border-radius: 50%;
-        display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem;
-        color: var(--text-secondary); transition: var(--transition); z-index: 2;
-    }
-    .process__step.animated .process__dot { background: var(--accent); border-color: var(--accent); color: white; box-shadow: 0 0 20px var(--accent-glow); }
-    .process__content { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-    .process__title { font-size: 1.35rem; margin-bottom: 0.75rem; color: var(--text-primary); }
-    .process__text { color: var(--text-secondary); line-height: 1.6; margin: 0; }
-
-    /* --- Contact & FAQ --- */
-    .contact__content { max-width: 600px; margin: 0 auto; text-align: center; }
-    .contact__text { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 2.5rem; }
-    .security-badges { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2rem; }
-    .security-badge {
-        display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem;
-        background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-full);
-        font-size: 0.85rem; color: var(--text-secondary); backdrop-filter: blur(8px);
-    }
-    .security-badge svg { color: var(--accent); flex-shrink: 0; }
-
-    .contact__form { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; text-align: left; }
-    .form-group input, .form-group textarea {
-        width: 100%; padding: 1rem 1.25rem; font-family: inherit; font-size: 1rem;
-        color: var(--text-primary); background: var(--bg-card); border: 1px solid var(--border);
-        border-radius: var(--radius); transition: var(--transition);
-    }
-    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-    .form-consent { display: flex; align-items: flex-start; gap: 0.75rem; margin: 0.5rem 0; }
-    .form-consent input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
-    .form-consent label { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; cursor: pointer; }
-    .form-consent label a { color: var(--accent); text-decoration: underline; }
-    .form-consent label a:hover { text-decoration: none; }
-
-    .contact__info { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; align-items: center; }
-    .contact__link-wrapper { position: relative; display: inline-flex; align-items: center; gap: 0.5rem; }
-    .contact__link {
-        display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1.5rem;
-        color: var(--text-primary); text-decoration: none; background: var(--bg-card);
-        border: 1px solid var(--border); border-radius: var(--radius); font-weight: 500;
-        font-size: 0.95rem; transition: var(--transition); backdrop-filter: blur(12px);
-    }
-    .contact__link:hover { color: var(--accent); border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 0 20px var(--accent-glow); transform: translateY(-2px); }
-    .contact__icon { color: var(--accent); flex-shrink: 0; transition: var(--transition); }
-    .contact__link:hover .contact__icon { transform: scale(1.1); }
-
-    .faq__grid { display: flex; flex-direction: column; gap: 1rem; max-width: 800px; margin: 0 auto; }
-    .faq__question {
-        width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 1rem;
-        padding: 1.5rem 0; background: transparent; border: none; border-bottom: 1px solid var(--border);
-        cursor: pointer; text-align: left; font-family: var(--font-display); font-size: 1.15rem;
-        font-weight: 600; color: var(--text-primary); transition: var(--transition);
-    }
-    .faq__question:hover { color: var(--accent); }
-    .faq__icon { font-size: 0.75rem; color: var(--accent); transition: transform 0.3s ease; flex-shrink: 0; }
-    .faq__item.active .faq__icon { transform: rotate(90deg); }
-    .faq__item.active .faq__question { color: var(--accent); border-bottom-color: var(--accent); }
-    .faq__answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.4s ease; }
-    .faq__item.active .faq__answer { max-height: 500px; }
-    .faq__answer p { padding: 0 0 1.5rem 0; color: var(--text-secondary); line-height: 1.7; font-size: 1rem; margin: 0; }
-
-    /* --- Footer & Sticky --- */
-    .sticky-bar {
-        position: sticky; bottom: 0; z-index: 900; background: rgba(3, 7, 18, 0.9);
-        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border-top: 1px solid var(--border); padding: 0.75rem 0 calc(0.75rem + env(safe-area-inset-bottom, 0px)); 
-        transition: opacity 0.3s ease, transform 0.3s ease; /* Добавлен transform */
-        transform: translateY(0); /* Начальное состояние */
-    }
-    .sticky-bar__content { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-    .sticky-bar__text { display: inline-flex; align-items: center; gap: 0.75rem; color: var(--text-primary); font-size: 0.95rem; font-weight: 500; }
-    .sticky-bar__icon { color: var(--accent); flex-shrink: 0; }
-
-    .footer { padding: 4rem 0 6rem 0; background: var(--bg-primary); border-top: 1px solid var(--border); }
-    .footer__content { display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap; }
-    .footer__tagline { margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); }
-    .footer__legal { margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-secondary); opacity: 0.7; }
-    .footer__links { display: flex; gap: 2rem; flex-wrap: wrap; }
-    .footer__links a { color: var(--text-secondary); text-decoration: none; transition: var(--transition); font-size: 0.95rem; }
-    .footer__links a:hover { color: var(--text-primary); }
-    .footer__socials { display: flex; gap: 1rem; }
-    .footer__social-link {
-        display: flex; align-items: center; justify-content: center; width: 44px; height: 44px;
-        border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border);
-        color: var(--text-secondary); transition: var(--transition);
-    }
-    .footer__social-link:hover { color: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); transform: translateY(-2px); }
-    .footer__copyright { font-size: 0.9rem; color: var(--text-secondary); }
-}
-
-/* ==========================================================================
-   6. UTILITIES & ANIMATIONS (УТИЛИТЫ)
-   ========================================================================== */
-@layer utilities {
-    .scroll-progress {
-        position: fixed; top: 0; left: 0; height: 3px;
-        background: linear-gradient(90deg, var(--accent), #60A5FA);
-        width: 0%; z-index: 1005;
-        transition: width 0.1s ease-out;
-        box-shadow: 0 0 10px var(--accent-glow); pointer-events: none;
-    }
-
-    .floating-actions {
-        position: fixed; bottom: calc(120px + env(safe-area-inset-bottom, 0px)); right: 24px;
-        display: flex; flex-direction: column; gap: 0.75rem; z-index: 950;
-    }
-    .floating-action {
-        width: 56px; height: 56px; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        color: white; text-decoration: none; transition: var(--transition);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); position: relative; border: none; cursor: pointer;
-    }
-    .floating-action::before {
-        content: ''; position: absolute; inset: -4px; border-radius: 50%;
-        background: currentColor; opacity: 0; transition: opacity 0.3s ease; z-index: -1;
-    }
-    .floating-action:hover::before { opacity: 0.2; animation: pulseRing 1.5s ease-out infinite; }
-    @keyframes pulseRing {
-        0% { transform: scale(1); opacity: 0.3; }
-        100% { transform: scale(1.4); opacity: 0; }
-    }
-    .floating-action--telegram { background: var(--telegram); }
-    .floating-action--telegram:hover { transform: scale(1.1) translateY(-4px); box-shadow: 0 8px 30px rgba(34, 158, 217, 0.5); }
-    .floating-action--whatsapp { background: var(--whatsapp); }
-    .floating-action--whatsapp:hover { transform: scale(1.1) translateY(-4px); box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5); }
-    .floating-action--top {
-        background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-        opacity: 0; visibility: hidden;
-        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    }
-    .floating-action--top.visible { opacity: 1; visibility: visible; animation: fadeInUp 0.4s ease; }
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .floating-action--top:hover { transform: scale(1.1) translateY(-4px); box-shadow: 0 8px 30px rgba(59, 130, 246, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
-    .floating-action--top:active { transform: scale(1.05) translateY(-2px); }
-
-    /* Cookie-notice с opt-out (аудит п.8): фиксированная панель внизу, поверх sticky-bar (900), ниже тостов (2000). */
-    .cookie-banner {
-        position: fixed; left: 0; right: 0; bottom: 0; z-index: 1100;
-        background: rgba(15, 23, 42, 0.97);
-        -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-        border-top: 1px solid rgba(148, 163, 184, 0.2);
-        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.45);
-        padding: 1rem 0 calc(1rem + env(safe-area-inset-bottom, 0px));
-    }
-    .cookie-banner[hidden] { display: none; }
-    .cookie-banner__inner {
-        max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;
-        display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
-    }
-    .cookie-banner__text { flex: 1 1 340px; margin: 0; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.55; }
-    .cookie-banner__text a { color: var(--accent); text-decoration: underline; }
-    .cookie-banner__text a:hover { color: var(--accent-hover); }
-    .cookie-banner__actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-    .cookie-banner__btn { padding: 0.7rem 1.5rem; font-size: 0.95rem; white-space: nowrap; }
-    .footer__cookie-btn {
-        background: none; border: none; padding: 0; cursor: pointer; font-family: inherit;
-        color: var(--text-secondary); font-size: 0.95rem; transition: var(--transition);
-    }
-    .footer__cookie-btn:hover { color: var(--text-primary); }
-    .partners-hero__alt { margin: 1.25rem 0 0; font-size: 0.9rem; text-align: center; }
-    .partners-hero__alt a { color: var(--text-secondary); text-decoration: underline; }
-    .partners-hero__alt a:hover { color: var(--text-primary); }
-    @media (max-width: 640px) {
-        .cookie-banner__inner { flex-direction: column; align-items: stretch; gap: 1rem; }
-        .cookie-banner__actions { flex-direction: column; }
-        .cookie-banner__btn { width: 100%; }
-    }
-    @media (prefers-reduced-motion: reduce) { .cookie-banner, .cookie-banner__btn { transition: none; } }
-
-    .toast-container {
-        position: fixed; top: 100px; right: 24px; z-index: 2000;
-        display: flex; flex-direction: column; gap: 0.75rem;
-        max-width: 340px; pointer-events: none;
-    }
-    .toast {
-        position: relative; display: flex; align-items: flex-start; gap: 0.75rem;
-        background: var(--bg-card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border: 1px solid var(--border); border-radius: var(--radius);
-        padding: 1rem 1.25rem; color: var(--text-primary); font-size: 0.95rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        opacity: 0; transform: translateX(400px); transition: opacity 0.3s ease, transform 0.3s ease;
-        pointer-events: auto;
-    }
-    .toast__text { flex: 1; line-height: 1.45; }
-    .toast__close {
-        background: none; border: none; color: var(--text-secondary);
-        font-size: 1.3rem; line-height: 1; cursor: pointer; padding: 0 0.15rem; flex-shrink: 0;
-    }
-    .toast__close:hover { color: var(--text-primary); }
-    .toast--visible { opacity: 1; transform: translateX(0); }
-    .toast--success { border-left: 4px solid #10B981; }
-    .toast--error { border-left: 4px solid #EF4444; }
-
-    .tooltip {
-        position: relative; border-bottom: 1px dashed var(--accent); cursor: help;
-        color: var(--accent); font-weight: 500;
-    }
-    .tooltip::after {
-        content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%;
-        transform: translateX(-50%) translateY(-8px);
-        background: var(--bg-secondary); color: var(--text-primary);
-        padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem;
-        width: 250px; opacity: 0; visibility: hidden; transition: var(--transition);
-        border: 1px solid var(--border); z-index: 100; line-height: 1.4;
-        font-family: var(--font-sans); pointer-events: none; font-weight: 400; text-align: left;
-    }
-    .tooltip:hover::after { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(-4px); }
-    .tooltip.tooltip--active::after { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(-4px); }
-
-    .copy-btn {
-        width: 44px; height: 44px; background: var(--bg-card); border: 1px solid var(--border);
-        border-radius: var(--radius-sm); color: var(--text-secondary); cursor: pointer;
-        display: flex; align-items: center; justify-content: center; transition: var(--transition); flex-shrink: 0;
-    }
-    .copy-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
-    .copy-btn.copied { background: #10B981; color: white; border-color: #10B981; }
-
-    @keyframes iconBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-    .service-card.animated .card__icon { animation: iconBounce 0.6s ease-out; }
-
-    .js .service-card, .js .case-card, .js .why__item, .js .industry-card {
-        opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .js .service-card.animated, .js .case-card.animated, .js .why__item.animated, .js .industry-card.animated {
-        opacity: 1; transform: translateY(0);
-    }
-
-    .hero__title { min-height: 2.4em; line-height: 1.1; }
-    .stat__number { min-height: 1.2em; display: flex; align-items: center; justify-content: center; }
-    .card__title, .process__title, .founder__name, .section-title { min-height: 1.3em; }
-    .hero__subtitle, .card__text, .stat__label { min-height: 1.5em; }
-}
-
-/* ==========================================================================
-   7. RESPONSIVE (АДАПТИВНОСТЬ)
-   ========================================================================== */
-@layer responsive {
-    @media (min-width: 960px) {
-        .services__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-        .services .service-card { grid-column: span 6; }
-        
-        .services .service-card--feature {
-            grid-column: span 7; grid-row: span 2;
-            display: flex; flex-direction: column;
-            padding: clamp(28px, 3.2vw, 48px);
-        }
-        .service-card--feature .card-art {
-            flex: 1; min-height: 240px; position: relative;
-            margin-inline: -1.5rem;
-        }
-        .service-card--feature .card-art img { position: absolute; inset: 0; object-fit: contain; }
-        
-        .services .service-card--compact { 
-            grid-column: span 5; 
-            display: grid;
-            grid-template-columns: 1fr 30%;
-            grid-template-areas:
-                "title image"
-                "text image"
-                "meta meta";
-            column-gap: 1rem;
-            row-gap: 0.75rem;
-        }
-        .service-card--compact .card-art {
-            grid-area: image;
-            margin: 0;
-            aspect-ratio: 1.7;
-        }
-        .service-card--compact .card-art img { object-fit: cover; }
-        .service-card--compact .card__title {
-            grid-area: title;
-            margin-bottom: 0;
-        }
-        .service-card--compact .card__text {
-            grid-area: text;
-            margin-bottom: 0;
-        }
-        .service-card--compact .service-card__meta {
-            grid-area: meta;
-            margin-top: 0.5rem;
-        }
-        
-        .services .service-card--wide {
-            grid-column: 1 / -1; display: grid;
-            grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
-            column-gap: clamp(28px, 4vw, 64px);
-            background: linear-gradient(100deg, #182e4a, #101c2d 54%);
-        }
-        .service-card--wide .card-art { grid-row: span 3; align-self: center; margin: 0; }
-
-        .optimization__grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media (max-width: 1024px) {
-        .founder__grid { grid-template-columns: 300px 1fr; gap: 3rem; }
-    }
-
-    @media (max-width: 768px) {
-        .burger { display: flex; z-index: 1002; }
-        
-        .nav {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            flex-direction: column; justify-content: center; align-items: center; gap: 2rem;
-            padding-top: 80px; background: rgba(3, 7, 18, 0.98); backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
-            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1001;
-        }
-        .nav.active { transform: translateX(0); }
-
-        .hero { padding: 140px 0 80px; }
-        .hero__title { font-size: 2.25rem; }
-        .hero__subtitle { font-size: 1.1rem; }
-        .section-title { font-size: 2rem; margin-bottom: 1.5rem; }
-        .section-subtitle { font-size: 1rem; margin-bottom: 2.5rem; }
-
-        .services, .trust-section, .process, .contact,
-        .cases, .industries { padding: 80px 0; }
-        
-        .services__grid, .cases__grid, .why__grid, .industries__grid, .optimization__grid { 
-            grid-template-columns: 1fr; 
-        }
-
-        .process__timeline { padding-left: 60px; }
-        .process__line { left: 19px; }
-        .process__dot { left: -60px; width: 40px; height: 40px; font-size: 0.9rem; }
-        .process__content { padding: 1.5rem; }
-
-        .founder__guarantee { margin-top: 0; padding-top: 3rem; }
-        .founder__guarantee::before { font-size: 0.75rem; padding: 0 1rem; }
-        .founder__grid { grid-template-columns: 1fr; gap: 3rem; text-align: center; }
-        .founder__photo { max-width: 280px; margin: 0 auto; }
-        .founder__actions { justify-content: center; }
-        .founder__bio p { text-align: left; }
-
-        .footer__content { flex-direction: column; text-align: center; gap: 1.5rem; }
-        .footer__links { flex-wrap: wrap; justify-content: center; }
-        .footer__socials { justify-content: center; }
-
-        .security-badges { gap: 0.5rem; }
-        .security-badge { font-size: 0.8rem; padding: 0.4rem 0.75rem; }
-        .case-card__btn { min-width: auto; }
-        .trust-section { overflow-x: hidden; }
-
-        .toast-container { top: 80px; right: 16px; left: 16px; max-width: none; }
-        .sticky-bar { padding: 0.5rem 0; }
-        .sticky-bar__content { gap: 0.75rem; }
-        .sticky-bar__text { font-size: 0.85rem; gap: 0.5rem; }
-        .sticky-bar__text svg { width: 16px; height: 16px; }
-        .sticky-bar .btn--sm { padding: 0.4rem 1rem; font-size: 0.8rem; }
-
-        .floating-actions { bottom: calc(140px + env(safe-area-inset-bottom, 0px)); right: 16px; gap: 0.5rem; }
-        .floating-action { width: 48px; height: 48px; }
-        .floating-action svg { width: 20px; height: 20px; }
-        .hero__grid { display: none; }
-
-        .optimization__grid { gap: 1.5rem; }
-    }
-
-    @media (max-width: 600px) {
-        .sticky-bar__text { display: none; }
-        .sticky-bar__content { justify-content: center; flex-direction: row; text-align: center; gap: 0.75rem; }
-        .faq__question { font-size: 1rem; padding: 1.25rem 0; }
-        .founder__actions { flex-direction: column; align-items: center; }
-        .contact__info { flex-direction: column; align-items: stretch; }
-        .contact__link-wrapper { width: 100%; justify-content: center; }
-        .contact__link { flex: 1; justify-content: center; }
-        .floating-actions { bottom: calc(120px + env(safe-area-inset-bottom, 0px)); right: 12px; gap: 0.5rem; }
-        .floating-action { width: 44px; height: 44px; }
-        .floating-action svg { width: 18px; height: 18px; }
-    }
-
-    @media (max-width: 480px) {
-        .container { padding: 0 16px; }
-        .hero__title { font-size: 1.75rem; }
-        .hero__subtitle { font-size: 1rem; }
-        .section-title { font-size: 1.5rem; }
-        .card { padding: 1.5rem; }
-        .stat__number { font-size: 2rem; }
-        .founder__name { font-size: 1.75rem; }
-        .btn { padding: 0.75rem 1.5rem; font-size: 0.9rem; }
-        .process__timeline { padding-left: 50px; }
-        .process__line { left: 15px; }
-        .process__dot { left: -50px; width: 32px; height: 32px; font-size: 0.8rem; }
-        .process__content { padding: 1.25rem; }
-        .process__title { font-size: 1.1rem; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-            scroll-behavior: auto !important;
-        }
-        html { scroll-behavior: auto; }
-        .js .stat, .js .service-card, .js .case-card, .js .why__item, .js .process__step, .js .industry-card {
-            opacity: 1 !important; transform: none !important;
-        }
-        .hero__grid { display: none; }
-    }
-}
-
-
-/* ==========================================================================
-   8. FLOW EFFECTS (СВЕТОВЫЕ ПОТОКИ)
-   ========================================================================== */
-@layer flow {
-    /* Optical flow is below the document and cannot intercept controls. */
-    body.flow-enabled { isolation: isolate; }
     
-    .light-flow {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        pointer-events: none;
-    }
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico?v=2">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     
-    .flow-enabled :is(.services, .cases, .process) {
-        background: rgba(3, 7, 18, .62);
-    }
-    
-    .flow-enabled :is(.industries, .trust-section, .contact) {
-        background: rgba(15, 23, 42, .78);
-    }
-    
-    .flow-enabled :is(.stats) {
-        background: rgba(15, 23, 42, .78);
-    }
-    
-    .flow-enabled .hero {
-        background: linear-gradient(90deg, rgba(3,7,18,.96) 0%, rgba(3,7,18,.84) 36%, rgba(3,7,18,.1) 75%);
-    }
-    
-    .flow-enabled .process__line { overflow: hidden; }
-    
-    .flow-enabled .process__line::after {
-        content: '';
-        position: absolute;
-        inset: 0 0 auto;
-        height: 100px;
-        background: linear-gradient(transparent, #3b82f6 50%, #d9e7f9 80%, transparent);
-        transform: translateY(var(--flow-packet-y, 0px));
-    }
-    
-    .flow-paused .process__line::after { display: none; }
-    
-    @media (max-width: 768px) {
-        .light-flow { opacity: .75; }
-        .flow-enabled .hero { background: rgba(3,7,18,.68); }
-    }
-}
+    <script type="application/ld+json"><?= $t['schema_jsonld'] ?></script>
 
-/* PATCH 2026-11-21-2: утилитарные классы вместо inline-стилей */
-/* Аудит 21.11.2026: доступность */
-.skip-link {
-    position: absolute; left: -9999px; top: 0; z-index: 3000;
-    background: var(--accent-hover); color: #fff; padding: 0.75rem 1.25rem;
-    border-radius: 0 0 8px 0; font-weight: 600; text-decoration: none;
-}
-.skip-link:focus { left: 0; }
-.form-group input::placeholder, .form-group textarea::placeholder { color: #94A3B8; opacity: 1; }
-.tooltip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
-.tooltip:focus-visible::after { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(-4px); }
+    </head>
+<body>
+    <!-- noscript-пиксель Метрики удалён (аудит п.8): без JS согласие не получить, аналитика не грузится -->
+<a class="skip-link" href="#main"><?= $t['skip_link'] ?></a>
+<?php include __DIR__ . '/../partials/header.php'; ?>
 
-.u-offscreen { position: absolute; left: -9999px; opacity: 0; }
-.u-noscript-note { color: #F87171; margin: 0 0 1rem; }
-.form-message { margin-top: 1rem; text-align: center; }
-.form-success { display: none; text-align: center; padding: 2rem 0; }
-.form-success__icon { color: var(--accent); margin: 0 auto 1.5rem; }
-.form-success__title { font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-primary); }
-.form-success__text { color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.6; }
-.hero__actions--center { justify-content: center; }
+    <!-- 1. Hero -->
+    <section class="hero" id="main">
+        <canvas class="hero__grid" aria-hidden="true"></canvas>
+        <div class="container">
+            <div class="hero__content">
+                <span class="hero__badge"><?= $t['hero_badge'] ?></span>
+                <h1 class="hero__title"><?= $t['hero_title'] ?><span class="logo__dot">.</span></h1>
+                <p class="hero__subtitle"><?= $t['hero_subtitle'] ?></p>
+                <div class="hero__actions">
+                    <a href="#contact" class="btn btn--primary"><?= $t['hero_cta'] ?></a>
+                    <a href="#cases" class="btn btn--secondary"><?= $t['hero_btn_cases'] ?></a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-/* Стили страницы partners (вынесены из inline) */
-.partners-hero {
-            position: relative;
-            padding: 180px 0 100px;
-            background: var(--bg-primary);
-            overflow: hidden;
-            text-align: center;
-        }
-        .partners-hero::before {
-            content: '';
-            position: absolute;
-            top: -20%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
-            filter: blur(100px);
-            z-index: 0;
-            pointer-events: none;
-        }
-        .partners-hero__content {
-            position: relative;
-            z-index: 1;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .partners-hero__badge {
-            display: inline-block;
-            background: var(--bg-card);
-            color: var(--accent);
-            padding: 0.5rem 1.25rem;
-            border-radius: var(--radius-full);
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            backdrop-filter: blur(8px);
-        }
-        .partners-hero__title {
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(to right, #F8FAFC, #94A3B8);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .partners-hero__title .highlight {
-            -webkit-text-fill-color: var(--accent);
-            color: var(--accent);
-            text-shadow: 0 0 30px var(--accent-glow);
-        }
-        .partners-hero__subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            margin-bottom: 2.5rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
-        }
-        .partners-stats {
-            padding: 60px 0;
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        .partners-stats__grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 2rem;
-            text-align: center;
-        }
-        .partners-stat__number {
-            font-family: var(--font-display);
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-            line-height: 1;
-        }
-        .partners-stat__label {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-        .partners-section { padding: 100px 0; }
-        .partners-section--alt { background: var(--bg-secondary); }
-        .for-whom__grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-        .for-whom__item {
-            text-align: center;
-            padding: 2.5rem 2rem;
-        }
-        .for-whom__item .card__icon { margin: 0 auto 1.5rem; }
-        .for-whom__item h3 { font-size: 1.25rem; margin-bottom: 0.75rem; }
-        .for-whom__item p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin: 0;
-        }
-        .benefits__grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.5rem;
-        }
-        .benefit-item { padding: 2rem; }
-        .benefit-item__icon {
-            width: 48px;
-            height: 48px;
-            background: var(--accent-glow);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-            margin-bottom: 1.25rem;
-        }
-        .benefit-item h3 { font-size: 1.15rem; margin-bottom: 0.75rem; }
-        .benefit-item p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin: 0;
-        }
-        .partners-form-wrapper {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        .partners-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-top: 2rem;
-            text-align: left;
-        }
-        .partners-faq {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .partners-cta {
-            padding: 80px 0;
-            background: var(--bg-primary);
-            text-align: center;
-            border-top: 1px solid var(--border);
-        }
-        .partners-cta h2 {
-            font-size: clamp(1.75rem, 4vw, 2.5rem);
-            margin-bottom: 1rem;
-        }
-        .partners-cta p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .partners-cta__actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        @media (max-width: 768px) {
-            .partners-hero { padding: 140px 0 60px; }
-            .partners-hero__title { font-size: 2rem; }
-            .partners-hero__subtitle { font-size: 1rem; }
-            .partners-section { padding: 60px 0; }
-            .partners-stat__number { font-size: 2.25rem; }
-        }
+    <!-- 2. Stats -->
+    <section class="stats" aria-label="<?= h($t['stats_aria']) ?>">
+        <div class="container">
+            <div class="stats__grid">
+                <div class="stat">
+                    <div class="stat__number" data-target="10" data-suffix="<?= h($t['stats_years_suffix']) ?>"><?= $t['stats_years_value'] ?></div>
+                    <div class="stat__label">
+                        <span class="tooltip" tabindex="0" data-tooltip="<?= h($t['stats_experience_tooltip']) ?>"><?= $t['stats_experience_label'] ?></span>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat__number" data-target="<?= h($t['stats_portfolio_target']) ?>" data-suffix="<?= h($t['stats_portfolio_suffix']) ?>"><?= $t['stats_portfolio_value'] ?></div>
+                    <div class="stat__label">
+                        <span class="tooltip" tabindex="0" data-tooltip="<?= h($t['stats_portfolio_tooltip']) ?>"><?= $t['stats_portfolio_label'] ?></span>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat__number" data-target="14" data-suffix="<?= h($t['stats_days_suffix']) ?>"><?= $t['stats_days_value'] ?></div>
+                    <div class="stat__label">
+                        <span class="tooltip" tabindex="0" data-tooltip="<?= h($t['stats_mvp_tooltip']) ?>"><?= $t['stats_mvp_label'] ?></span>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat__number" data-target="100" data-suffix="%">100%</div>
+                    <div class="stat__label">
+                        <span class="tooltip" tabindex="0" data-tooltip="<?= h($t['stats_sla_tooltip']) ?>"><?= $t['stats_sla_label'] ?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Services: Продукты + Оптимизация в табах -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title"><?= $t['services_title'] ?><span class="logo__dot">.</span></h2>
+            <p class="section-subtitle"><?= $t['services_subtitle'] ?></p>
+
+            <div class="tabs" role="tablist" aria-label="<?= h($t['services_tabs_aria']) ?>">
+                <button class="tabs__btn" type="button" id="tab-products" role="tab" aria-selected="true" aria-controls="panel-products" tabindex="0">
+                    <span class="tabs__label"><?= $t['services_tab_products'] ?></span>
+                    <span class="tabs__hint"><?= $t['services_tab_products_hint'] ?></span>
+                </button>
+                <button class="tabs__btn" type="button" id="tab-optimization" role="tab" aria-selected="false" aria-controls="optimization" tabindex="-1">
+                    <span class="tabs__label"><?= $t['services_tab_opt'] ?></span>
+                    <span class="tabs__hint"><?= $t['services_tab_opt_hint'] ?></span>
+                </button>
+            </div>
+
+            <div class="services__panel" id="panel-products" role="tabpanel" aria-labelledby="tab-products" tabindex="0">
+                <h3 class="panel-title"><?= $t['services_tab_products'] ?></h3>
+                <div class="services__grid">
+                                <article class="card service-card service-card--feature">
+                                    <div class="card-art">
+                                        <img src="assets/products/document-scanner.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                    </div>
+                                    <h3 class="card__title"><?= $t['svc_docs_title'] ?></h3>
+                                    <p class="card__text"><?= $t['svc_docs_text'] ?></p>
+                                    <div class="service-card__meta">
+                                        <span><?= $t['svc_docs_metric'] ?></span>
+                                        <span><?= $t['svc_docs_term'] ?></span>
+                                        <span class="service-card__price"><?= $t['svc_docs_price'] ?></span>
+                                    </div>
+                                </article>
+                                <article class="card service-card service-card--compact">
+                                    <div class="card-art">
+                                        <img src="assets/products/inspection-gauge.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                    </div>
+                                    <h3 class="card__title"><?= $t['svc_quality_title'] ?></h3>
+                                    <p class="card__text"><?= $t['svc_quality_text'] ?><span class="tooltip" tabindex="0" data-tooltip="<?= h($t['svc_quality_edge_tooltip']) ?>"><?= $t['svc_quality_edge_term'] ?></span><?= $t['svc_quality_text_tail'] ?></p>
+                                    <div class="service-card__meta">
+                                        <span><?= $t['svc_quality_metric'] ?></span>
+                                        <span><?= $t['svc_quality_term'] ?></span>
+                                        <span class="service-card__price"><?= $t['svc_quality_price'] ?></span>
+                                    </div>
+                                </article>
+                                <article class="card service-card service-card--compact service-card--accent">
+                                    <div class="card-art">
+                                        <img src="assets/products/video-camera.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                    </div>
+                                    <h3 class="card__title"><?= $t['svc_video_title'] ?></h3>
+                                    <p class="card__text"><?= $t['svc_video_text'] ?></p>
+                                    <div class="service-card__meta">
+                                        <span><?= $t['svc_video_metric'] ?></span>
+                                        <span><?= $t['svc_video_term'] ?></span>
+                                        <span class="service-card__price"><?= $t['svc_video_price'] ?></span>
+                                    </div>
+                                </article>
+                                <article class="card service-card service-card--wide">
+                                    <div class="card-art">
+                                        <img src="assets/products/product-search.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                    </div>
+                                    <h3 class="card__title"><?= $t['svc_search_title'] ?></h3>
+                                    <p class="card__text"><?= $t['svc_search_text'] ?></p>
+                                    <div class="service-card__meta">
+                                        <span><?= $t['svc_search_metric'] ?></span>
+                                        <span><?= $t['svc_search_term'] ?></span>
+                                        <span class="service-card__price"><?= $t['svc_search_price'] ?></span>
+                                    </div>
+                                </article>
+                                <article class="card service-card">
+                                    <div class="card-art">
+                                        <img src="assets/products/ct-scanner.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                    </div>
+                                    <h3 class="card__title"><?= $t['svc_med_title'] ?></h3>
+                                    <p class="card__text"><?= $t['svc_med_text'] ?><span class="tooltip" tabindex="0" data-tooltip="<?= h($t['svc_med_mis_tooltip']) ?>"><?= $t['svc_med_mis_term'] ?></span><?= $t['svc_med_text_tail'] ?></p>
+                                    <div class="service-card__meta">
+                                        <span><?= $t['svc_med_metric'] ?></span>
+                                        <span><?= $t['svc_med_term'] ?></span>
+                                        <span class="service-card__price"><?= $t['svc_med_price'] ?></span>
+                                    </div>
+                                </article>
+                                <article class="card service-card">
+                                    <div class="card-art">
+                                        <img src="assets/products/card-catalog.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                    </div>
+                                    <h3 class="card__title"><?= $t['svc_rag_title_prefix'] ?><span class="tooltip" tabindex="0" data-tooltip="<?= h($t['svc_rag_tooltip']) ?>">RAG</span><?= $t['svc_rag_title_suffix'] ?></h3>
+                                    <p class="card__text"><?= $t['svc_rag_text'] ?></p>
+                                    <div class="service-card__meta">
+                                        <span><?= $t['svc_rag_metric'] ?></span>
+                                        <span><?= $t['svc_rag_term'] ?></span>
+                                        <span class="service-card__price"><?= $t['svc_rag_price'] ?></span>
+                                    </div>
+                                </article>
+                            </div>
+            </div>
+
+            <div class="services__panel" id="optimization" role="tabpanel" aria-labelledby="tab-optimization" tabindex="0">
+                <h3 class="panel-title"><?= $t['opt_title'] ?></h3>
+                <p class="section-subtitle panel-intro"><?= $t['opt_subtitle'] ?></p>
+                <div class="optimization__grid">
+                            <article class="card optimization-card">
+                                <div class="card-art">
+                                    <img src="assets/optimization/security.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                </div>
+                                <h3 class="card__title"><?= $t['opt_security_title'] ?></h3>
+                                <p class="card__text"><?= $t['opt_security_text'] ?></p>
+                                <div class="optimization-card__meta">
+                                    <span><?= $t['opt_security_metric'] ?></span>
+                                    <span><?= $t['opt_security_term'] ?></span>
+                                    <span class="optimization-card__price"><?= $t['opt_security_price'] ?></span>
+                                </div>
+                            </article>
+
+                            <article class="card optimization-card">
+                                <div class="card-art">
+                                    <img src="assets/optimization/llm-cost.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                </div>
+                                <h3 class="card__title"><?= $t['opt_llm_title'] ?></h3>
+                                <p class="card__text"><?= $t['opt_llm_text'] ?></p>
+                                <div class="optimization-card__meta">
+                                    <span><?= $t['opt_llm_metric'] ?></span>
+                                    <span><?= $t['opt_llm_term'] ?></span>
+                                    <span class="optimization-card__price"><?= $t['opt_llm_price'] ?></span>
+                                </div>
+                            </article>
+
+                            <article class="card optimization-card">
+                                <div class="card-art">
+                                    <img src="assets/optimization/algorithms.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                </div>
+                                <h3 class="card__title"><?= $t['opt_algo_title'] ?></h3>
+                                <p class="card__text"><?= $t['opt_algo_text'] ?></p>
+                                <div class="optimization-card__meta">
+                                    <span><?= $t['opt_algo_metric'] ?></span>
+                                    <span class="optimization-card__price"><?= $t['opt_algo_price'] ?></span>
+                                </div>
+                            </article>
+
+                            <article class="card optimization-card">
+                                <div class="card-art">
+                                    <img src="assets/optimization/patents.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                                </div>
+                                <h3 class="card__title"><?= $t['opt_patent_title'] ?></h3>
+                                <p class="card__text"><?= $t['opt_patent_text'] ?></p>
+                                <div class="optimization-card__meta">
+                                    <span><?= $t['opt_patent_metric'] ?></span>
+                                    <span class="optimization-card__price"><?= $t['opt_patent_price'] ?></span>
+                                </div>
+                            </article>
+                        </div>
+            </div>
+
+            <div class="services__cta">
+                <a href="#contact" class="btn btn--primary"><?= $t['opt_cta'] ?></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Industries -->
+    <section id="industries" class="industries">
+        <div class="container">
+            <h2 class="section-title"><?= $t['industries_title'] ?><span class="logo__dot">.</span></h2>
+            <p class="section-subtitle"><?= $t['industries_subtitle'] ?></p>
+
+            <div class="industries__grid">
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/bank-vault.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title"><?= $t['ind_fintech_title'] ?></h3>
+                    <p class="card__text"><?= $t['ind_fintech_text'] ?></p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/machine-tool.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title"><?= $t['ind_manufacturing_title'] ?></h3>
+                    <p class="card__text"><?= $t['ind_manufacturing_text'] ?></p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/freight-train.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title"><?= $t['ind_logistics_title'] ?></h3>
+                    <p class="card__text"><?= $t['ind_logistics_text'] ?></p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/cash-register.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title"><?= $t['ind_retail_title'] ?></h3>
+                    <p class="card__text"><?= $t['ind_retail_text'] ?></p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/microscope.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title"><?= $t['ind_healthcare_title'] ?></h3>
+                    <p class="card__text"><?= $t['ind_healthcare_text'] ?></p>
+                </article>
+                <article class="card industry-card">
+                    <div class="card-art">
+                        <img src="assets/industries/open-book.webp?v=cutout-1" width="800" height="320" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <h3 class="card__title"><?= $t['ind_education_title'] ?></h3>
+                    <p class="card__text"><?= $t['ind_education_text'] ?></p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Cases -->
+    <section id="cases" class="cases">
+        <div class="container">
+            <h2 class="section-title"><?= $t['cases_title'] ?><span class="logo__dot">.</span></h2>
+            <p class="section-subtitle"><?= $t['cases_subtitle'] ?></p>
+            <div class="cases__grid">
+                <article class="card case-card">
+                    <div class="card-art">
+                        <img src="assets/cases/scoring.webp?v=cutout-1" width="960" height="384" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <div class="case-card__header">
+                        <h3 class="card__title"><?= $t['case_scoring_title'] ?></h3>
+                        <span class="case-card__btn case-card__btn--nda" aria-label="<?= h($t['case_scoring_nda_aria']) ?>">
+                            <svg width="16" height="16" aria-hidden="true"><use href="#icon-lock"/></svg>
+                            <span>NDA</span>
+                        </span>
+                    </div>
+                    <p class="case-card__text"><strong><?= $t['label_industry'] ?></strong><?= $t['case_scoring_industry'] ?></p>
+                    <p class="case-card__text"><strong><?= $t['label_task'] ?></strong><?= $t['case_scoring_task'] ?></p>
+                    <p class="case-card__text"><strong><?= $t['label_result'] ?></strong><?= $t['case_scoring_result'] ?></p>
+                    <div class="case-card__impact">
+                        <svg width="16" height="16" aria-hidden="true"><use href="#icon-quote"/></svg>
+                        <p><?= $t['case_scoring_quote'] ?></p>
+                    </div>
+                </article>
+
+                <article class="card case-card">
+                    <div class="card-art">
+                        <img src="assets/cases/industry.webp?v=cutout-1" width="960" height="384" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <div class="case-card__header">
+                        <h3 class="card__title"><?= $t['case_mbatr_title'] ?></h3>
+                        <a href="https://mbatr.ru" target="_blank" rel="noopener noreferrer" class="case-card__btn" aria-label="<?= h($t['case_mbatr_link_aria']) ?>">
+                            <span>mbatr.ru</span>
+                            <svg width="16" height="16" aria-hidden="true"><use href="#icon-external"/></svg>
+                        </a>
+                    </div>
+                    <p class="case-card__text"><strong><?= $t['label_industry'] ?></strong><?= $t['case_mbatr_industry'] ?></p>
+                    <p class="case-card__text"><strong><?= $t['label_task'] ?></strong><?= $t['case_mbatr_task'] ?></p>
+                    <p class="case-card__text"><strong><?= $t['label_result'] ?></strong><?= $t['case_mbatr_result'] ?></p>
+                    <div class="case-card__impact">
+                        <svg width="16" height="16" aria-hidden="true"><use href="#icon-quote"/></svg>
+                        <p><?= $t['case_mbatr_quote'] ?></p>
+                    </div>
+                </article>
+
+                <article class="card case-card">
+                    <div class="card-art">
+                        <img src="assets/cases/connections.webp?v=cutout-1" width="960" height="384" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <div class="case-card__header">
+                        <h3 class="card__title"><?= $t['case_edinstvo_title'] ?></h3>
+                        <a href="https://t.me/fcc_edinstvo_bot" target="_blank" rel="noopener noreferrer" class="case-card__btn" aria-label="<?= h($t['case_edinstvo_link_aria']) ?>">
+                            <span><?= $t['case_edinstvo_client'] ?></span>
+                            <svg width="16" height="16" aria-hidden="true"><use href="#icon-external"/></svg>
+                        </a>
+                    </div>
+                    <p class="case-card__text"><strong><?= $t['label_industry'] ?></strong><?= $t['case_edinstvo_industry'] ?></p>
+                    <p class="case-card__text"><strong><?= $t['label_task'] ?></strong><?= $t['case_edinstvo_task'] ?></p>
+                    <p class="case-card__text"><strong><?= $t['label_result'] ?></strong><?= $t['case_edinstvo_result'] ?></p>
+                    <div class="case-card__impact">
+                        <svg width="16" height="16" aria-hidden="true"><use href="#icon-quote"/></svg>
+                        <p><?= $t['case_edinstvo_quote'] ?></p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Trust / Founder -->
+    <section id="founder" class="trust-section">
+        <div class="container">
+            <div class="trust-section__header">
+                <h2 class="section-title"><?= $t['trust_title'] ?><span class="logo__dot">.</span></h2>
+                <p class="section-subtitle"><?= $t['trust_subtitle'] ?></p>
+            </div>
+                    
+            <!-- Founder -->
+            <div class="founder__guarantee">
+                <div class="founder__grid">
+                    <div class="founder__photo">
+                        <div class="founder__image">
+                            <img src="assets/trust/founder.jpg?v=1" alt="<?= h($t['founder_photo_alt']) ?>" loading="lazy" decoding="async" width="800" height="1143">
+                        </div>
+                        <div class="founder__photo-badge">
+                            <svg width="16" height="16" aria-hidden="true"><use href="#icon-check"/></svg>
+                            <span><?= $t['founder_badge'] ?></span>
+                        </div>
+                    </div>
+
+                    <div class="founder__content">
+                        <span class="founder__label"><?= $t['founder_guarantee_label'] ?></span>
+                        <h2 class="founder__name"><?= $t['founder_name'] ?><span class="logo__dot">.</span></h2>
+                        <p class="founder__role"><?= $t['founder_role'] ?></p>
+                        
+                        <div class="founder__bio">
+                            <p><?= $t['founder_bio_intro'] ?><strong><?= $t['founder_portfolio_value'] ?></strong><?= $t['founder_bio_tail'] ?></p>
+                            <p><?= $t['founder_patent_prefix'] ?><strong><?= $t['founder_patent_strong'] ?></strong><?= $t['founder_patent_tail'] ?></p>
+                            <p><?= $t['founder_boutique_prefix'] ?><strong><?= $t['founder_boutique_strong'] ?></strong><?= $t['founder_boutique_tail'] ?></p>
+                        </div>
+
+                        <div class="founder__actions">
+                            <a href="https://t.me/zohrab_ahundov" target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--sm">
+                                <svg width="16" height="16" aria-hidden="true"><use href="#icon-telegram"/></svg>
+                                <span><?= $t['founder_telegram_btn'] ?></span>
+                            </a>
+                            <a href="#contact" class="btn btn--secondary btn--sm"><?= $t['cta_discuss'] ?></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Process -->
+    <section id="process" class="process">
+        <div class="container">
+            <h2 class="section-title"><?= $t['process_title'] ?><span class="logo__dot">.</span></h2>
+            <p class="section-subtitle"><?= $t['process_subtitle'] ?></p>
+            <div class="process__timeline">
+                <div class="process__line"></div>
+                <div class="process__step">
+                    <div class="process__dot">01</div>
+                    <div class="process__content">
+                        <h3 class="process__title"><?= $t['process_step1_title'] ?></h3>
+                        <p class="process__text"><?= $t['process_step1_text'] ?></p>
+                    </div>
+                </div>
+                <div class="process__step">
+                    <div class="process__dot">02</div>
+                    <div class="process__content">
+                        <h3 class="process__title"><?= $t['process_step2_title'] ?></h3>
+                        <p class="process__text"><?= $t['process_step2_text'] ?></p>
+                    </div>
+                </div>
+                <div class="process__step">
+                    <div class="process__dot">03</div>
+                    <div class="process__content">
+                        <h3 class="process__title"><?= $t['process_step3_title'] ?></h3>
+                        <p class="process__text"><?= $t['process_step3_text'] ?></p>
+                    </div>
+                </div>
+                <div class="process__step">
+                    <div class="process__dot">04</div>
+                    <div class="process__content">
+                        <h3 class="process__title"><?= $t['process_step4_title'] ?></h3>
+                        <p class="process__text"><?= $t['process_step4_text'] ?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. Contact -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="contact__content">
+                <h2 class="section-title"><?= $t['contact_title'] ?><span class="logo__dot">?</span></h2>
+                <p class="contact__text"><?= $t['contact_text'] ?></p>
+                
+                <div class="security-badges" role="list" aria-label="<?= h($t['contact_badges_aria']) ?>">
+                    <div class="security-badge" role="listitem">
+                        <svg width="16" height="16" aria-hidden="true"><use href="#icon-shield"/></svg>
+                        <span><?= $t['contact_badge_nda'] ?></span>
+                    </div>
+                    <div class="security-badge" role="listitem">
+                        <svg width="16" height="16" aria-hidden="true"><use href="#icon-lock"/></svg>
+                        <span><?= $t['contact_badge_fz'] ?></span>
+                    </div>
+                </div>
+                
+                <form class="contact__form" id="contactForm" novalidate method="post" action="/send.php">
+                    <input type="text" name="website" tabindex="-1" autocomplete="new-password" class="u-offscreen" aria-hidden="true">
+                    <input type="hidden" name="form_time" id="formTime">
+                    <noscript><p class="u-noscript-note"><?= $t['contact_noscript'] ?><a href="mailto:info@ahundoff.ru">info@ahundoff.ru</a> / <a href="https://t.me/zohrab_ahundov">@zohrab_ahundov</a></p></noscript>
+                    
+                    <div class="form-group">
+                        <label for="name" class="sr-only"><?= $t['form_name'] ?></label>
+                        <input type="text" name="name" id="name" placeholder="<?= h($t['form_name']) ?>" required minlength="2" maxlength="100" autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="sr-only"><?= $t['form_phone_label'] ?></label>
+                        <input type="text" name="phone" id="phone" placeholder="<?= h($t['form_phone_placeholder']) ?>" required autocomplete="tel" inputmode="text" maxlength="40">
+                    </div>
+                    
+                    <div class="form-consent">
+                        <input type="checkbox" id="pd-consent" name="pd-consent" required>
+                        <label for="pd-consent"><?= $t['form_consent_prefix'] ?><a href="<?= $privacy_url ?>" target="_blank" rel="noopener noreferrer"><?= $t['form_consent_link'] ?></a><?= $t['form_consent_suffix'] ?></label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn--primary btn--full" id="submitBtn"><?= $t['form_submit'] ?></button>
+                    <div id="formMessage" class="form-message" role="alert" aria-live="polite"></div>
+                </form>
+                
+                <!-- Блок подтверждения успешной отправки (скрыт по умолчанию) -->
+                <div id="successBlock" class="form-success" role="status" aria-live="polite">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="form-success__icon">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <h3 class="form-success__title"><?= $t['success_title'] ?></h3>
+                    <p class="form-success__text"><?= $t['success_text'] ?></p>
+                    <button type="button" id="resetFormBtn" class="btn btn--secondary"><?= $t['success_again_btn'] ?></button>
+                </div>
+                
+                <address class="contact__info">
+                    <div class="contact__link-wrapper">
+                        <a href="mailto:info@ahundoff.ru" class="contact__link">
+                            <svg class="contact__icon" width="20" height="20" aria-hidden="true"><use href="#icon-mail"/></svg>
+                            <span>info@ahundoff.ru</span>
+                        </a>
+                        <button class="copy-btn" data-copy="info@ahundoff.ru" aria-label="<?= h($t['success_copy_email']) ?>">
+                            <svg width="16" height="16" aria-hidden="true"><use href="#icon-code"/></svg>
+                        </button>
+                    </div>
+                    <a href="tel:+79295005785" class="contact__link">
+                        <svg class="contact__icon" width="20" height="20" aria-hidden="true"><use href="#icon-phone"/></svg>
+                        <span>+7 (929) 500-57-85</span>
+                    </a>
+                    <a href="https://wa.me/79295005785" target="_blank" rel="noopener noreferrer" class="contact__link">
+                        <svg class="contact__icon" width="20" height="20" aria-hidden="true"><use href="#icon-whatsapp"/></svg>
+                        <span>WhatsApp</span>
+                    </a>
+                    <a href="https://t.me/zohrab_ahundov" target="_blank" rel="noopener noreferrer" class="contact__link">
+                        <svg class="contact__icon" width="20" height="20" aria-hidden="true"><use href="#icon-telegram"/></svg>
+                        <span>Telegram</span>
+                    </a>
+                </address>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Sticky Bar -->
+    <div class="sticky-bar" role="complementary" aria-label="<?= h($t['sticky_aria']) ?>">
+        <div class="container">
+            <div class="sticky-bar__content">
+                <div class="sticky-bar__text">
+                    <svg class="sticky-bar__icon" width="20" height="20" aria-hidden="true"><use href="#icon-rocket"/></svg>
+                    <span><?= $t['sticky_text'] ?></span>
+                </div>
+                <a href="#contact" class="btn btn--primary btn--sm"><?= $t['sticky_btn'] ?></a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 9. Footer -->
+<?php include __DIR__ . '/../partials/footer.php'; ?>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" aria-hidden="true"></div>
+
+    <!-- Floating Actions -->
+    <div class="floating-actions">
+        <a href="https://t.me/zohrab_ahundov" target="_blank" rel="noopener noreferrer" class="floating-action floating-action--telegram" aria-label="<?= h($t['floating_telegram_aria']) ?>">
+            <svg width="24" height="24" aria-hidden="true"><use href="#icon-telegram"/></svg>
+        </a>
+        <a href="https://wa.me/79295005785" target="_blank" rel="noopener noreferrer" class="floating-action floating-action--whatsapp" aria-label="<?= h($t['floating_whatsapp_aria']) ?>">
+            <svg width="24" height="24" aria-hidden="true"><use href="#icon-whatsapp"/></svg>
+        </a>
+        <button class="floating-action floating-action--top" aria-label="<?= h($t['floating_top_aria']) ?>">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"/>
+            </svg>
+        </button>
+    </div>
+
+    <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
+    <script src="/script.js?v=2026-11-21-6" defer></script>
+</body>
+</html>
