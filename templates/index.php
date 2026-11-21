@@ -106,6 +106,8 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
     <section id="services" class="services">
         <div class="container">
             <h2 class="section-title"><?= $t['services_title'] ?><span class="logo__dot">.</span></h2>
+            <p class="section-subtitle"><?= $t['services_subtitle'] ?></p>
+
             <div class="tabs" role="tablist" aria-label="<?= h($t['services_tabs_aria']) ?>">
                 <button class="tabs__btn" type="button" id="tab-products" role="tab" aria-selected="true" aria-controls="panel-products" tabindex="0">
                     <span class="tabs__label"><?= $t['services_tab_products'] ?></span>
@@ -197,6 +199,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
 
             <div class="services__panel" id="optimization" role="tabpanel" aria-labelledby="tab-optimization" tabindex="0">
                 <h3 class="panel-title"><?= $t['opt_title'] ?></h3>
+                <p class="section-subtitle panel-intro"><?= $t['opt_subtitle'] ?></p>
                 <div class="optimization__grid">
                             <article class="card optimization-card">
                                 <div class="card-art">
@@ -260,6 +263,8 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
     <section id="industries" class="industries">
         <div class="container">
             <h2 class="section-title"><?= $t['industries_title'] ?><span class="logo__dot">.</span></h2>
+            <p class="section-subtitle"><?= $t['industries_subtitle'] ?></p>
+
             <div class="industries__grid">
                 <article class="card industry-card">
                     <div class="card-art">
@@ -311,6 +316,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
     <section id="cases" class="cases">
         <div class="container">
             <h2 class="section-title"><?= $t['cases_title'] ?><span class="logo__dot">.</span></h2>
+            <p class="section-subtitle"><?= $t['cases_subtitle'] ?></p>
             <div class="cases__grid">
                 <article class="card case-card">
                     <div class="card-art">
@@ -380,7 +386,9 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
         <div class="container">
             <div class="trust-section__header">
                 <h2 class="section-title"><?= $t['trust_title'] ?><span class="logo__dot">.</span></h2>
-            </div> 
+                <p class="section-subtitle"><?= $t['trust_subtitle'] ?></p>
+            </div>
+                    
             <!-- Founder -->
             <div class="founder__guarantee">
                 <div class="founder__grid">
@@ -422,6 +430,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
     <section id="process" class="process">
         <div class="container">
             <h2 class="section-title"><?= $t['process_title'] ?><span class="logo__dot">.</span></h2>
+            <p class="section-subtitle"><?= $t['process_subtitle'] ?></p>
             <div class="process__timeline">
                 <div class="process__line"></div>
                 <div class="process__step">
