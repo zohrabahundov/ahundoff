@@ -39,7 +39,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
     
     <title><?= $t['site_title'] ?></title>
     
-    <link rel="stylesheet" href="/styles.css?v=2026-11-21-5">
+    <link rel="stylesheet" href="/styles.css?v=2026-11-21-6">
     
     
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
@@ -478,70 +478,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
         </div>
     </section>
 
-    <!-- 9. FAQ -->
-    <section class="faq">
-        <div class="container">
-            <h2 class="section-title"><?= $t['faq_title'] ?><span class="logo__dot"><?= $t['faq_title_dot'] ?></span></h2>
-            <div class="faq__grid">
-                <div class="faq__item">
-                    <button class="faq__question" aria-expanded="false" aria-controls="faq-answer-1" id="faq-question-1">
-                        <span><?= $t['faq_q1'] ?></span>
-                        <span class="faq__icon" aria-hidden="true">▶</span>
-                    </button>
-                    <div class="faq__answer" id="faq-answer-1" role="region" aria-labelledby="faq-question-1">
-                        <p><?= $t['faq_a1'] ?></p>
-                    </div>
-                </div>
-                <div class="faq__item">
-                    <button class="faq__question" aria-expanded="false" aria-controls="faq-answer-2" id="faq-question-2">
-                        <span><?= $t['faq_q2'] ?></span>
-                        <span class="faq__icon" aria-hidden="true">▶</span>
-                    </button>
-                    <div class="faq__answer" id="faq-answer-2" role="region" aria-labelledby="faq-question-2">
-                        <p><?= $t['faq_a2'] ?></p>
-                    </div>
-                </div>
-                <div class="faq__item">
-                    <button class="faq__question" aria-expanded="false" aria-controls="faq-answer-3" id="faq-question-3">
-                        <span><?= $t['faq_q3'] ?></span>
-                        <span class="faq__icon" aria-hidden="true">▶</span>
-                    </button>
-                    <div class="faq__answer" id="faq-answer-3" role="region" aria-labelledby="faq-question-3">
-                        <p><?= $t['faq_a3'] ?></p>
-                    </div>
-                </div>
-                <div class="faq__item">
-                    <button class="faq__question" aria-expanded="false" aria-controls="faq-answer-4" id="faq-question-4">
-                        <span><?= $t['faq_q4'] ?></span>
-                        <span class="faq__icon" aria-hidden="true">▶</span>
-                    </button>
-                    <div class="faq__answer" id="faq-answer-4" role="region" aria-labelledby="faq-question-4">
-                        <p><?= $t['faq_a4'] ?></p>
-                    </div>
-                </div>
-                <div class="faq__item">
-                    <button class="faq__question" aria-expanded="false" aria-controls="faq-answer-5" id="faq-question-5">
-                        <span><?= $t['faq_q5'] ?></span>
-                        <span class="faq__icon" aria-hidden="true">▶</span>
-                    </button>
-                    <div class="faq__answer" id="faq-answer-5" role="region" aria-labelledby="faq-question-5">
-                        <p><?= $t['faq_a5'] ?></p>
-                    </div>
-                </div>
-                <div class="faq__item">
-                    <button class="faq__question" aria-expanded="false" aria-controls="faq-answer-6" id="faq-question-6">
-                        <span><?= $t['faq_q6'] ?></span>
-                        <span class="faq__icon" aria-hidden="true">▶</span>
-                    </button>
-                    <div class="faq__answer" id="faq-answer-6" role="region" aria-labelledby="faq-question-6">
-                        <p><?= $t['faq_a6'] ?></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- 10. Contact -->
+    <!-- 9. Contact -->
     <section id="contact" class="contact">
         <div class="container">
             <div class="contact__content">
@@ -641,7 +578,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
         </div>
     </div>
     
-    <!-- 11. Footer -->
+    <!-- 10. Footer -->
 <?php include __DIR__ . '/../partials/footer.php'; ?>
 
     <!-- Scroll Progress -->

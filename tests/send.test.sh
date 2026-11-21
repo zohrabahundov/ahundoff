@@ -5,6 +5,14 @@
 HOST="${TEST_HOST:-http://127.0.0.1:8088}"
 U="$HOST/send.php"
 NOW=$(date +%s); FT=$((NOW-10))
+# Сброс состояния rate-limit перед прогоном: тесты используют фиксированные IP,
+# поэтому повторный запуск в течение часа давал ложные FAIL (E1/E2/E5).
+# Только для локального стенда — на удалённом хосте файлы не трогаем.
+case "$HOST" in
+  http://127.0.0.1:*|http://localhost:*|https://127.0.0.1:*|https://localhost:*)
+    RL="$(cd "$(dirname "$0")/.." && pwd)/logs/rate_limit.json"
+    if [ -f "$RL" ]; then : > "$RL"; fi ;;
+esac
 PASS=0; FAIL=0
 dec() { python3 -c "import sys,json
 try:

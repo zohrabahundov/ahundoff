@@ -415,7 +415,7 @@
     .stat__label { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.4; }
 
     /* --- Global Section Padding --- */
-    .services, .trust-section, .faq { padding: 120px 0; background: var(--bg-primary); }
+    .services, .trust-section { padding: 120px 0; background: var(--bg-primary); }
     .optimization, .industries, .cases, .process, .contact { padding: 120px 0; background: var(--bg-secondary); }
 
     /* --- Optimization Suite --- */
@@ -1006,7 +1006,7 @@
         .section-subtitle { font-size: 1rem; margin-bottom: 2.5rem; }
 
         .services, .trust-section, .process, .contact,
-        .cases, .industries, .faq, .optimization { padding: 80px 0; }
+        .cases, .industries, .optimization { padding: 80px 0; }
         
         .services__grid, .cases__grid, .why__grid, .industries__grid, .optimization__grid { 
             grid-template-columns: 1fr; 
@@ -1110,7 +1110,7 @@
         pointer-events: none;
     }
     
-    .flow-enabled :is(.services, .industries, .trust-section, .faq) {
+    .flow-enabled :is(.services, .industries, .trust-section) {
         background: rgba(3, 7, 18, .62);
     }
     
