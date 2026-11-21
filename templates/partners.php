@@ -336,7 +336,7 @@ $og_url    = $canonical;
     </div>
 
     <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
-    <script src="/script.js?v=2026-11-21-4" defer></script>
+    <script src="/script.js?v=2026-11-21-5" defer></script>
 
     </body>
 </html>
