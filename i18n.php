@@ -10,6 +10,11 @@ $privacy_url     = $lang === 'en' ? '/privacy-policy-en.html' : '/privacy-policy
 $alt_policy_url  = $lang === 'en' ? '/privacy-policy.html' : '/privacy-policy-en.html';
 // Якорь формы контактов на главной странице текущего языка.
 $home_contact    = $lang === 'en' ? '/en.html#contact' : '/#contact';
+// Партнёрская программа на текущем языке и на альтернативном.
+$partners_url      = $lang === 'en' ? '/partners-en.html' : '/partners.html';
+$alt_partners_url  = $lang === 'en' ? '/partners.html' : '/partners-en.html';
+// Главная страница текущего языка (для ссылок «На главную»).
+$home_url          = $lang === 'en' ? '/en.html' : '/';
 
 if (!function_exists('h')) {
     // Экранирование значений атрибутов (словари — доверенный контент).

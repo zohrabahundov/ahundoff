@@ -39,7 +39,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
     
     <title><?= $t['site_title'] ?></title>
     
-    <link rel="stylesheet" href="/styles.css?v=2026-11-21-3">
+    <link rel="stylesheet" href="/styles.css?v=2026-11-21-4">
     
     
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
@@ -50,7 +50,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
 
     </head>
 <body>
-    <noscript><div><img src="https://mc.yandex.ru/watch/113749509" class="u-offscreen" alt="" /></div></noscript>
+    <!-- noscript-пиксель Метрики удалён (аудит п.8): без JS согласие не получить, аналитика не грузится -->
 <a class="skip-link" href="#main"><?= $t['skip_link'] ?></a>
 <?php include __DIR__ . '/../partials/header.php'; ?>
 
@@ -705,6 +705,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
         </button>
     </div>
 
-    <script src="/script.js?v=2026-11-21-3" defer></script>
+    <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
+    <script src="/script.js?v=2026-11-21-4" defer></script>
 </body>
 </html>

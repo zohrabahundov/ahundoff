@@ -5,7 +5,7 @@ const HOST = process.env.TEST_HOST || 'http://127.0.0.1:8088';
 let pass = 0, fail = 0;
 const ok = (name, cond, extra='') => { if (cond) { pass++; console.log('PASS:', name); } else { fail++; console.log('FAIL:', name, extra); } };
 
-async function makeWindow(path) {
+async function makeWindow(path, opts={}) {
   const html = await (await fetch(HOST + path)).text();
   const dom = new JSDOM(html, { url: 'https://ahundoff.ru/', runScripts: 'outside-only', pretendToBeVisual: true });
   const w = dom.window;
@@ -34,6 +34,10 @@ async function makeWindow(path) {
     if (next.reject) return Promise.reject(new Error('network'));
     return Promise.resolve({ ok: next.ok !== false, json: next.jsonThrows ? async () => { throw new Error('bad json'); } : async () => next.body });
   };
+  // Cookie-согласие: по умолчанию 'all' (аналитика разрешена — как у принявшего пользователя),
+  // чтобы существующие тесты трекинга работали. opts.consent=null -> чистый визит без выбора.
+  const consent = opts.consent === undefined ? 'all' : opts.consent;
+  if (consent) { try { w.localStorage.setItem('ahundoff_cookie_consent', consent); } catch(e){} }
   w.eval(SCRIPT);
   return w;
 }
@@ -183,6 +187,60 @@ const setInput = (w, id, v) => { const el = w.document.getElementById(id); el.va
   ok('T21 partner: form_type=partner отправлен', pfd.get('form_type') === 'partner');
   ok('T22 partner: label восстановлен из data-default-label', dp.getElementById('p-submitBtn').textContent === 'Отправить заявку');
   ok('T23 partner: без successBlock -> тост (RU)', [...dp.querySelectorAll('.toast--success')].some(t => t.textContent.includes('Заявка отправлена')));
+  ok('P8 RU partners: cross-link на EN-версию', !!dp.querySelector('.partners-hero__alt a[href="/partners-en.html"]'));
+
+  // ================= COOKIE-NOTICE с opt-out (аудит п.8) =================
+  const wc = await makeWindow('/', {consent:null}); await tick(40);
+  const dc = wc.document;
+  ok('C1 баннер показан без согласия', !!dc.getElementById('cookie-banner') && !dc.getElementById('cookie-banner').hidden);
+  ok('C2 Метрика НЕ загружена без согласия', typeof wc.ym === 'undefined');
+  ok('C3 noscript-пиксель Метрики удалён', !dc.documentElement.innerHTML.includes('mc.yandex.ru/watch'));
+  dc.getElementById('cookie-accept').dispatchEvent(new wc.Event('click', {bubbles:true})); await tick();
+  ok('C4 accept: согласие сохранено', wc.localStorage.getItem('ahundoff_cookie_consent') === 'all');
+  ok('C5 accept: баннер скрыт', dc.getElementById('cookie-banner').hidden);
+  ok('C6 accept: Метрика загружена', typeof wc.ym === 'function');
+
+  const we2 = await makeWindow('/', {consent:null}); await tick(40);
+  we2.document.getElementById('cookie-essential').dispatchEvent(new we2.Event('click', {bubbles:true})); await tick();
+  ok('C7 essential: согласие сохранено', we2.localStorage.getItem('ahundoff_cookie_consent') === 'essential');
+  ok('C8 essential: Метрика не загружена', typeof we2.ym === 'undefined');
+  ok('C9 essential: баннер скрыт', we2.document.getElementById('cookie-banner').hidden);
+
+  const we3 = await makeWindow('/', {consent:'essential'}); await tick(40);
+  ok('C10 essential preset: баннер скрыт, Метрики нет', we3.document.getElementById('cookie-banner').hidden && typeof we3.ym === 'undefined');
+
+  const wf = await makeWindow('/', {consent:'all'}); await tick(40);
+  ok('C11a при согласии баннер скрыт', wf.document.getElementById('cookie-banner').hidden);
+  wf.document.querySelector('[data-cookie-settings]').dispatchEvent(new wf.Event('click', {bubbles:true, cancelable:true})); await tick();
+  ok('C11b ссылка «Настройки cookie» в подвале открывает баннер', !wf.document.getElementById('cookie-banner').hidden);
+
+  const wen = await makeWindow('/en.html', {consent:null}); await tick(40);
+  ok('C12 EN: текст баннера по-английски', wen.document.getElementById('cookie-banner').textContent.includes('We use cookies'));
+  ok('C13 EN: кнопка Accept all', wen.document.getElementById('cookie-accept').textContent === 'Accept all');
+
+  const wg = await makeWindow('/', {consent:null}); await tick(40);
+  const tg = wg.document.querySelector('.floating-action--telegram');
+  if (tg) tg.dispatchEvent(new wg.Event('click', {bubbles:true})); // цель до согласия -> очередь
+  wg.document.getElementById('cookie-accept').dispatchEvent(new wg.Event('click', {bubbles:true})); await tick();
+  const gcalls = (wg.ym && wg.ym.a) || [];
+  ok('C14 цель до согласия отправлена после accept (flush)', gcalls.some(c => c[1]==='reachGoal' && c[2]==='click_messenger_telegram'), JSON.stringify(gcalls).slice(0,150));
+
+  // ================= EN-ПАРТНЁРКА (аудит п.16) =================
+  const wpe = await makeWindow('/partners-en.html'); await tick(40);
+  const dpe = wpe.document;
+  ok('P1 EN partners: lang=en', dpe.documentElement.getAttribute('lang') === 'en');
+  ok('P2 EN partners: заголовок EN', dpe.querySelector('.partners-hero__title').textContent.includes('Earn'));
+  setInput(wpe, 'p-name', 'Partner'); setInput(wpe, 'p-contact', '@partner_one');
+  const compE = dpe.querySelector('[name="company"]'); compE.value = 'CRM'; compE.dispatchEvent(new wpe.Event('input', {bubbles:true}));
+  dpe.getElementById('p-pd-consent').checked = true;
+  wpe.__fetchQueue.push({ ok: true, body: { success: true } });
+  submit(wpe, 'partnersForm'); await tick(30);
+  const pfdE = wpe.__fetchCalls[0].opts.body;
+  ok('P3 EN partners: form_type=partner', pfdE.get('form_type') === 'partner');
+  ok('P4 EN partners: lang=en в FormData', pfdE.get('lang') === 'en');
+  ok('P5 EN partners: label кнопки EN', dpe.getElementById('p-submitBtn').textContent === 'Send application');
+  ok('P6 EN partners: футер ведёт на /partners-en.html', !!dpe.querySelector('.footer__links a[href="/partners-en.html"]'));
+  ok('P7 EN partners: hreflang ru/en', !!dpe.querySelector('link[hreflang="ru"]') && !!dpe.querySelector('link[hreflang="en"]'));
 
   console.log(`\nИТОГО DOM: PASS=${pass} FAIL=${fail}`);
   process.exit(0);

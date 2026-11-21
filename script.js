@@ -4,23 +4,10 @@
 
 document.documentElement.classList.add('js');
 
-/* Yandex.Metrika — единый загрузчик.
-   Аудит 21.11.2026: инициализируем СРАЗУ (tag.js грузится async и не блокирует рендер).
-   Раньше загрузка откладывалась до requestIdleCallback/2с, и цели, отправленные до
-   инициализации (клик по телефону, быстрая отправка формы), молча терялись. */
-(() => {
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113749509', 'ym');
-    ym(113749509, 'init', {
-        ssr: true, webvisor: false, clickmap: true, ecommerce: "dataLayer",
-        referrer: document.referrer, url: location.href,
-        accurateTrackBounce: true, trackLinks: true
-    });
-})();
+/* Yandex.Metrika — загрузка ТОЛЬКО после согласия на аналитические cookie (аудит п.8).
+   Раньше грузилась сразу для всех; теперь управляет модуль CookieConsent/Metrika ниже:
+   consent='all' -> грузим сразу, 'essential'/нет выбора -> не грузим, показываем баннер.
+   Цели, отправленные до согласия, накапливаются в Tracker.pending и шлются после accept. */
 
 
 (() => {
@@ -56,9 +43,56 @@ document.documentElement.classList.add('js');
         return { lang, t };
     })();
 
+    // MODULE: cookie-consent — выбор пользователя по аналитическим cookie (аудит п.8).
+    const CookieConsent = (() => {
+        const KEY = 'ahundoff_cookie_consent';
+        const get = () => { try { return localStorage.getItem(KEY); } catch (e) { return null; } };
+        const set = (v) => { try { localStorage.setItem(KEY, v); } catch (e) {} };
+        // Удаляем уже установленные cookie Метрики (_ym_*) при отказе от аналитики.
+        const clearYmCookies = () => {
+            try {
+                const host = location.hostname;
+                const domains = ['', host, '.' + host, '.' + host.split('.').slice(-2).join('.')];
+                document.cookie.split(';').forEach(c => {
+                    const name = c.split('=')[0].trim();
+                    if (/^_ym_/.test(name)) {
+                        domains.forEach(d => {
+                            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/' + (d ? '; domain=' + d : '');
+                        });
+                    }
+                });
+            } catch (e) {}
+        };
+        return { KEY, get, set, clearYmCookies };
+    })();
+
+    // MODULE: metrika — загрузчик Яндекс.Метрики, вызывается только при согласии.
+    const Metrika = (() => {
+        const YM_ID = 113749509;
+        let loaded = false;
+        const load = () => {
+            if (loaded) return;
+            loaded = true;
+            (function(m,e,t,r,i,k,a){
+                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                m[i].l=1*new Date();
+                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+            })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=' + YM_ID, 'ym');
+            ym(YM_ID, 'init', {
+                ssr: true, webvisor: false, clickmap: true, ecommerce: "dataLayer",
+                referrer: document.referrer, url: location.href,
+                accurateTrackBounce: true, trackLinks: true
+            });
+            Tracker.flush(); // цели, накопленные до согласия
+        };
+        return { load, isLoaded: () => loaded, YM_ID };
+    })();
+
     const Tracker = (() => {
         const YM_ID = 113749509;
-        
+        const pending = []; // цели до согласия: шлём после accept, сбрасываем при essential
+
         const track = (goalName) => {
             if (typeof ym !== 'undefined') {
                 try {
@@ -66,8 +100,17 @@ document.documentElement.classList.add('js');
                 } catch (e) {
                     console.warn('Metrika tracking failed:', e);
                 }
+            } else if (CookieConsent.get() !== 'essential') {
+                pending.push(goalName); // ждём согласия (если отказ — очередь сбросится)
             }
         };
+        const flush = () => {
+            while (pending.length) {
+                const g = pending.shift();
+                if (typeof ym !== 'undefined') { try { ym(YM_ID, 'reachGoal', g); } catch (e) {} }
+            }
+        };
+        const discard = () => { pending.length = 0; };
 
         const initEvents = () => {
             document.querySelectorAll('a[href^="tel:"]').forEach(link => {
@@ -100,7 +143,7 @@ document.documentElement.classList.add('js');
             }
         };
 
-        return { track, initEvents };
+        return { track, initEvents, flush, discard };
     })();
 
     const createObserver = (target, callback, options = {}) => {
@@ -867,6 +910,48 @@ document.documentElement.classList.add('js');
         return { init };
     })();
 
+    // MODULE: cookie-banner — UI уведомления с opt-out (аудит п.8).
+    const CookieBanner = (() => {
+        const init = () => {
+            const banner = document.getElementById('cookie-banner');
+            if (!banner) return;
+            const acceptBtn = document.getElementById('cookie-accept');
+            const essentialBtn = document.getElementById('cookie-essential');
+            const show = () => { banner.hidden = false; document.body.classList.add('cookie-banner-open'); };
+            const hide = () => { banner.hidden = true; document.body.classList.remove('cookie-banner-open'); };
+            const choose = (value) => {
+                CookieConsent.set(value);
+                hide();
+                if (value === 'all') {
+                    Metrika.load();
+                } else {
+                    CookieConsent.clearYmCookies();
+                    Tracker.discard();
+                    // Если Метрика уже была загружена в этой сессии — перезагружаем страницу,
+                    // чтобы гарантированно не осталось активного трекера.
+                    if (Metrika.isLoaded()) location.reload();
+                }
+            };
+            if (acceptBtn) acceptBtn.addEventListener('click', () => choose('all'));
+            if (essentialBtn) essentialBtn.addEventListener('click', () => choose('essential'));
+            document.querySelectorAll('[data-cookie-settings]').forEach(el => {
+                el.addEventListener('click', (e) => { e.preventDefault(); show(); });
+            });
+            if (!CookieConsent.get()) show();
+        };
+        return { init };
+    })();
+
+    // Стартовое применение согласия (сразу, не дожидаясь DOMContentLoaded):
+    // 'all' -> грузим Метрику немедленно (как раньше); 'essential' -> чистим её cookie.
+    (() => {
+        const consent = CookieConsent.get();
+        if (consent === 'all') Metrika.load();
+        else if (consent === 'essential') CookieConsent.clearYmCookies();
+        // Фиксируем язык страницы для серверного авто-определения (Accept-Language + cookie).
+        try { document.cookie = 'lang_choice=' + I18N.lang + '; path=/; max-age=31536000; SameSite=Lax'; } catch (e) {}
+    })();
+
     document.addEventListener('DOMContentLoaded', () => {
         // Аудит 21.11.2026: каждый модуль инициализируется изолированно —
         // ошибка в одном не блокирует остальные (раньше карточки могли остаться невидимыми).
@@ -875,7 +960,8 @@ document.documentElement.classList.add('js');
             ['ScrollAnimations', ScrollAnimations], ['Counters', Counters], ['FAQ', FAQ],
             ['Tracker', { init: Tracker.initEvents }], ['ScrollProgress', ScrollProgress],
             ['BackToTop', BackToTop], ['CopyToClipboard', CopyToClipboard], ['ProcessTimeline', ProcessTimeline],
-            ['StickyBar', StickyBar], ['PhoneMask', PhoneMask], ['HeroGrid', HeroGrid], ['MobileTooltip', MobileTooltip]
+            ['StickyBar', StickyBar], ['PhoneMask', PhoneMask], ['HeroGrid', HeroGrid], ['MobileTooltip', MobileTooltip],
+            ['CookieBanner', CookieBanner]
         ];
         modules.forEach(([name, mod]) => {
             try { mod.init(); } catch (err) { console.error(`[Ahundoff] ${name} init failed:`, err); }

@@ -42,6 +42,8 @@ $wrappers = [
     'en.html' => ['en', 'templates/index.php'],
     'privacy-policy.html' => ['ru', 'templates/privacy.php'],
     'privacy-policy-en.html' => ['en', 'templates/privacy.php'],
+    'partners.html' => ['ru', 'templates/partners.php'],
+    'partners-en.html' => ['en', 'templates/partners.php'],
 ];
 foreach ($wrappers as $file => [$lang, $tpl]) {
     $src = file_get_contents($root . '/' . $file);
