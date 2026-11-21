@@ -21,7 +21,7 @@ $canonical = $lang === 'en' ? 'https://ahundoff.ru/privacy-policy-en.html' : 'ht
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
     <link rel="alternate icon" type="image/x-icon" href="/favicon.ico?v=2">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="stylesheet" href="styles.css?v=2026-11-21-6">
+    <link rel="stylesheet" href="styles.css?v=2026-11-21-7">
 </head>
 <body>
     <a class="skip-link" href="#main"><?= $t['skip_link'] ?></a>
@@ -242,6 +242,6 @@ $canonical = $lang === 'en' ? 'https://ahundoff.ru/privacy-policy-en.html' : 'ht
     <!-- Footer -->
     <?php include __DIR__ . '/../partials/footer.php'; ?>
     <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
-    <script src="/script.js?v=2026-11-21-5" defer></script>
+    <script src="/script.js?v=2026-11-21-6" defer></script>
 </body>
 </html>

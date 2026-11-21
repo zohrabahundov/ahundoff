@@ -7,7 +7,7 @@ const ok = (name, cond, extra='') => { if (cond) { pass++; console.log('PASS:', 
 
 async function makeWindow(path, opts={}) {
   const html = await (await fetch(HOST + path)).text();
-  const dom = new JSDOM(html, { url: 'https://ahundoff.ru/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const dom = new JSDOM(html, { url: 'https://ahundoff.ru/' + (opts.hash || ''), runScripts: 'outside-only', pretendToBeVisual: true });
   const w = dom.window;
   // --- моки браузерных API, отсутствующих в jsdom ---
   w.matchMedia = () => ({ matches: false, addEventListener(){}, removeEventListener(){}, addListener(){}, removeListener(){} });
@@ -109,6 +109,28 @@ const setInput = (w, id, v) => { const el = w.document.getElementById(id); el.va
   ok('T10e ИСПРАВЛЕНО: telegram без @ -> автоподстановка @', withoutAt === '@durov', 'value="' + withoutAt + '"');
   const plus7 = setInput(w, 'phone', '+7'); plus7.dispatchEvent(new w.Event('blur', { bubbles: true }));
   ok('T10f +7 на blur очищается', plus7.value === '');
+
+  // ================= U: секция «Услуги» с табами (Продукты + Оптимизация) =================
+  ok('U1 одна секция услуг: 2 таба, 10 карточек', d.querySelectorAll('.tabs [role="tab"]').length === 2 && d.querySelectorAll('#panel-products article').length === 6 && d.querySelectorAll('#optimization article').length === 4 && !d.querySelector('section.optimization'));
+  const tabP = d.getElementById('tab-products'), tabO = d.getElementById('tab-optimization');
+  const panP = d.getElementById('panel-products'), panO = d.getElementById('optimization');
+  ok('U2 по умолчанию Продукты: aria-selected + вторая панель скрыта', tabP.getAttribute('aria-selected') === 'true' && !panP.hidden && panO.hidden && tabO.tabIndex === -1);
+  tabO.dispatchEvent(new w.Event('click', { bubbles: true }));
+  ok('U3 клик по табу Оптимизация переключает панели и ARIA', tabO.getAttribute('aria-selected') === 'true' && !panO.hidden && panP.hidden && tabO.tabIndex === 0);
+  ok('U4 карточки показанной панели получили animated (не остались невидимыми)', [...panO.querySelectorAll('.optimization-card')].every(c => c.classList.contains('animated')));
+  tabO.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+  ok('U5 клавиатура ArrowLeft возвращает на Продукты', tabP.getAttribute('aria-selected') === 'true' && !panP.hidden && panO.hidden);
+  const rawHome = await (await fetch(HOST + '/')).text();
+  ok('U6 без JS обе панели видны (hidden ставит только скрипт)', !/<div class="services__panel"[^>]*\shidden/.test(rawHome) && rawHome.includes('id="optimization"'));
+  ok('U7 навигация: один пункт «Услуги», ссылки на #optimization в меню нет', d.querySelectorAll('.nav__link').length === 6 && !d.querySelector('.nav__link[href$="#optimization"]') && !!d.querySelector('.nav__link[href$="#services"]'));
+  const wl = await makeWindow('/'); await tick(40);
+  wl.document.querySelector('.footer__links a[href$="#optimization"]').dispatchEvent(new wl.Event('click', { bubbles: true, cancelable: true }));
+  ok('U10 ссылка из подвала открывает таб Оптимизация (SmoothScroll не мешает)', wl.document.getElementById('tab-optimization').getAttribute('aria-selected') === 'true' && !wl.document.getElementById('optimization').hidden);
+  const wh = await makeWindow('/', { hash: '#optimization' }); await tick(40);
+  ok('U8 deep-link /#optimization открывает второй таб', wh.document.getElementById('tab-optimization').getAttribute('aria-selected') === 'true' && !wh.document.getElementById('optimization').hidden);
+  const wgoal = await makeWindow('/'); await tick(40);
+  wgoal.document.getElementById('tab-optimization').dispatchEvent(new wgoal.Event('click', { bubbles: true }));
+  ok('U9 переключение таба шлёт цель Метрики', ((wgoal.ym && wgoal.ym.a) || []).some(c => c[1] === 'reachGoal' && c[2] === 'services_tab_optimization'));
 
   // T11: FAQ на главной удалён (ужатие); аккордеон проверяется на партнёрке — см. T11a/T11b ниже
   ok('T11 на главной нет секции FAQ', !d.querySelector('section.faq') && !d.getElementById('faq-question-1'));
