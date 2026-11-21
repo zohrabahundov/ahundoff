@@ -388,31 +388,7 @@ $og_url    = $lang === 'en' ? 'https://ahundoff.ru/en.html' : 'https://ahundoff.
                 <h2 class="section-title"><?= $t['trust_title'] ?><span class="logo__dot">.</span></h2>
                 <p class="section-subtitle"><?= $t['trust_subtitle'] ?></p>
             </div>
-            
-            <div class="why__grid">
-                <div class="card why__item">
-                    <div class="card-art">
-                        <img src="assets/trust/balance.webp?v=cutout-1" width="880" height="352" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title"><?= $t['trust_results_title'] ?></h3>
-                    <p class="card__text"><?= $t['trust_results_text'] ?></p>
-                </div>
-                <div class="card why__item">
-                    <div class="card-art">
-                        <img src="assets/trust/bridge.webp?v=cutout-1" width="880" height="352" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title"><?= $t['trust_reliability_title'] ?></h3>
-                    <p class="card__text"><?= $t['trust_reliability_text'] ?></p>
-                </div>
-                <div class="card why__item">
-                    <div class="card-art">
-                        <img src="assets/trust/turbine.webp?v=cutout-1" width="880" height="352" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <h3 class="card__title"><?= $t['trust_speed_title'] ?></h3>
-                    <p class="card__text"><?= $t['trust_speed_text'] ?></p>
-                </div>
-            </div>
-
+                    
             <!-- Founder -->
             <div class="founder__guarantee">
                 <div class="founder__grid">
