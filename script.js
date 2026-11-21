@@ -493,7 +493,7 @@ document.documentElement.classList.add('js');
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             
             const animatedElements = document.querySelectorAll(
-                '.service-card, .case-card, .why__item, .industry-card'
+                '.service-card, .case-card, .industry-card'
             );
 
             animatedElements.forEach(el => {
