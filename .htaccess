@@ -20,6 +20,13 @@
     RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
     RewriteRule ^index\.html$ / [L,R=301]
 
+    # Аудит п.16: авто-определение языка по Accept-Language. Только для корня (/),
+    # только если нет ручного выбора (cookie lang_choice, фиксируется в script.js),
+    # и только если Accept-Language начинается с "en". Прямой заход на /en.html не трогаем.
+    RewriteCond %{HTTP_COOKIE} !lang_choice= [NC]
+    RewriteCond %{HTTP_ACCEPT_LANGUAGE} ^en [NC]
+    RewriteRule ^$ /en.html [L,R=302,E=lang_detect:1]
+
     # Блокируем скрытые файлы и папки, КРОМЕ .well-known (нужен для Let's Encrypt и security.txt)
     RewriteCond %{REQUEST_URI} !^/\.well-known/ [NC]
     RewriteRule (^\.|/\.) - [F]
@@ -122,6 +129,11 @@ AddDefaultCharset UTF-8
     # (QR-библиотека теперь self-hosted); img-src сужен; добавлены object-src 'none' и
     # upgrade-insecure-requests. Шрифты self-hosted — Google больше не нужен.
     Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://mc.yandex.ru; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://mc.yandex.ru; object-src 'none'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
+
+    # Авто-определение языка (аудит п.16): ответ-редирект зависит от Accept-Language —
+    # помечаем Vary и запрещаем кэширование, чтобы прокси не отдали редирект не тому языку.
+    Header always set Vary "Accept-Language" env=lang_detect
+    Header always set Cache-Control "no-store" env=lang_detect
 
     # Убираем версию сервера
     Header unset X-Powered-By

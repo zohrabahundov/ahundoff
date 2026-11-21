@@ -19,8 +19,9 @@ $home = in_array($_SERVER['SCRIPT_NAME'] ?? '', ['/', '/index.html', '/en.html']
                     <a href="<?= $home ?>#founder"><?= $t['nav_founder'] ?></a>
                     <a href="<?= $home ?>#process"><?= $t['nav_process'] ?></a>
                     <a href="<?= $home ?>#contact"><?= $t['nav_contact'] ?></a>
-                    <a href="/partners.html"><?= $t['footer_partners'] ?></a>
+                    <a href="<?= $partners_url ?>"><?= $t['footer_partners'] ?></a>
                     <a href="<?= $privacy_url ?>"><?= $t['footer_privacy'] ?></a>
+                    <button type="button" class="footer__cookie-btn" data-cookie-settings><?= $t['cookie_settings'] ?></button>
                 </nav>
 
                 <div class="footer__socials">

@@ -836,6 +836,40 @@
     .floating-action--top:hover { transform: scale(1.1) translateY(-4px); box-shadow: 0 8px 30px rgba(59, 130, 246, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
     .floating-action--top:active { transform: scale(1.05) translateY(-2px); }
 
+    /* Cookie-notice с opt-out (аудит п.8): фиксированная панель внизу, поверх sticky-bar (900), ниже тостов (2000). */
+    .cookie-banner {
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 1100;
+        background: rgba(15, 23, 42, 0.97);
+        -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+        border-top: 1px solid rgba(148, 163, 184, 0.2);
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.45);
+        padding: 1rem 0 calc(1rem + env(safe-area-inset-bottom, 0px));
+    }
+    .cookie-banner[hidden] { display: none; }
+    .cookie-banner__inner {
+        max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;
+        display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+    }
+    .cookie-banner__text { flex: 1 1 340px; margin: 0; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.55; }
+    .cookie-banner__text a { color: var(--accent); text-decoration: underline; }
+    .cookie-banner__text a:hover { color: var(--accent-hover); }
+    .cookie-banner__actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .cookie-banner__btn { padding: 0.7rem 1.5rem; font-size: 0.95rem; white-space: nowrap; }
+    .footer__cookie-btn {
+        background: none; border: none; padding: 0; cursor: pointer; font-family: inherit;
+        color: var(--text-secondary); font-size: 0.95rem; transition: var(--transition);
+    }
+    .footer__cookie-btn:hover { color: var(--text-primary); }
+    .partners-hero__alt { margin: 1.25rem 0 0; font-size: 0.9rem; text-align: center; }
+    .partners-hero__alt a { color: var(--text-secondary); text-decoration: underline; }
+    .partners-hero__alt a:hover { color: var(--text-primary); }
+    @media (max-width: 640px) {
+        .cookie-banner__inner { flex-direction: column; align-items: stretch; gap: 1rem; }
+        .cookie-banner__actions { flex-direction: column; }
+        .cookie-banner__btn { width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) { .cookie-banner, .cookie-banner__btn { transition: none; } }
+
     .toast-container {
         position: fixed; top: 100px; right: 24px; z-index: 2000;
         display: flex; flex-direction: column; gap: 0.75rem;
