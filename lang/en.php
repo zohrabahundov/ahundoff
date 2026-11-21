@@ -235,7 +235,7 @@ TXT,
 
     // Главная: Контакты / форма
     'contact_title' => 'Ready to discuss your project',
-    'contact_text' => 'Leave a request, and we will contact you within 2 hours for a free business diagnostics and ROI calculation.',
+    'contact_text' => 'Leave a request and we will contact you within 2 hours.',
     'contact_badges_aria' => 'Security guarantees',
     'contact_badge_nda' => 'We work under NDA',
     'contact_badge_fz' => 'Data in Russia (152-FZ)',
