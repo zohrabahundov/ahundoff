@@ -2,14 +2,16 @@
   "name": "ahundoff-site",
   "version": "1.0.0",
   "private": true,
-  "description": "Ahundoff Studio — статический сайт с PHP-обработчиком форм. Общие RU/EN шаблоны (templates/) и словари (lang/). Тесты: jsdom (DOM) + bash (send.php) + python (структура HTML) + php (парность локалей).",
+  "description": "Ahundoff Studio — статический сайт с PHP-обработчиком форм. Общие RU/EN шаблоны (templates/) и словари (lang/). Тесты: jsdom (DOM) + bash (send.php) + python (структура HTML) + php (парность локалей) + python (шрифты). Сборка subset-шрифтов: npm run build:fonts.",
   "scripts": {
     "serve": "php -d sendmail_path=\"$PWD/tests/mailcatch.sh\" -S 0.0.0.0:8088 -t . tests/router.php",
     "test:dom": "node tests/dom.test.js",
     "test:send": "bash tests/send.test.sh",
     "test:structure": "python3 tests/structure.py",
     "test:i18n": "php tests/i18n.test.php",
-    "test": "npm run test:i18n && npm run test:send && npm run test:dom && npm run test:structure"
+    "test": "npm run test:i18n && npm run test:send && npm run test:dom && npm run test:structure && npm run test:fonts",
+    "test:fonts": "python3 tests/fonts.py",
+    "build:fonts": "python3 tools/build-fonts.py"
   },
   "devDependencies": {
     "jsdom": "^24.0.0"

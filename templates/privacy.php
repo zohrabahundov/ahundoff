@@ -21,7 +21,7 @@ $canonical = $lang === 'en' ? 'https://ahundoff.ru/privacy-policy-en.html' : 'ht
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
     <link rel="alternate icon" type="image/x-icon" href="/favicon.ico?v=2">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="stylesheet" href="styles.css?v=2026-11-21-7">
+    <link rel="stylesheet" href="styles.css?v=2026-11-21-8">
 </head>
 <body>
     <a class="skip-link" href="#main"><?= $t['skip_link'] ?></a>
