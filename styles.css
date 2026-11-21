@@ -701,6 +701,12 @@
     .process__title { font-size: 1.35rem; margin-bottom: 0.75rem; color: var(--text-primary); }
     .process__text { color: var(--text-secondary); line-height: 1.6; margin: 0; }
 
+    .process { padding: 64px 0; }
+    .process .section-subtitle { margin-bottom: 1.5rem; }
+    .process .process__step { margin-bottom: 1.25rem; }
+    .process .process__content { padding: 1rem 1.5rem; }
+    .process .process__title { margin-bottom: 0.5rem; }
+
     /* --- Contact & FAQ --- */
     .contact__content { max-width: 600px; margin: 0 auto; text-align: center; }
     .contact__text { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 2.5rem; }
